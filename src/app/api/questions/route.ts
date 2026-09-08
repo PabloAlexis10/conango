@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const sizeParam = parseInt(searchParams.get("size") || "100", 10);
   const formulaParam = searchParams.get("formula"); // e.g. "1", "45", "random"
 
-  const validSizes: SessionSize[] = [10, 30, 50, 100];
+  const validSizes: SessionSize[] = [10, 20, 30, 50, 100];
   const size: SessionSize = validSizes.includes(sizeParam as SessionSize)
     ? (sizeParam as SessionSize)
     : 100;
@@ -109,15 +109,23 @@ export async function GET(request: NextRequest) {
 
     if (size === 100) {
       // EXAMEN OFICIAL: 1 a 60 Listening en orden estricto, 61 a 100 Reading en orden estricto (0 duplicados)
-      const list60 = listeningItems.slice(0, 60).map((q, idx) => ({
-        ...q,
-        id: idx + 1,
-        formula: selectedFormulaNumber,
-        formulaName: `Fórmula ${selectedFormulaNumber}`,
-        type: "listening" as const,
-        textToSpeak: cleanAudioPrompt(q.textToSpeak || q.question),
-        question: cleanQuestionText(q.question),
-      }));
+      const list60 = listeningItems.slice(0, 60).map((q, idx) => {
+        const cleanQ = cleanQuestionText(q.question);
+        const cleanSpk = cleanAudioPrompt(q.textToSpeak || q.question);
+        const ctx = q.context || cleanAudioPrompt(cleanSpk.replace(cleanQ, "").trim()) || cleanSpk;
+        return {
+          ...q,
+          id: idx + 1,
+          formula: selectedFormulaNumber,
+          formulaName: `Fórmula ${selectedFormulaNumber}`,
+          type: "listening" as const,
+          context: ctx,
+          contextEs: q.contextEs || "Contexto de la situación en audio en inglés.",
+          question: cleanQ,
+          questionEs: q.questionEs || "¿Cuál es la respuesta correcta según el audio?",
+          textToSpeak: cleanSpk,
+        };
+      });
 
       const read40 = readingItems.slice(0, 40).map((q, idx) => ({
         ...q,
@@ -131,7 +139,7 @@ export async function GET(request: NextRequest) {
 
       finalQuestions = [...list60, ...read40];
     } else {
-      // QUIZZES (10, 30, 50): 50% Listening y 50% Reading ALEATORIAS del banco de la fórmula
+      // QUIZZES (10, 20, 30, 50): 50% Listening y 50% Reading ALEATORIAS del banco de la fórmula
       // Así el usuario no ve siempre las mismas preguntas al repetir el quiz.
       const halfCount = Math.floor(size / 2);
       const readCount = size - halfCount;
@@ -152,14 +160,20 @@ export async function GET(request: NextRequest) {
       while (lIdx < listSlice.length || rIdx < readSlice.length) {
         if (lIdx < listSlice.length) {
           const item = listSlice[lIdx];
+          const cleanQ = cleanQuestionText(item.question);
+          const cleanSpk = cleanAudioPrompt(item.textToSpeak || item.question);
+          const ctx = item.context || cleanAudioPrompt(cleanSpk.replace(cleanQ, "").trim()) || cleanSpk;
           finalQuestions.push({
             ...item,
             id: globalId++,
             formula: selectedFormulaNumber,
             formulaName: `Fórmula ${selectedFormulaNumber}`,
             type: "listening" as const,
-            textToSpeak: cleanAudioPrompt(item.textToSpeak || item.question),
-            question: cleanQuestionText(item.question),
+            context: ctx,
+            contextEs: item.contextEs || "Contexto de la situación en audio en inglés.",
+            question: cleanQ,
+            questionEs: item.questionEs || "¿Cuál es la respuesta correcta según el audio?",
+            textToSpeak: cleanSpk,
           });
           lIdx++;
         }

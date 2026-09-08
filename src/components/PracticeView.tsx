@@ -95,7 +95,10 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
           type: currentQ.type,
           formula: currentQ.formula,
           formulaName: currentQ.formulaName,
+          context: currentQ.context,
+          contextEs: currentQ.contextEs,
           question: currentQ.question,
+          questionEs: currentQ.questionEs,
           options: currentQ.options,
           correctAnswer: currentQ.correctAnswer,
           selectedAnswer: selectedIndex,
@@ -103,6 +106,7 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
           explanation: currentQ.explanation,
           image: currentQ.image,
           audioUrl: currentQ.audioUrl,
+          textToSpeak: currentQ.textToSpeak,
         },
       ]);
 

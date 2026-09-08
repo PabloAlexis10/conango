@@ -1,12 +1,15 @@
 export type SessionType = "listening" | "reading" | "mixed";
-export type SessionSize = 10 | 30 | 50 | 100;
+export type SessionSize = 10 | 20 | 30 | 50 | 100;
 
 export interface Question {
   id: number;
   type: "listening" | "reading";
   formula: number;
   formulaName?: string;
+  context?: string;
+  contextEs?: string;
   question: string;
+  questionEs?: string;
   options: string[];
   correctAnswer: number;
   image?: string | null;
@@ -20,7 +23,10 @@ export interface QuestionReview {
   type: "listening" | "reading";
   formula: number;
   formulaName?: string;
+  context?: string;
+  contextEs?: string;
   question: string;
+  questionEs?: string;
   options: string[];
   correctAnswer: number;
   selectedAnswer: number;

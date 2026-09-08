@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Question } from "@/lib/types";
-import { CheckCircle2, XCircle, ArrowRight, Lightbulb, Sparkles, Volume2, BookOpen } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight, Lightbulb, Sparkles, Volume2, BookOpen, Headphones, Languages } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AudioPlayer from "./AudioPlayer";
 import ConanMascot from "./ConanMascot";
@@ -102,11 +102,46 @@ export default function QuestionCard({
 
         {/* Audio Player (Only rendered for Listening questions) */}
         {isListening && (
-          <div className="mb-5">
+          <div className="mb-4">
             <AudioPlayer
               audioUrl={question.audioUrl}
               textToSpeak={question.textToSpeak || question.question}
             />
+          </div>
+        )}
+
+        {/* Subtítulo y Traducción del Contexto del Audio (Listening) */}
+        {isListening && (
+          <div className="mb-6 bg-[#FAF6F0] rounded-2xl border-2 border-[#E5D5C5] p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-black uppercase tracking-wider text-[#92400E] flex items-center gap-1.5">
+                <Headphones className="w-4 h-4 text-[#F59E0B]" />
+                Contexto del Audio (Situación)
+              </span>
+              <span className="text-[11px] font-bold text-[#A67B5B] bg-white px-2.5 py-0.5 rounded-full border border-[#E5D5C5] shadow-xs">
+                Subtítulo & Traducción
+              </span>
+            </div>
+
+            {/* Subtítulo en Inglés */}
+            <div className="mb-2 bg-white/95 p-3.5 rounded-xl border border-[#E5D5C5]">
+              <span className="text-[11px] font-black text-[#6B4423] uppercase tracking-wide block mb-1">
+                🇬🇧 Subtítulo (Audio en inglés):
+              </span>
+              <p className="text-sm sm:text-base text-[#4A3319] font-bold leading-relaxed">
+                &ldquo;{question.context || (question.textToSpeak ? question.textToSpeak.replace(question.question, "").trim() : "") || question.question}&rdquo;
+              </p>
+            </div>
+
+            {/* Traducción al Español */}
+            <div className="bg-blue-50/95 p-3.5 rounded-xl border border-blue-200">
+              <span className="text-[11px] font-black text-blue-900 uppercase tracking-wide block mb-1">
+                🇪🇸 Traducción al español:
+              </span>
+              <p className="text-sm sm:text-base text-blue-950 font-semibold leading-relaxed">
+                &ldquo;{question.contextEs || "La situación descrita en el audio en inglés."}&rdquo;
+              </p>
+            </div>
           </div>
         )}
 
@@ -122,9 +157,19 @@ export default function QuestionCard({
         )}
 
         {/* Question Prompt */}
-        <h3 className="text-lg sm:text-xl font-extrabold text-[#6B4423] mb-6 leading-snug">
-          {question.question}
-        </h3>
+        <div className="mb-6">
+          <span className="text-xs font-black uppercase tracking-wider text-[#A67B5B] block mb-1">
+            Pregunta:
+          </span>
+          <h3 className="text-lg sm:text-xl font-extrabold text-[#6B4423] leading-snug">
+            {question.question}
+          </h3>
+          {question.questionEs && (
+            <p className="text-xs sm:text-sm text-[#8C6B4B] font-semibold mt-1">
+              🇪🇸 {question.questionEs}
+            </p>
+          )}
+        </div>
 
         {/* Options List */}
         <div className="space-y-3">

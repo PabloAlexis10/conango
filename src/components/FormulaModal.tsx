@@ -37,7 +37,7 @@ type RangeFilter = "1-25" | "26-50" | "51-75" | "76-100" | "all";
 export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
   const router = useRouter();
   const [selectedFormula, setSelectedFormula] = useState<number>(1);
-  const [selectedMode, setSelectedMode] = useState<"exam100" | "quiz10" | "quiz30" | "quiz50">("exam100");
+  const [selectedMode, setSelectedMode] = useState<"exam100" | "quiz10" | "quiz20" | "quiz30" | "quiz50">("exam100");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [rangeFilter, setRangeFilter] = useState<RangeFilter>("1-25");
 
@@ -68,6 +68,7 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
     if (!selectedFormula) return;
     let size = 100;
     if (selectedMode === "quiz10") size = 10;
+    if (selectedMode === "quiz20") size = 20;
     if (selectedMode === "quiz30") size = 30;
     if (selectedMode === "quiz50") size = 50;
 
@@ -199,7 +200,7 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
           <p className="text-xs font-black text-[#6B4423] uppercase tracking-wider mb-2">
             Modo para Fórmula {selectedFormula}:
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
             <button
               type="button"
               onClick={() => setSelectedMode("exam100")}
@@ -225,7 +226,21 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
             >
               <Sparkles className="w-3.5 h-3.5 text-blue-500 mb-0.5" />
               <span className="text-xs">Quiz 10</span>
-              <span className="text-[10px] text-[#A67B5B] font-medium">Con Vidas</span>
+              <span className="text-[10px] text-[#A67B5B] font-medium">5L / 5R</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSelectedMode("quiz20")}
+              className={`p-2 rounded-xl border-2 text-center transition-all flex flex-col items-center justify-center ${
+                selectedMode === "quiz20"
+                  ? "border-[#F59E0B] bg-[#FFFBEB] text-[#92400E] font-black shadow-sm"
+                  : "border-[#E5D5C5] text-[#6B4423] hover:bg-[#FAF6F0] font-bold"
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-blue-500 mb-0.5" />
+              <span className="text-xs">Quiz 20</span>
+              <span className="text-[10px] text-[#A67B5B] font-medium">10L / 10R</span>
             </button>
 
             <button
@@ -239,7 +254,7 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
             >
               <Sparkles className="w-3.5 h-3.5 text-blue-500 mb-0.5" />
               <span className="text-xs">Quiz 30</span>
-              <span className="text-[10px] text-[#A67B5B] font-medium">Con Vidas</span>
+              <span className="text-[10px] text-[#A67B5B] font-medium">15L / 15R</span>
             </button>
 
             <button
@@ -253,7 +268,7 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
             >
               <Sparkles className="w-3.5 h-3.5 text-blue-500 mb-0.5" />
               <span className="text-xs">Quiz 50</span>
-              <span className="text-[10px] text-[#A67B5B] font-medium">Con Vidas</span>
+              <span className="text-[10px] text-[#A67B5B] font-medium">25L / 25R</span>
             </button>
           </div>
         </div>
