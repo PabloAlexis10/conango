@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Volume2, Play, Pause, RotateCcw, Radio } from "lucide-react";
+import { Volume2, Play, Pause, RotateCcw } from "lucide-react";
 
 interface AudioPlayerProps {
   audioUrl?: string | null;
@@ -12,8 +12,8 @@ interface AudioPlayerProps {
   className?: string;
 }
 
-// Find native American English male voice in browser
-function getRoboticUSMaleVoice(): SpeechSynthesisVoice | null {
+// Find high-quality conversational American English voice in browser
+function getConversationalUSVoice(): SpeechSynthesisVoice | null {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return null;
   const voices = window.speechSynthesis.getVoices();
   if (!voices || voices.length === 0) return null;
@@ -22,66 +22,35 @@ function getRoboticUSMaleVoice(): SpeechSynthesisVoice | null {
     (v) => v.lang === "en-US" || v.lang === "en_US" || v.lang.startsWith("en-US")
   );
 
-  // 1. Search for known native US male voices (David is the standard Windows robotic male voice)
-  const maleKeywords = ["david", "guy", "christopher", "mark", "george", "james", "eric", "male", "google us english"];
-  const usMale = usVoices.find((v) => {
-    const nameLower = v.name.toLowerCase();
-    return maleKeywords.some((k) => nameLower.includes(k));
-  });
-  if (usMale) return usMale;
+  // 1. Prioritize modern natural/neural conversational voices
+  const naturalMale = usVoices.find(
+    (v) =>
+      (v.name.includes("Natural") || v.name.includes("Online") || v.name.includes("Google")) &&
+      (v.name.toLowerCase().includes("guy") ||
+        v.name.toLowerCase().includes("christopher") ||
+        v.name.toLowerCase().includes("david") ||
+        v.name.toLowerCase().includes("male") ||
+        v.name.toLowerCase().includes("google us english"))
+  );
+  if (naturalMale) return naturalMale;
 
-  // 2. Any voice containing "David"
-  const david = voices.find((v) => v.name.toLowerCase().includes("david"));
-  if (david) return david;
+  // 2. Any natural/neural US voice (Jenny, Aria, etc. which sound remarkably human)
+  const anyNatural = usVoices.find(
+    (v) => v.name.includes("Natural") || v.name.includes("Online") || v.name.includes("Google")
+  );
+  if (anyNatural) return anyNatural;
 
-  // 3. Fallback to any en-US voice
+  // 3. Known pleasant conversational voices on Windows / Apple
+  const conversationalNames = ["guy", "christopher", "david", "samantha", "alex", "daniel", "tom"];
+  for (const name of conversationalNames) {
+    const match = usVoices.find((v) => v.name.toLowerCase().includes(name));
+    if (match) return match;
+  }
+
+  // 4. Any en-US voice
   if (usVoices.length > 0) return usVoices[0];
 
   return voices.find((v) => v.lang.startsWith("en")) || null;
-}
-
-// Synthesize short tactical radio mic-click / squelch sound
-function playRadioChirp(type: "start" | "end") {
-  try {
-    if (typeof window === "undefined") return;
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    const now = ctx.currentTime;
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    if (type === "start") {
-      // Short dual-tone radio transmission click
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(880, now);
-      osc.frequency.exponentialRampToValueAtTime(1760, now + 0.04);
-
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.06);
-    } else {
-      // Roger squelch burst
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(1400, now);
-      osc.frequency.exponentialRampToValueAtTime(700, now + 0.05);
-
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.exponentialRampToValueAtTime(0.1, now + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.07);
-    }
-  } catch {}
 }
 
 export default function AudioPlayer({
@@ -140,7 +109,7 @@ export default function AudioPlayer({
     window.speechSynthesis.cancel();
     if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
 
-    const maleVoice = getRoboticUSMaleVoice();
+    const voice = getConversationalUSVoice();
 
     let situationText = (context || "").trim();
     let qText = (questionText || "").trim();
@@ -159,28 +128,24 @@ export default function AudioPlayer({
 
     setIsPlaying(true);
 
-    // Initial radio transmission chirp
-    playRadioChirp("start");
-
-    // Helper to configure robotic US male voice
-    const configureRoboticUtterance = (text: string): SpeechSynthesisUtterance => {
+    // Helper to configure warm, natural conversational voice
+    const configureConversationalUtterance = (text: string, isQuestion = false): SpeechSynthesisUtterance => {
       const utt = new SpeechSynthesisUtterance(text);
       utt.lang = "en-US";
-      // Slightly lower, flat pitch for robotic cadence
-      utt.pitch = 0.82;
-      utt.rate = 0.94;
-      if (maleVoice) utt.voice = maleVoice;
+      // Natural human conversational settings
+      utt.pitch = isQuestion ? 1.02 : 1.0;
+      utt.rate = 0.92; // Natural, unhurried human pacing
+      if (voice) utt.voice = voice;
       return utt;
     };
 
     if (!situationText || !qText) {
       const fullText = situationText || qText;
-      const utterance = configureRoboticUtterance(fullText);
+      const utterance = configureConversationalUtterance(fullText, false);
 
       setPlaybackStage("context");
       utterance.onstart = () => setIsPlaying(true);
       utterance.onend = () => {
-        playRadioChirp("end");
         setIsPlaying(false);
         setPlaybackStage("idle");
       };
@@ -192,22 +157,19 @@ export default function AudioPlayer({
       return;
     }
 
-    // Step 1: Speak context
-    const contextUtterance = configureRoboticUtterance(situationText);
+    // Step 1: Speak context in natural conversational tone
+    const contextUtterance = configureConversationalUtterance(situationText, false);
     setPlaybackStage("context");
 
     contextUtterance.onend = () => {
-      playRadioChirp("end");
       setPlaybackStage("pause");
 
       pauseTimerRef.current = setTimeout(() => {
-        // Step 2: Speak question after pause
-        playRadioChirp("start");
+        // Step 2: Speak question after natural pause
         setPlaybackStage("question");
-        const questionUtterance = configureRoboticUtterance(`Question: ${qText}`);
+        const questionUtterance = configureConversationalUtterance(`Question: ${qText}`, true);
 
         questionUtterance.onend = () => {
-          playRadioChirp("end");
           setIsPlaying(false);
           setPlaybackStage("idle");
         };
@@ -217,7 +179,7 @@ export default function AudioPlayer({
         };
 
         window.speechSynthesis.speak(questionUtterance);
-      }, 1400); // 1.4-second pause
+      }, 1300); // Natural 1.3-second conversational pause
     };
 
     contextUtterance.onerror = () => {
@@ -252,11 +214,11 @@ export default function AudioPlayer({
     if (!isPlaying) return "Pista de audio (Inglés 🇺🇸)";
     switch (playbackStage) {
       case "context":
-        return "🎧 Transmisión de situación...";
+        return "🎧 Escuchando situación...";
       case "pause":
-        return "⏸️ Pausa de reflexión (1.4s)...";
+        return "⏸️ Pausa de reflexión...";
       case "question":
-        return "❓ Pregunta...";
+        return "❓ Escuchando pregunta...";
       default:
         return "Reproduciendo audio...";
     }
@@ -302,7 +264,7 @@ export default function AudioPlayer({
             </span>
           </div>
           <p className="text-xs text-[#A67B5B]">
-            {useSpeechFallback ? "Voz masculina nativa robotizada (Inglés 🇺🇸)" : "Audio grabado"}
+            {useSpeechFallback ? "Voz humana nativa conversacional (Inglés 🇺🇸)" : "Audio grabado"}
           </p>
         </div>
       </div>
