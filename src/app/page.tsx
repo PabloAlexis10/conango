@@ -19,18 +19,28 @@ import {
   BookOpen,
   Layers
 } from "lucide-react";
-import { getCurrentUser, subscribeAuth } from "@/lib/supabase";
+import { getCurrentUser, subscribeAuth, getGuestUsageCount, hasReachedGuestLimit, GUEST_LIMIT } from "@/lib/supabase";
+import AuthModal from "@/components/AuthModal";
 import { UserProfile } from "@/lib/types";
 
 export default function HomePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [formulaModalOpen, setFormulaModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [guestUsage, setGuestUsage] = useState(0);
+  const [guestLimitHit, setGuestLimitHit] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   useEffect(() => {
-    setUser(getCurrentUser());
+    const cur = getCurrentUser();
+    setUser(cur);
+    setGuestUsage(getGuestUsageCount());
+    setGuestLimitHit(hasReachedGuestLimit());
+
     const unsubscribe = subscribeAuth((updatedUser) => {
       setUser(updatedUser);
+      setGuestUsage(getGuestUsageCount());
+      setGuestLimitHit(hasReachedGuestLimit());
     });
     return () => unsubscribe();
   }, []);
@@ -112,6 +122,50 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* GUEST USAGE BANNER */}
+        {!user && (
+          <div className="mb-8">
+            {guestLimitHit ? (
+              <div className="bg-amber-50 border-2 border-amber-300 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-xl flex-shrink-0 shadow-sm">
+                    🔒
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-amber-950">
+                      Límite de prueba alcanzado ({guestUsage} de {GUEST_LIMIT} lecciones)
+                    </h3>
+                    <p className="text-xs text-amber-800 font-semibold mt-0.5">
+                      Has completado tus 2 lecciones gratuitas. Inicia sesión o crea tu cuenta gratis para acceder a las 100 fórmulas y vocabulario completo.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAuthModalOpen(true)}
+                  className="w-full sm:w-auto px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-conan-btn transition-transform active:scale-95 flex-shrink-0"
+                >
+                  Iniciar Sesión / Crear Cuenta
+                </button>
+              </div>
+            ) : guestUsage > 0 ? (
+              <div className="bg-[#FAF6F0] border border-[#E5D5C5] rounded-2xl p-4 shadow-xs flex items-center justify-between gap-3 text-xs font-bold text-[#6B4423]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] animate-pulse" />
+                  <span>Modo Invitado: Has completado {guestUsage} de {GUEST_LIMIT} lecciones de prueba gratuitas.</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAuthModalOpen(true)}
+                  className="text-xs font-black text-[#F59E0B] hover:underline flex-shrink-0"
+                >
+                  Crear cuenta gratis &rarr;
+                </button>
+              </div>
+            ) : null}
+          </div>
+        )}
 
         {/* CORE SECTION: EVALUACIONES OFICIALES */}
         <section className="mb-10">

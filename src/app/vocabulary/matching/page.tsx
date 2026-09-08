@@ -6,6 +6,9 @@ import { matchingPairs, MatchingPair } from "@/lib/vocabularyData";
 import ConanMascot from "@/components/ConanMascot";
 import Header from "@/components/Header";
 import { soundEffects } from "@/lib/soundEffects";
+import { getCurrentUser, hasReachedGuestLimit, incrementGuestUsage } from "@/lib/supabase";
+import GuestLimitWall from "@/components/GuestLimitWall";
+import AuthModal from "@/components/AuthModal";
 import { ArrowLeft, RotateCcw, Sparkles, Check, Volume2, Trophy, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -41,6 +44,8 @@ export default function VocabularyMatchingPage() {
   const [totalMatched, setTotalMatched] = useState(0);
   const [streak, setStreak] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   // Initialize game
   const initGame = () => {
@@ -77,7 +82,11 @@ export default function VocabularyMatchingPage() {
   };
 
   useEffect(() => {
-    initGame();
+    if (hasReachedGuestLimit()) {
+      setLimitReached(true);
+    } else {
+      initGame();
+    }
   }, []);
 
   const speakEnglishWord = (word: string) => {
@@ -142,6 +151,9 @@ export default function VocabularyMatchingPage() {
               if (prev.length <= 1) {
                 setIsFinished(true);
                 soundEffects.playLevelUp();
+                if (!getCurrentUser()) {
+                  incrementGuestUsage();
+                }
               }
               return prev;
             });

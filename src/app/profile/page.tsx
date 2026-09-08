@@ -11,6 +11,9 @@ import {
   getSessionHistory,
   logoutAccount,
   subscribeAuth,
+  changePassword,
+  getGuestUsageCount,
+  GUEST_LIMIT,
 } from "@/lib/supabase";
 import {
   Trophy,
@@ -23,7 +26,10 @@ import {
   LogIn,
   Flame,
   CheckCircle2,
-  UserCheck,
+  AlertCircle,
+  Shield,
+  KeyRound,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -32,10 +38,20 @@ export default function ProfilePage() {
   const [examHistory, setExamHistory] = useState<ExamResult[]>([]);
   const [sessionHistory, setSessionHistory] = useState<SessionResult[]>([]);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [guestUsage, setGuestUsage] = useState<number>(0);
+
+  // Change password states
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwdError, setPwdError] = useState("");
+  const [pwdSuccess, setPwdSuccess] = useState("");
+  const [pwdLoading, setPwdLoading] = useState(false);
 
   const loadData = () => {
     const cur = getCurrentUser();
     setUser(cur);
+    setGuestUsage(getGuestUsageCount());
     getExamHistory().then((data) => setExamHistory(data));
     getSessionHistory().then((data) => setSessionHistory(data));
   };
@@ -61,6 +77,39 @@ export default function ProfilePage() {
     await logoutAccount();
   };
 
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdError("");
+    setPwdSuccess("");
+
+    if (newPassword.length < 6) {
+      setPwdError("La nueva contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwdError("Las nuevas contraseñas no coinciden.");
+      return;
+    }
+
+    setPwdLoading(true);
+    try {
+      const res = await changePassword(currentPassword, newPassword);
+      if (!res.success) {
+        setPwdError(res.error || "No se pudo actualizar la contraseña.");
+      } else {
+        setPwdSuccess("¡Contraseña actualizada exitosamente!");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setTimeout(() => setPwdSuccess(""), 4000);
+      }
+    } catch {
+      setPwdError("Error inesperado al cambiar la contraseña.");
+    } finally {
+      setPwdLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header medals={user?.medals ?? 0} />
@@ -73,7 +122,7 @@ export default function ProfilePage() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider mb-2">
                 <Flame className="w-3.5 h-3.5 text-[#F59E0B]" />
-                {user ? "Cadete Registrado" : "Modo Invitado"}
+                {user ? "Cadete Registrado (Acceso Ilimitado)" : "Modo Invitado (Prueba Limitada)"}
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-[#6B4423]">
                 {user?.name || user?.email || "Cadete Invitado"}
@@ -85,7 +134,9 @@ export default function ProfilePage() {
                     <strong className="text-[#F59E0B] font-black">{user.medals}</strong>
                   </>
                 ) : (
-                  "Inicia sesión para que tus medallas y notas queden guardadas en tu cuenta."
+                  <>
+                    Has usado <strong className="text-[#6B4423]">{guestUsage} de {GUEST_LIMIT}</strong> lecciones gratuitas de prueba. Inicia sesión para tener acceso ilimitado.
+                  </>
                 )}
               </p>
             </div>
@@ -113,7 +164,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Global Statistics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-[#F59E0B]">
               <Trophy className="w-6 h-6" />
@@ -153,6 +204,120 @@ export default function ProfilePage() {
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Account Security & Password Section */}
+        <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 mb-10 shadow-sm">
+          <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-[#E5D5C5]">
+            <Shield className="w-5 h-5 text-[#F59E0B]" />
+            <h3 className="font-black text-lg text-[#6B4423]">
+              Seguridad de la Cuenta y Contraseña
+            </h3>
+          </div>
+
+          {user ? (
+            <form onSubmit={handlePasswordSubmit} className="max-w-xl space-y-3.5">
+              <p className="text-xs text-[#A67B5B] font-semibold mb-3">
+                Actualiza tu contraseña periódicamente para proteger tu historial y progreso.
+              </p>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                  Contraseña Actual
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
+                  <input
+                    type="password"
+                    required
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Ingresa tu contraseña actual"
+                    className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                    Nueva Contraseña
+                  </label>
+                  <div className="relative">
+                    <KeyRound className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
+                    <input
+                      type="password"
+                      required
+                      minLength={6}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Mínimo 6 caracteres"
+                      className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                    Confirmar Nueva Contraseña
+                  </label>
+                  <div className="relative">
+                    <KeyRound className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
+                    <input
+                      type="password"
+                      required
+                      minLength={6}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Repite la nueva clave"
+                      className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {pwdError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{pwdError}</span>
+                </div>
+              )}
+
+              {pwdSuccess && (
+                <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-xs font-bold text-green-800 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                  <span>{pwdSuccess}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={pwdLoading}
+                className="px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-sm flex items-center gap-2 transition-transform active:scale-98"
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>{pwdLoading ? "Actualizando..." : "Cambiar Contraseña"}</span>
+              </button>
+            </form>
+          ) : (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white rounded-2xl border border-[#E5D5C5]">
+              <div>
+                <h4 className="text-sm font-black text-[#6B4423] mb-1">
+                  Protege tu cuenta y desbloquea acceso ilimitado
+                </h4>
+                <p className="text-xs text-[#A67B5B] font-medium">
+                  Crea una cuenta gratuita con contraseña para guardar tus medallas y seguir practicando sin límites de lecciones.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAuthModalOpen(true)}
+                className="px-4 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs font-black rounded-xl shadow-sm whitespace-nowrap"
+              >
+                Crear Cuenta Gratis
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Two Columns: Exam History & Session History */}

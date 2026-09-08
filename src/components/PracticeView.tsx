@@ -8,7 +8,9 @@ import QuestionCard from "@/components/QuestionCard";
 import ConanMascot from "@/components/ConanMascot";
 import { Question, QuestionReview, SessionSize, SessionType } from "@/lib/types";
 import { soundEffects } from "@/lib/soundEffects";
-import { saveSessionResult, saveExamResult, getCurrentUser, updateUserMedals } from "@/lib/supabase";
+import { saveSessionResult, saveExamResult, getCurrentUser, updateUserMedals, hasReachedGuestLimit, incrementGuestUsage } from "@/lib/supabase";
+import GuestLimitWall from "@/components/GuestLimitWall";
+import AuthModal from "@/components/AuthModal";
 import { RotateCcw, Home, Loader2, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -40,9 +42,17 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [activeFormula, setActiveFormula] = useState<number | null>(null);
+  const [limitReached, setLimitReached] = useState<boolean>(false);
+  const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
 
   // Fetch questions
   const loadQuestions = useCallback(async () => {
+    if (hasReachedGuestLimit()) {
+      setLimitReached(true);
+      setIsLoading(false);
+      return;
+    }
+    setLimitReached(false);
     setIsLoading(true);
     setIsGameOver(false);
     setMedals(5);
@@ -160,6 +170,10 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
         updateUserMedals(2);
       }
 
+      if (!getCurrentUser()) {
+        incrementGuestUsage();
+      }
+
       // Navigate to /results
       router.push(
         `/results?type=${typeParam}&size=${size}&correct=${finalCorrect}&incorrect=${finalIncorrect}&mode=${
@@ -192,6 +206,26 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
     sessionHeaderTitle = activeFormula
       ? `Quiz Fórmula ${activeFormula} – ${size} preguntas`
       : `Quiz ALCPT – ${size} preguntas`;
+  }
+
+  if (limitReached) {
+    return (
+      <div className="min-h-screen bg-[#FAF6F0] flex flex-col justify-center items-center p-4">
+        <GuestLimitWall onOpenAuth={() => setAuthModalOpen(true)} />
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          initialMode="register"
+          preventClose={true}
+          forcedReason="Llegaste al límite de 2 lecciones de prueba gratuita. Inicia sesión o regístrate gratis para continuar practicando sin límites."
+          onSuccess={() => {
+            setAuthModalOpen(false);
+            setLimitReached(false);
+            loadQuestions();
+          }}
+        />
+      </div>
+    );
   }
 
   if (isLoading) {

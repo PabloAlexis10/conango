@@ -208,6 +208,136 @@ export async function logoutAccount(): Promise<void> {
   notifyAuthListeners(null);
 }
 
+export async function resetPassword(
+  email: string,
+  newPassword: string
+): Promise<{ success: boolean; error?: string }> {
+  const cleanEmail = email.trim().toLowerCase();
+  if (!cleanEmail || !newPassword || newPassword.length < 6) {
+    return { success: false, error: "La nueva contraseña debe tener al menos 6 caracteres." };
+  }
+
+  if (supabase) {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail);
+      if (error) {
+        console.warn("Supabase password reset fallback:", error.message);
+      }
+    } catch (e) {
+      console.warn("Supabase reset error fallback:", e);
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+
+    const idx = accounts.findIndex((a) => a.email.toLowerCase() === cleanEmail);
+    if (idx === -1) {
+      return { success: false, error: "No se encontró ninguna cuenta registrada con este correo electrónico." };
+    }
+
+    accounts[idx].password = newPassword;
+    localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+
+    const cur = getCurrentUser();
+    if (cur && cur.email.toLowerCase() === cleanEmail) {
+      cur.password = newPassword;
+      localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cur));
+      notifyAuthListeners(cur);
+    }
+
+    return { success: true };
+  }
+
+  return { success: false, error: "No se pudo restablecer la contraseña." };
+}
+
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ success: boolean; error?: string }> {
+  const cur = getCurrentUser();
+  if (!cur) {
+    return { success: false, error: "Debes iniciar sesión para cambiar tu contraseña." };
+  }
+
+  if (!newPassword || newPassword.length < 6) {
+    return { success: false, error: "La nueva contraseña debe tener al menos 6 caracteres." };
+  }
+
+  if (supabase) {
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        return { success: false, error: error.message };
+      }
+    } catch (e: any) {
+      console.warn("Supabase password update fallback:", e);
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+
+    const idx = accounts.findIndex((a) => a.id === cur.id || a.email.toLowerCase() === cur.email.toLowerCase());
+    if (idx !== -1) {
+      // Validate current password if set
+      if (accounts[idx].password && accounts[idx].password !== currentPassword) {
+        return { success: false, error: "La contraseña actual no es correcta." };
+      }
+      accounts[idx].password = newPassword;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+
+    cur.password = newPassword;
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cur));
+    notifyAuthListeners(cur);
+    return { success: true };
+  }
+
+  return { success: false, error: "Error al actualizar la contraseña." };
+}
+
+// ----------------------------------------------------
+// GUEST LESSON LIMIT ENGINE (LOGIN-WALL)
+// ----------------------------------------------------
+
+export const GUEST_LIMIT = 2; // Maximum lessons allowed before forcing login
+const STORAGE_KEY_GUEST_USAGE = "conango_guest_usage_count";
+
+export function getGuestUsageCount(): number {
+  if (typeof window === "undefined") return 0;
+  const val = localStorage.getItem(STORAGE_KEY_GUEST_USAGE);
+  return val ? parseInt(val, 10) || 0 : 0;
+}
+
+export function incrementGuestUsage(): number {
+  if (typeof window === "undefined") return 0;
+  // If user is already logged in, do not count
+  if (getCurrentUser()) return 0;
+
+  const current = getGuestUsageCount();
+  const next = current + 1;
+  localStorage.setItem(STORAGE_KEY_GUEST_USAGE, next.toString());
+  return next;
+}
+
+export function hasReachedGuestLimit(): boolean {
+  // Logged-in cadets have UNLIMITED access
+  if (getCurrentUser()) return false;
+  return getGuestUsageCount() >= GUEST_LIMIT;
+}
+
+export function resetGuestUsage(): void {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(STORAGE_KEY_GUEST_USAGE);
+  }
+}
+
 // ----------------------------------------------------
 // USER PROGRESS & HISTORY PERSISTENCE
 // ----------------------------------------------------

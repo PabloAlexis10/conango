@@ -6,6 +6,9 @@ import { definitionCards, DefinitionCard } from "@/lib/vocabularyData";
 import ConanMascot from "@/components/ConanMascot";
 import Header from "@/components/Header";
 import { soundEffects } from "@/lib/soundEffects";
+import { getCurrentUser, hasReachedGuestLimit, incrementGuestUsage } from "@/lib/supabase";
+import GuestLimitWall from "@/components/GuestLimitWall";
+import AuthModal from "@/components/AuthModal";
 import {
   ArrowLeft,
   Mic,
@@ -74,6 +77,8 @@ export default function VocabularyPronunciationPage() {
   const [speechSupported, setSpeechSupported] = useState(true);
   const [score, setScore] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const recognitionRef = useRef<any>(null);
   const advanceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -227,6 +232,9 @@ export default function VocabularyPronunciationPage() {
     } else {
       setIsCompleted(true);
       soundEffects.playLevelUp();
+      if (!getCurrentUser()) {
+        incrementGuestUsage();
+      }
     }
   };
 
@@ -238,6 +246,29 @@ export default function VocabularyPronunciationPage() {
     setSimilarityScore(null);
     setIsCompleted(false);
   };
+
+  if (limitReached) {
+    return (
+      <div className="min-h-screen bg-[#FAF6F0] flex flex-col justify-center items-center p-4">
+        <Header sessionTitle="Reto de Pronunciación" />
+        <div className="max-w-lg w-full my-auto">
+          <GuestLimitWall onOpenAuth={() => setAuthModalOpen(true)} />
+        </div>
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          initialMode="register"
+          preventClose={true}
+          forcedReason="Llegaste al límite de 2 lecciones de prueba gratuita. Inicia sesión o regístrate gratis para continuar practicando sin límites."
+          onSuccess={() => {
+            setAuthModalOpen(false);
+            setLimitReached(false);
+            handleRestart();
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans text-[#6B4423]">
