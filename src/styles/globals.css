@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --conan-dark: #6B4423;
+  --conan-light: #A67B5B;
+  --conan-orange: #F59E0B;
+  --conan-gold: #FBBF24;
+}
+
+body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: #6B4423;
+  background-color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom 3D button press styles */
+.btn-3d {
+  transition: all 0.1s ease;
+  position: relative;
+}
+
+.btn-3d:active {
+  transform: translateY(3px);
+  box-shadow: none !important;
+}
+
+/* Duolingo-like option button styling */
+.option-btn {
+  transition: all 0.15s ease-in-out;
+  border-width: 2px;
+  border-color: #E5D5C5;
+  box-shadow: 0 4px 0 0 #E5D5C5;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: #A67B5B;
+  background-color: #FAF6F0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 0 #A67B5B;
+}
+
+.option-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 #A67B5B;
+}
+
+/* Shaking animation for lost lives */
+@keyframes conan-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: conan-shake 0.4s ease-in-out;
+}

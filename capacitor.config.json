@@ -1,0 +1,9 @@
+{
+  "appId": "com.conango.alcpt",
+  "appName": "ConanGo",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}

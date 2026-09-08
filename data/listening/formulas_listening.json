@@ -1,0 +1,3062 @@
+[
+  {
+    "id": 1,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen to the report: The temperature in Dallas is 85 degrees and the sky is clear. What is the weather like in Dallas?",
+    "question": "What is the weather like in Dallas?",
+    "options": [
+      "It is freezing and snowing",
+      "It is warm and sunny",
+      "It is raining heavily",
+      "It is foggy and cold"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "85 degrees Fahrenheit is warm and clear sky means sunny."
+  },
+  {
+    "id": 2,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen to the speaker: The sergeant told the recruits to fall in immediately outside the barracks. Where should the recruits assemble?",
+    "question": "Where should the recruits assemble?",
+    "options": [
+      "Inside the mess hall",
+      "Outside the barracks",
+      "At the motor pool",
+      "In the commander's office"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "The statement clearly states 'outside the barracks'."
+  },
+  {
+    "id": 3,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'What time does the morning briefing begin?' - 'It starts at zero eight thirty sharp.' When will the briefing start?",
+    "question": "When will the briefing start?",
+    "options": [
+      "At 8:00 AM",
+      "At 8:30 AM",
+      "At 8:30 PM",
+      "At 8:13 AM"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Zero eight thirty (0830) corresponds to 8:30 AM in standard time."
+  },
+  {
+    "id": 4,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen to the pilot: We have reached our cruising altitude of twenty thousand feet. How high is the aircraft flying?",
+    "question": "How high is the aircraft flying?",
+    "options": [
+      "2,000 feet",
+      "12,000 feet",
+      "20,000 feet",
+      "200,000 feet"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "Twenty thousand feet is 20,000 feet."
+  },
+  {
+    "id": 5,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen to the mechanic: The truck ran out of diesel five miles down the highway. Why did the vehicle stop?",
+    "question": "Why did the vehicle stop?",
+    "options": [
+      "It had a flat tire",
+      "It had no more fuel",
+      "The engine overheated",
+      "The transmission failed"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Ran out of diesel' means the vehicle had no fuel remaining."
+  },
+  {
+    "id": 6,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Did Lieutenant Gomez approve your leave request?' - 'Yes, he signed it ten minutes ago.' What did Lieutenant Gomez do?",
+    "question": "What did Lieutenant Gomez do?",
+    "options": [
+      "He rejected the request",
+      "He approved and signed the document",
+      "He lost the paperwork",
+      "He postponed the decision"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Signing the leave request indicates approval."
+  },
+  {
+    "id": 7,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Announcement: Attention all personnel. The base swimming pool is closed today for scheduled water filtration. Why is the pool unavailable?",
+    "question": "Why is the pool unavailable?",
+    "options": [
+      "Due to cold weather",
+      "For water cleaning and maintenance",
+      "Because of a swimming competition",
+      "For military training"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Water filtration is maintenance and cleaning."
+  },
+  {
+    "id": 8,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen to the instructor: Before cleaning your rifle, always ensure the magazine is detached and the chamber is clear. What is the first safety measure mentioned?",
+    "question": "What is the first safety measure mentioned?",
+    "options": [
+      "Oil the trigger",
+      "Check that the weapon is completely unloaded",
+      "Aim at the target",
+      "Assemble the barrel"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Detaching the magazine and checking the chamber ensures the weapon is unloaded."
+  },
+  {
+    "id": 9,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Can you give me a hand with this heavy supply crate?' - 'Sure, let's lift it together.' What does 'give me a hand' mean?",
+    "question": "What does 'give me a hand' mean?",
+    "options": [
+      "Clap hands",
+      "Help carry something",
+      "Shake hands formally",
+      "Take attendance"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Give me a hand' is an idiom meaning to help."
+  },
+  {
+    "id": 10,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen to the driver: We need to turn left at the next intersection to reach the fuel depot. Which direction should the vehicle turn?",
+    "question": "Which direction should the vehicle turn?",
+    "options": [
+      "Right",
+      "Left",
+      "Make a U-turn",
+      "Go straight"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "The driver explicitly specifies turning left."
+  },
+  {
+    "id": 11,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The commander wants to inspect the barracks right now. When will the inspection take place?",
+    "question": "When will the inspection take place?",
+    "options": [
+      "Tomorrow morning",
+      "Next week",
+      "Immediately",
+      "After lunch"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "'Right now' means immediately."
+  },
+  {
+    "id": 12,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'How far is the dispensary from here?' - 'It's about two blocks down Main Street, on your right.' Where is the medical dispensary?",
+    "question": "Where is the medical dispensary?",
+    "options": [
+      "Two miles away",
+      "Two blocks down on the right",
+      "At the airport",
+      "Next to the guardhouse"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "The speaker mentions it is two blocks down on the right side."
+  },
+  {
+    "id": 13,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: Private Johnson was late for muster because his alarm clock didn't go off. Why was Private Johnson late?",
+    "question": "Why was Private Johnson late?",
+    "options": [
+      "His car broke down",
+      "His alarm failed to sound",
+      "He was sick",
+      "Traffic was heavy"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "His alarm clock failed to ring/sound."
+  },
+  {
+    "id": 14,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Would you like some coffee before we begin?' - 'No thanks, I just had a cup at the dining facility.' Did the speaker drink coffee?",
+    "question": "Did the speaker drink coffee?",
+    "options": [
+      "Yes, already drank coffee",
+      "No, never drinks coffee",
+      "Yes, wants three cups",
+      "No, is allergic to coffee"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker said 'I just had a cup at the dining facility'."
+  },
+  {
+    "id": 15,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The technician calibrated the radar equipment so it is now fully functional. What is the status of the radar?",
+    "question": "What is the status of the radar?",
+    "options": [
+      "It is broken",
+      "It is working properly",
+      "It is missing parts",
+      "It needs replacement"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Fully functional means it is operating properly."
+  },
+  {
+    "id": 16,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'When are the new recruits arriving?' - 'They are scheduled to arrive next Tuesday at fourteen hundred hours.' At what time will they arrive next Tuesday?",
+    "question": "At what time will they arrive next Tuesday?",
+    "options": [
+      "2:00 AM",
+      "4:00 PM",
+      "2:00 PM",
+      "12:00 PM"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "Fourteen hundred hours (1400) is 2:00 PM."
+  },
+  {
+    "id": 17,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: The doctor advised Captain Lee to drink plenty of fluids and get eight hours of rest. What did the physician recommend?",
+    "question": "What did the physician recommend?",
+    "options": [
+      "Intense physical exercise",
+      "Hydration and adequate sleep",
+      "Skip all meals",
+      "Immediate deployment"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Drinking fluids and resting means hydration and sleep."
+  },
+  {
+    "id": 18,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Where did you put the spare vehicle keys?' - 'They are hanging on the board inside the dispatcher's office.' Where are the keys located?",
+    "question": "Where are the keys located?",
+    "options": [
+      "In the driver's pocket",
+      "On the board in the dispatcher's office",
+      "Under the truck seat",
+      "In the maintenance bay"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "They are on the board in the dispatcher's office."
+  },
+  {
+    "id": 19,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: Heavy fog has reduced visibility on runway three to zero feet. What is causing poor visibility on the runway?",
+    "question": "What is causing poor visibility on the runway?",
+    "options": [
+      "Heavy rain",
+      "Thick fog",
+      "Sandstorm",
+      "Smoke from a fire"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "The speaker states heavy fog has reduced visibility."
+  },
+  {
+    "id": 20,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Did you hear the siren?' - 'Yes, that means we must evacuate the hangar immediately.' What should the personnel do?",
+    "question": "What should the personnel do?",
+    "options": [
+      "Stay inside the building",
+      "Leave the building right away",
+      "Turn off the lights",
+      "Begin maintenance"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Evacuating means leaving the building right away."
+  },
+  {
+    "id": 21,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The cargo plane was overloaded, so the crew removed five crates. Why were five crates removed?",
+    "question": "Why were five crates removed?",
+    "options": [
+      "They were damaged",
+      "The aircraft exceeded its weight limit",
+      "They belonged to another unit",
+      "The destination changed"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Overloaded means exceeding the safe weight capacity."
+  },
+  {
+    "id": 22,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Are you familiar with this radio model?' - 'No, I have never operated this model before.' Does the speaker know how to use the radio?",
+    "question": "Does the speaker know how to use the radio?",
+    "options": [
+      "Yes, expert operator",
+      "No, has no experience with it",
+      "Yes, designed it",
+      "No, it is broken"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Never operated before means having no prior experience."
+  },
+  {
+    "id": 23,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Announcement: All personnel participating in the field exercise must wear Kevlar helmets and protective vests. What protective gear is mandatory?",
+    "question": "What protective gear is mandatory?",
+    "options": [
+      "Winter coats",
+      "Helmets and body armor vests",
+      "Earplugs only",
+      "Reflective belts only"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Kevlar helmets and protective vests constitute armor."
+  },
+  {
+    "id": 24,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Is the runway clear for takeoff?' - 'Control tower confirms runway zero nine is completely clear.' What did the control tower confirm?",
+    "question": "What did the control tower confirm?",
+    "options": [
+      "The runway is blocked",
+      "The plane may proceed for takeoff",
+      "The flight is canceled",
+      "Poor weather conditions"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "A clear runway indicates permission to proceed."
+  },
+  {
+    "id": 25,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: Corporal Adams had to call off his medical appointment due to emergency duty. What did Corporal Adams do with his appointment?",
+    "question": "What did Corporal Adams do with his appointment?",
+    "options": [
+      "Rescheduled it for tomorrow",
+      "Attended on time",
+      "Canceled it",
+      "Arrived early"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "To 'call off' means to cancel."
+  },
+  {
+    "id": 26,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'How many gallons of fuel are in the tank?' - 'The gauge shows exactly twenty-five gallons.' What does the fuel gauge read?",
+    "question": "What does the fuel gauge read?",
+    "options": [
+      "50 gallons",
+      "25 gallons",
+      "Empty",
+      "10 gallons"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Twenty-five gallons is 25."
+  },
+  {
+    "id": 27,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The platoon crossed the shallow river on foot because the bridge was washed away. How did the troops cross the river?",
+    "question": "How did the troops cross the river?",
+    "options": [
+      "By boat",
+      "By swimming",
+      "Walking across the shallow water",
+      "By truck"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "Crossing on foot in shallow water means walking across."
+  },
+  {
+    "id": 28,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Did you double-check the cargo straps?' - 'Yes, they are tight and secure.' What is the condition of the straps?",
+    "question": "What is the condition of the straps?",
+    "options": [
+      "Loose and dangling",
+      "Firmly secured",
+      "Torn and broken",
+      "Missing"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Tight and secure means firmly attached."
+  },
+  {
+    "id": 29,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: The officer told the driver to slow down because the road was icy. Why did the driver need to reduce speed?",
+    "question": "Why did the driver need to reduce speed?",
+    "options": [
+      "Heavy pedestrian traffic",
+      "Slippery road conditions due to ice",
+      "A flat tire",
+      "A radar speed trap"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "An icy road creates slippery driving hazards."
+  },
+  {
+    "id": 30,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Where is Sergeant Miller stationed?' - 'He was reassigned to the airbase in Germany last month.' Where is Sergeant Miller currently serving?",
+    "question": "Where is Sergeant Miller currently serving?",
+    "options": [
+      "In Japan",
+      "In Texas",
+      "In Germany",
+      "In California"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "He was reassigned to an airbase in Germany."
+  },
+  {
+    "id": 31,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The mechanic discovered a minor oil leak under the engine block. What issue was identified?",
+    "question": "What issue was identified?",
+    "options": [
+      "A broken windshield",
+      "A small loss of oil",
+      "A dead battery",
+      "Defective brakes"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "A minor oil leak is a small escape of engine oil."
+  },
+  {
+    "id": 32,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Can you figure out how to reset this navigation device?' - 'Yes, just press the red button for five seconds.' What does 'figure out' mean in this context?",
+    "question": "What does 'figure out' mean in this context?",
+    "options": [
+      "Draw a picture",
+      "Understand or solve",
+      "Purchase a new one",
+      "Discard"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Figure out' means to understand or find the solution."
+  },
+  {
+    "id": 33,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Announcement: The flight from Atlanta has been delayed by forty-five minutes due to head winds. What happened to the flight?",
+    "question": "What happened to the flight?",
+    "options": [
+      "It crashed",
+      "It arrived 45 minutes early",
+      "It will arrive 45 minutes late",
+      "It was diverted to Chicago"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "Delayed by 45 minutes means arriving later than scheduled."
+  },
+  {
+    "id": 34,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Are all weapons accounted for in the armory?' - 'Yes, sir, every single rifle is locked in the rack.' What does 'accounted for' mean?",
+    "question": "What does 'accounted for' mean?",
+    "options": [
+      "All verified and present",
+      "All sold",
+      "Some are missing",
+      "They need repair"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Accounted for means checked and verified present."
+  },
+  {
+    "id": 35,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The soldier felt dizzy and weak after marching in the hot sun all day. What was the matter with the soldier?",
+    "question": "What was the matter with the soldier?",
+    "options": [
+      "He broke his arm",
+      "He suffered symptoms of heat fatigue",
+      "He lost his canteen",
+      "He was angry"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Dizziness and weakness in the sun indicate heat fatigue."
+  },
+  {
+    "id": 36,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Do you mind if I borrow your dictionary for ten minutes?' - 'Not at all, here you go.' Did the speaker allow borrowing the dictionary?",
+    "question": "Did the speaker allow borrowing the dictionary?",
+    "options": [
+      "No, he refused",
+      "Yes, he gladly agreed",
+      "He lost the dictionary",
+      "He demanded money"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Not at all' in response to 'do you mind' means consent."
+  },
+  {
+    "id": 37,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The fire alarm was triggered by excessive smoke in the kitchen. What caused the alarm to sound?",
+    "question": "What caused the alarm to sound?",
+    "options": [
+      "A water leak",
+      "Heavy smoke in the cooking area",
+      "An earthquake",
+      "An electrical blackout"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Excessive smoke in the kitchen triggered the detector."
+  },
+  {
+    "id": 38,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'When will the commander return from headquarters?' - 'He should be back by noon.' At what time is the commander expected?",
+    "question": "At what time is the commander expected?",
+    "options": [
+      "12:00 AM midnight",
+      "12:00 PM midday",
+      "Tomorrow evening",
+      "Next Friday"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Noon is 12:00 PM (midday)."
+  },
+  {
+    "id": 39,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: The private was instructed to discard the expired emergency rations. What should the private do with the old food?",
+    "question": "What should the private do with the old food?",
+    "options": [
+      "Eat it immediately",
+      "Throw it away",
+      "Sell it",
+      "Cook it for dinner"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "To 'discard' means to dispose of or throw away."
+  },
+  {
+    "id": 40,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Is the runway lighting operational tonight?' - 'Yes, the airfield electrician fixed the transformer.' Are the runway lights working?",
+    "question": "Are the runway lights working?",
+    "options": [
+      "No, they are completely dark",
+      "Yes, they are in working order",
+      "Only during daytime",
+      "They are broken"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Fixing the transformer restored operation."
+  },
+  {
+    "id": 41,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Radio call: 'Tower, this is Cobra One-One, we have five minutes of fuel remaining, request priority landing.' Why does the pilot request immediate priority landing?",
+    "question": "Why does the pilot request immediate priority landing?",
+    "options": [
+      "Low fuel emergency",
+      "Severe turbulence",
+      "Passenger sickness",
+      "Navigational error"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Five minutes of fuel is an emergency low fuel situation."
+  },
+  {
+    "id": 42,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The sergeant instructed his men to dig trenches along the northern perimeter. Where are the trenches to be dug?",
+    "question": "Where are the trenches to be dug?",
+    "options": [
+      "Near the mess hall",
+      "Along the northern boundary",
+      "Inside the supply room",
+      "At the south gate"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "The northern perimeter is the northern boundary."
+  },
+  {
+    "id": 43,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Did you get in touch with Captain Barnes?' - 'Not yet, his line was busy all morning.' Did the speaker speak with Captain Barnes?",
+    "question": "Did the speaker speak with Captain Barnes?",
+    "options": [
+      "Yes, had a long talk",
+      "No, could not reach him by phone",
+      "Yes, met him in person",
+      "Captain Barnes was asleep"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "A busy line prevented telephone contact."
+  },
+  {
+    "id": 44,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: The uniform must be neat, clean, and pressed for tomorrow's ceremony. How should the uniform look?",
+    "question": "How should the uniform look?",
+    "options": [
+      "Muddy and worn",
+      "Clean and ironed with care",
+      "Casual civilian style",
+      "Loose-fitting"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Neat, clean, and pressed means tidy and ironed."
+  },
+  {
+    "id": 45,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'How often are the generators inspected?' - 'They are checked twice a week without fail.' What is the inspection schedule?",
+    "question": "What is the inspection schedule?",
+    "options": [
+      "Every two weeks",
+      "Two times every week",
+      "Once a month",
+      "Daily at midnight"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Twice a week means two times each week."
+  },
+  {
+    "id": 46,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: Due to road repairs on Route 9, convoys must take an alternate detour. Why must convoys use a different route?",
+    "question": "Why must convoys use a different route?",
+    "options": [
+      "The road is being repaired",
+      "Bridge is under enemy fire",
+      "Route 9 is too narrow",
+      "There is no fuel station"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Road repairs caused the detour."
+  },
+  {
+    "id": 47,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Can you hear me clearly through this headset?' - 'Loud and clear, no static at all.' How is the audio reception?",
+    "question": "How is the audio reception?",
+    "options": [
+      "Garbled and noisy",
+      "Extremely clear and audible",
+      "Too quiet to understand",
+      "Completely silent"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Loud and clear' means very distinct audio with no interference."
+  },
+  {
+    "id": 48,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: The student pilot practiced touch-and-go landings for two straight hours. What maneuver was being practiced?",
+    "question": "What maneuver was being practiced?",
+    "options": [
+      "Emergency parachute jumps",
+      "Landings and immediate takeoffs",
+      "Night navigation only",
+      "Cross-country flights"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Touch-and-go is landing and immediately accelerating for takeoff."
+  },
+  {
+    "id": 49,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Did the new radar arrive today?' - 'No, the delivery was postponed until Thursday.' When will the radar be delivered?",
+    "question": "When will the radar be delivered?",
+    "options": [
+      "Today at noon",
+      "On Thursday",
+      "Yesterday",
+      "Next month"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Postponed until Thursday means delivery is rescheduled for Thursday."
+  },
+  {
+    "id": 50,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The warehouse roof is leaking right above the ammunition boxes. Why is the roof leak particularly dangerous?",
+    "question": "Why is the roof leak particularly dangerous?",
+    "options": [
+      "It is near the beds",
+      "It threatens the stored ammunition",
+      "It makes the floor slippery for cars",
+      "It ruined civilian clothing"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Ammunition must be kept dry to avoid degradation."
+  },
+  {
+    "id": 51,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: Sergeant Davis told the driver to step on the gas because they were behind schedule. What does 'step on the gas' mean?",
+    "question": "What does 'step on the gas' mean?",
+    "options": [
+      "Clean the fuel filter",
+      "Accelerate the vehicle",
+      "Check oil levels",
+      "Stop the truck"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Step on the gas' means to accelerate or drive faster."
+  },
+  {
+    "id": 52,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Are you ready for the physical fitness test?' - 'I am in top shape after two months of training.' What does 'in top shape' indicate?",
+    "question": "What does 'in top shape' indicate?",
+    "options": [
+      "Ill or exhausted",
+      "In excellent physical condition",
+      "Injured during exercise",
+      "Needs more rest"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "In top shape means in optimal physical condition."
+  },
+  {
+    "id": 53,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The lieutenant warned that anyone arriving after zero six hundred would face disciplinary action. What is the deadline to report without penalty?",
+    "question": "What is the deadline to report without penalty?",
+    "options": [
+      "6:00 PM",
+      "6:00 AM",
+      "6:30 AM",
+      "7:00 AM"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Zero six hundred (0600) is 6:00 AM."
+  },
+  {
+    "id": 54,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Did you make up your mind about the overseas deployment?' - 'Yes, I decided to volunteer.' What does 'make up your mind' mean?",
+    "question": "What does 'make up your mind' mean?",
+    "options": [
+      "Forget a memory",
+      "Make a decision",
+      "Change your rank",
+      "Write a letter"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "To make up one's mind means to reach a decision."
+  },
+  {
+    "id": 55,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: The military police set up a checkpoint at the south gate to verify all identification badges. Why was the checkpoint established?",
+    "question": "Why was the checkpoint established?",
+    "options": [
+      "To collect parking fees",
+      "To inspect identification cards",
+      "To sell vehicle permits",
+      "To wash vehicles"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "To verify identification badges."
+  },
+  {
+    "id": 56,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Why is the generator making that loud rattling noise?' - 'A mounting bolt came loose.' What caused the unusual noise?",
+    "question": "What caused the unusual noise?",
+    "options": [
+      "A loose fastener bolt",
+      "Lack of fuel",
+      "Water in the cylinders",
+      "A broken belt"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "A mounting bolt came loose."
+  },
+  {
+    "id": 57,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Speaker: The cadets were exhausted after a twenty-mile march with full backpacks. How did the cadets feel after the march?",
+    "question": "How did the cadets feel after the march?",
+    "options": [
+      "Very energetic",
+      "Extremely tired",
+      "Hungry but fresh",
+      "Bored"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Exhausted means extremely fatigued and tired."
+  },
+  {
+    "id": 58,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Dialogue: 'Is Lieutenant Miller still on duty?' - 'No, Captain Rogers relieved him twenty minutes ago.' What does 'relieved him' mean?",
+    "question": "What does 'relieved him' mean?",
+    "options": [
+      "Fired him from the army",
+      "Took over his guard watch or post",
+      "Gave him medical aid",
+      "Promoted him"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "To relieve someone on duty means to take over their watch or post."
+  },
+  {
+    "id": 59,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Announcement: Attention flight crews. Severe thunderstorm warnings remain in effect until twenty-two hundred hours. Until what time are thunderstorm warnings active?",
+    "question": "Until what time are thunderstorm warnings active?",
+    "options": [
+      "8:00 PM",
+      "10:00 PM",
+      "11:00 PM",
+      "10:00 AM"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Twenty-two hundred hours (2200) is 10:00 PM."
+  },
+  {
+    "id": 60,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "listening",
+    "textToSpeak": "Listen: Private Harris forgot his identification card, so the guard refused to let him onto the installation. Why was Private Harris denied entry?",
+    "question": "Why was Private Harris denied entry?",
+    "options": [
+      "He arrived too late",
+      "He did not have his ID card",
+      "He was wearing civilian clothes",
+      "The base was closed"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "He forgot his ID card, which is mandatory for base entry."
+  },
+  {
+    "id": 1,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 1: The officer in charge reported oil pressure dropping rapidly in engine number two. What action was taken?",
+    "question": "Question 1: What occurred during the operational event described?",
+    "options": [
+      "The officer reported oil pressure dropping rapidly in engine number two",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported oil pressure dropping rapidly in engine number two."
+  },
+  {
+    "id": 2,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 2: The officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight. What action was taken?",
+    "question": "Question 2: What occurred during the operational event described?",
+    "options": [
+      "The officer cleared the transport aircraft for immediate takeoff on runway one-eight",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight."
+  },
+  {
+    "id": 3,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 3: The officer in charge instructed the maintenance crew to replace the hydraulic seal. What action was taken?",
+    "question": "Question 3: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the maintenance crew to replace the hydraulic seal",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the maintenance crew to replace the hydraulic seal."
+  },
+  {
+    "id": 4,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 4: The officer in charge ordered the convoy to halt before crossing the damaged culvert. What action was taken?",
+    "question": "Question 4: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered the convoy to halt before crossing the damaged culvert",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered the convoy to halt before crossing the damaged culvert."
+  },
+  {
+    "id": 5,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 5: The officer in charge confirmed that all weapons were locked in the armory vault. What action was taken?",
+    "question": "Question 5: What occurred during the operational event described?",
+    "options": [
+      "The officer confirmed that all weapons were locked in the armory vault",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge confirmed that all weapons were locked in the armory vault."
+  },
+  {
+    "id": 6,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 6: The officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours. What action was taken?",
+    "question": "Question 6: What occurred during the operational event described?",
+    "options": [
+      "The officer scheduled the night reconnaissance flight for twenty-one hundred hours",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours."
+  },
+  {
+    "id": 7,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 7: The officer in charge requested emergency medical evacuation for a wounded soldier. What action was taken?",
+    "question": "Question 7: What occurred during the operational event described?",
+    "options": [
+      "The officer requested emergency medical evacuation for a wounded soldier",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge requested emergency medical evacuation for a wounded soldier."
+  },
+  {
+    "id": 8,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 8: The officer in charge advised that runway three is closed due to rubber debris. What action was taken?",
+    "question": "Question 8: What occurred during the operational event described?",
+    "options": [
+      "The officer advised that runway three is closed due to rubber debris",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge advised that runway three is closed due to rubber debris."
+  },
+  {
+    "id": 9,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 9: The officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule. What action was taken?",
+    "question": "Question 9: What occurred during the operational event described?",
+    "options": [
+      "The officer noted that the fuel truck arrived thirty minutes ahead of schedule",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule."
+  },
+  {
+    "id": 10,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 10: The officer in charge reminded the cadets to wear reflective safety belts during evening runs. What action was taken?",
+    "question": "Question 10: What occurred during the operational event described?",
+    "options": [
+      "The officer reminded the cadets to wear reflective safety belts during evening runs",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reminded the cadets to wear reflective safety belts during evening runs."
+  },
+  {
+    "id": 11,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 11: The officer in charge reported that navigation beacons along the coast are functioning normally. What action was taken?",
+    "question": "Question 11: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that navigation beacons along the coast are functioning normally",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that navigation beacons along the coast are functioning normally."
+  },
+  {
+    "id": 12,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 12: The officer in charge ordered all communications equipment switched to secure alternate frequencies. What action was taken?",
+    "question": "Question 12: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered all communications equipment switched to secure alternate frequencies",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered all communications equipment switched to secure alternate frequencies."
+  },
+  {
+    "id": 13,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 13: The officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow. What action was taken?",
+    "question": "Question 13: What occurred during the operational event described?",
+    "options": [
+      "The officer stated that the supply warehouse will undergo quarterly inventory tomorrow",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow."
+  },
+  {
+    "id": 14,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 14: The officer in charge observed that wind shear was detected on final approach to airfield Bravo. What action was taken?",
+    "question": "Question 14: What occurred during the operational event described?",
+    "options": [
+      "The officer observed that wind shear was detected on final approach to airfield Bravo",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge observed that wind shear was detected on final approach to airfield Bravo."
+  },
+  {
+    "id": 15,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 15: The officer in charge directed the patrol unit to establish observation post Delta on the hilltop. What action was taken?",
+    "question": "Question 15: What occurred during the operational event described?",
+    "options": [
+      "The officer directed the patrol unit to establish observation post Delta on the hilltop",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge directed the patrol unit to establish observation post Delta on the hilltop."
+  },
+  {
+    "id": 16,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 16: The officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty. What action was taken?",
+    "question": "Question 16: What occurred during the operational event described?",
+    "options": [
+      "The officer informed the staff that flight physical examinations begin Monday at zero-eight-thirty",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty."
+  },
+  {
+    "id": 17,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 17: The officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways. What action was taken?",
+    "question": "Question 17: What occurred during the operational event described?",
+    "options": [
+      "The officer cautioned drivers to reduce speed because freezing rain is coating the highways",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways."
+  },
+  {
+    "id": 18,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 18: The officer in charge verified that all cargo manifests were signed by the logistics officer. What action was taken?",
+    "question": "Question 18: What occurred during the operational event described?",
+    "options": [
+      "The officer verified that all cargo manifests were signed by the logistics officer",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge verified that all cargo manifests were signed by the logistics officer."
+  },
+  {
+    "id": 19,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 19: The officer in charge reported that radar contact with the drone was re-established at ten thousand feet. What action was taken?",
+    "question": "Question 19: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that radar contact with the drone was re-established at ten thousand feet",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that radar contact with the drone was re-established at ten thousand feet."
+  },
+  {
+    "id": 20,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 20: The officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint. What action was taken?",
+    "question": "Question 20: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the guards to inspect vehicle trunks at the main gate checkpoint",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint."
+  },
+  {
+    "id": 21,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 21: The officer in charge reported oil pressure dropping rapidly in engine number two. What action was taken?",
+    "question": "Question 21: What occurred during the operational event described?",
+    "options": [
+      "The officer reported oil pressure dropping rapidly in engine number two",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported oil pressure dropping rapidly in engine number two."
+  },
+  {
+    "id": 22,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 22: The officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight. What action was taken?",
+    "question": "Question 22: What occurred during the operational event described?",
+    "options": [
+      "The officer cleared the transport aircraft for immediate takeoff on runway one-eight",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight."
+  },
+  {
+    "id": 23,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 23: The officer in charge instructed the maintenance crew to replace the hydraulic seal. What action was taken?",
+    "question": "Question 23: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the maintenance crew to replace the hydraulic seal",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the maintenance crew to replace the hydraulic seal."
+  },
+  {
+    "id": 24,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 24: The officer in charge ordered the convoy to halt before crossing the damaged culvert. What action was taken?",
+    "question": "Question 24: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered the convoy to halt before crossing the damaged culvert",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered the convoy to halt before crossing the damaged culvert."
+  },
+  {
+    "id": 25,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 25: The officer in charge confirmed that all weapons were locked in the armory vault. What action was taken?",
+    "question": "Question 25: What occurred during the operational event described?",
+    "options": [
+      "The officer confirmed that all weapons were locked in the armory vault",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge confirmed that all weapons were locked in the armory vault."
+  },
+  {
+    "id": 26,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 26: The officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours. What action was taken?",
+    "question": "Question 26: What occurred during the operational event described?",
+    "options": [
+      "The officer scheduled the night reconnaissance flight for twenty-one hundred hours",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours."
+  },
+  {
+    "id": 27,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 27: The officer in charge requested emergency medical evacuation for a wounded soldier. What action was taken?",
+    "question": "Question 27: What occurred during the operational event described?",
+    "options": [
+      "The officer requested emergency medical evacuation for a wounded soldier",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge requested emergency medical evacuation for a wounded soldier."
+  },
+  {
+    "id": 28,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 28: The officer in charge advised that runway three is closed due to rubber debris. What action was taken?",
+    "question": "Question 28: What occurred during the operational event described?",
+    "options": [
+      "The officer advised that runway three is closed due to rubber debris",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge advised that runway three is closed due to rubber debris."
+  },
+  {
+    "id": 29,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 29: The officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule. What action was taken?",
+    "question": "Question 29: What occurred during the operational event described?",
+    "options": [
+      "The officer noted that the fuel truck arrived thirty minutes ahead of schedule",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule."
+  },
+  {
+    "id": 30,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 30: The officer in charge reminded the cadets to wear reflective safety belts during evening runs. What action was taken?",
+    "question": "Question 30: What occurred during the operational event described?",
+    "options": [
+      "The officer reminded the cadets to wear reflective safety belts during evening runs",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reminded the cadets to wear reflective safety belts during evening runs."
+  },
+  {
+    "id": 31,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 31: The officer in charge reported that navigation beacons along the coast are functioning normally. What action was taken?",
+    "question": "Question 31: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that navigation beacons along the coast are functioning normally",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that navigation beacons along the coast are functioning normally."
+  },
+  {
+    "id": 32,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 32: The officer in charge ordered all communications equipment switched to secure alternate frequencies. What action was taken?",
+    "question": "Question 32: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered all communications equipment switched to secure alternate frequencies",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered all communications equipment switched to secure alternate frequencies."
+  },
+  {
+    "id": 33,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 33: The officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow. What action was taken?",
+    "question": "Question 33: What occurred during the operational event described?",
+    "options": [
+      "The officer stated that the supply warehouse will undergo quarterly inventory tomorrow",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow."
+  },
+  {
+    "id": 34,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 34: The officer in charge observed that wind shear was detected on final approach to airfield Bravo. What action was taken?",
+    "question": "Question 34: What occurred during the operational event described?",
+    "options": [
+      "The officer observed that wind shear was detected on final approach to airfield Bravo",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge observed that wind shear was detected on final approach to airfield Bravo."
+  },
+  {
+    "id": 35,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 35: The officer in charge directed the patrol unit to establish observation post Delta on the hilltop. What action was taken?",
+    "question": "Question 35: What occurred during the operational event described?",
+    "options": [
+      "The officer directed the patrol unit to establish observation post Delta on the hilltop",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge directed the patrol unit to establish observation post Delta on the hilltop."
+  },
+  {
+    "id": 36,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 36: The officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty. What action was taken?",
+    "question": "Question 36: What occurred during the operational event described?",
+    "options": [
+      "The officer informed the staff that flight physical examinations begin Monday at zero-eight-thirty",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty."
+  },
+  {
+    "id": 37,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 37: The officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways. What action was taken?",
+    "question": "Question 37: What occurred during the operational event described?",
+    "options": [
+      "The officer cautioned drivers to reduce speed because freezing rain is coating the highways",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways."
+  },
+  {
+    "id": 38,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 38: The officer in charge verified that all cargo manifests were signed by the logistics officer. What action was taken?",
+    "question": "Question 38: What occurred during the operational event described?",
+    "options": [
+      "The officer verified that all cargo manifests were signed by the logistics officer",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge verified that all cargo manifests were signed by the logistics officer."
+  },
+  {
+    "id": 39,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 39: The officer in charge reported that radar contact with the drone was re-established at ten thousand feet. What action was taken?",
+    "question": "Question 39: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that radar contact with the drone was re-established at ten thousand feet",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that radar contact with the drone was re-established at ten thousand feet."
+  },
+  {
+    "id": 40,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 40: The officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint. What action was taken?",
+    "question": "Question 40: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the guards to inspect vehicle trunks at the main gate checkpoint",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint."
+  },
+  {
+    "id": 41,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 41: The officer in charge reported oil pressure dropping rapidly in engine number two. What action was taken?",
+    "question": "Question 41: What occurred during the operational event described?",
+    "options": [
+      "The officer reported oil pressure dropping rapidly in engine number two",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported oil pressure dropping rapidly in engine number two."
+  },
+  {
+    "id": 42,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 42: The officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight. What action was taken?",
+    "question": "Question 42: What occurred during the operational event described?",
+    "options": [
+      "The officer cleared the transport aircraft for immediate takeoff on runway one-eight",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight."
+  },
+  {
+    "id": 43,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 43: The officer in charge instructed the maintenance crew to replace the hydraulic seal. What action was taken?",
+    "question": "Question 43: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the maintenance crew to replace the hydraulic seal",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the maintenance crew to replace the hydraulic seal."
+  },
+  {
+    "id": 44,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 44: The officer in charge ordered the convoy to halt before crossing the damaged culvert. What action was taken?",
+    "question": "Question 44: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered the convoy to halt before crossing the damaged culvert",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered the convoy to halt before crossing the damaged culvert."
+  },
+  {
+    "id": 45,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 45: The officer in charge confirmed that all weapons were locked in the armory vault. What action was taken?",
+    "question": "Question 45: What occurred during the operational event described?",
+    "options": [
+      "The officer confirmed that all weapons were locked in the armory vault",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge confirmed that all weapons were locked in the armory vault."
+  },
+  {
+    "id": 46,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 46: The officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours. What action was taken?",
+    "question": "Question 46: What occurred during the operational event described?",
+    "options": [
+      "The officer scheduled the night reconnaissance flight for twenty-one hundred hours",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours."
+  },
+  {
+    "id": 47,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 47: The officer in charge requested emergency medical evacuation for a wounded soldier. What action was taken?",
+    "question": "Question 47: What occurred during the operational event described?",
+    "options": [
+      "The officer requested emergency medical evacuation for a wounded soldier",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge requested emergency medical evacuation for a wounded soldier."
+  },
+  {
+    "id": 48,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 48: The officer in charge advised that runway three is closed due to rubber debris. What action was taken?",
+    "question": "Question 48: What occurred during the operational event described?",
+    "options": [
+      "The officer advised that runway three is closed due to rubber debris",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge advised that runway three is closed due to rubber debris."
+  },
+  {
+    "id": 49,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 49: The officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule. What action was taken?",
+    "question": "Question 49: What occurred during the operational event described?",
+    "options": [
+      "The officer noted that the fuel truck arrived thirty minutes ahead of schedule",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule."
+  },
+  {
+    "id": 50,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 50: The officer in charge reminded the cadets to wear reflective safety belts during evening runs. What action was taken?",
+    "question": "Question 50: What occurred during the operational event described?",
+    "options": [
+      "The officer reminded the cadets to wear reflective safety belts during evening runs",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reminded the cadets to wear reflective safety belts during evening runs."
+  },
+  {
+    "id": 51,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 51: The officer in charge reported that navigation beacons along the coast are functioning normally. What action was taken?",
+    "question": "Question 51: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that navigation beacons along the coast are functioning normally",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that navigation beacons along the coast are functioning normally."
+  },
+  {
+    "id": 52,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 52: The officer in charge ordered all communications equipment switched to secure alternate frequencies. What action was taken?",
+    "question": "Question 52: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered all communications equipment switched to secure alternate frequencies",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered all communications equipment switched to secure alternate frequencies."
+  },
+  {
+    "id": 53,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 53: The officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow. What action was taken?",
+    "question": "Question 53: What occurred during the operational event described?",
+    "options": [
+      "The officer stated that the supply warehouse will undergo quarterly inventory tomorrow",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow."
+  },
+  {
+    "id": 54,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 54: The officer in charge observed that wind shear was detected on final approach to airfield Bravo. What action was taken?",
+    "question": "Question 54: What occurred during the operational event described?",
+    "options": [
+      "The officer observed that wind shear was detected on final approach to airfield Bravo",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge observed that wind shear was detected on final approach to airfield Bravo."
+  },
+  {
+    "id": 55,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 55: The officer in charge directed the patrol unit to establish observation post Delta on the hilltop. What action was taken?",
+    "question": "Question 55: What occurred during the operational event described?",
+    "options": [
+      "The officer directed the patrol unit to establish observation post Delta on the hilltop",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge directed the patrol unit to establish observation post Delta on the hilltop."
+  },
+  {
+    "id": 56,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 56: The officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty. What action was taken?",
+    "question": "Question 56: What occurred during the operational event described?",
+    "options": [
+      "The officer informed the staff that flight physical examinations begin Monday at zero-eight-thirty",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty."
+  },
+  {
+    "id": 57,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 57: The officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways. What action was taken?",
+    "question": "Question 57: What occurred during the operational event described?",
+    "options": [
+      "The officer cautioned drivers to reduce speed because freezing rain is coating the highways",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways."
+  },
+  {
+    "id": 58,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 58: The officer in charge verified that all cargo manifests were signed by the logistics officer. What action was taken?",
+    "question": "Question 58: What occurred during the operational event described?",
+    "options": [
+      "The officer verified that all cargo manifests were signed by the logistics officer",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge verified that all cargo manifests were signed by the logistics officer."
+  },
+  {
+    "id": 59,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 59: The officer in charge reported that radar contact with the drone was re-established at ten thousand feet. What action was taken?",
+    "question": "Question 59: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that radar contact with the drone was re-established at ten thousand feet",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that radar contact with the drone was re-established at ten thousand feet."
+  },
+  {
+    "id": 60,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "listening",
+    "textToSpeak": "Fórmula 2 Audio Reactivo 60: The officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint. What action was taken?",
+    "question": "Question 60: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the guards to inspect vehicle trunks at the main gate checkpoint",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint."
+  },
+  {
+    "id": 1,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 1: The officer in charge reported oil pressure dropping rapidly in engine number two. What action was taken?",
+    "question": "Question 1: What occurred during the operational event described?",
+    "options": [
+      "The officer reported oil pressure dropping rapidly in engine number two",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported oil pressure dropping rapidly in engine number two."
+  },
+  {
+    "id": 2,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 2: The officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight. What action was taken?",
+    "question": "Question 2: What occurred during the operational event described?",
+    "options": [
+      "The officer cleared the transport aircraft for immediate takeoff on runway one-eight",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight."
+  },
+  {
+    "id": 3,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 3: The officer in charge instructed the maintenance crew to replace the hydraulic seal. What action was taken?",
+    "question": "Question 3: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the maintenance crew to replace the hydraulic seal",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the maintenance crew to replace the hydraulic seal."
+  },
+  {
+    "id": 4,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 4: The officer in charge ordered the convoy to halt before crossing the damaged culvert. What action was taken?",
+    "question": "Question 4: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered the convoy to halt before crossing the damaged culvert",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered the convoy to halt before crossing the damaged culvert."
+  },
+  {
+    "id": 5,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 5: The officer in charge confirmed that all weapons were locked in the armory vault. What action was taken?",
+    "question": "Question 5: What occurred during the operational event described?",
+    "options": [
+      "The officer confirmed that all weapons were locked in the armory vault",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge confirmed that all weapons were locked in the armory vault."
+  },
+  {
+    "id": 6,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 6: The officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours. What action was taken?",
+    "question": "Question 6: What occurred during the operational event described?",
+    "options": [
+      "The officer scheduled the night reconnaissance flight for twenty-one hundred hours",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours."
+  },
+  {
+    "id": 7,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 7: The officer in charge requested emergency medical evacuation for a wounded soldier. What action was taken?",
+    "question": "Question 7: What occurred during the operational event described?",
+    "options": [
+      "The officer requested emergency medical evacuation for a wounded soldier",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge requested emergency medical evacuation for a wounded soldier."
+  },
+  {
+    "id": 8,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 8: The officer in charge advised that runway three is closed due to rubber debris. What action was taken?",
+    "question": "Question 8: What occurred during the operational event described?",
+    "options": [
+      "The officer advised that runway three is closed due to rubber debris",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge advised that runway three is closed due to rubber debris."
+  },
+  {
+    "id": 9,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 9: The officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule. What action was taken?",
+    "question": "Question 9: What occurred during the operational event described?",
+    "options": [
+      "The officer noted that the fuel truck arrived thirty minutes ahead of schedule",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule."
+  },
+  {
+    "id": 10,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 10: The officer in charge reminded the cadets to wear reflective safety belts during evening runs. What action was taken?",
+    "question": "Question 10: What occurred during the operational event described?",
+    "options": [
+      "The officer reminded the cadets to wear reflective safety belts during evening runs",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reminded the cadets to wear reflective safety belts during evening runs."
+  },
+  {
+    "id": 11,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 11: The officer in charge reported that navigation beacons along the coast are functioning normally. What action was taken?",
+    "question": "Question 11: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that navigation beacons along the coast are functioning normally",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that navigation beacons along the coast are functioning normally."
+  },
+  {
+    "id": 12,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 12: The officer in charge ordered all communications equipment switched to secure alternate frequencies. What action was taken?",
+    "question": "Question 12: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered all communications equipment switched to secure alternate frequencies",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered all communications equipment switched to secure alternate frequencies."
+  },
+  {
+    "id": 13,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 13: The officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow. What action was taken?",
+    "question": "Question 13: What occurred during the operational event described?",
+    "options": [
+      "The officer stated that the supply warehouse will undergo quarterly inventory tomorrow",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow."
+  },
+  {
+    "id": 14,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 14: The officer in charge observed that wind shear was detected on final approach to airfield Bravo. What action was taken?",
+    "question": "Question 14: What occurred during the operational event described?",
+    "options": [
+      "The officer observed that wind shear was detected on final approach to airfield Bravo",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge observed that wind shear was detected on final approach to airfield Bravo."
+  },
+  {
+    "id": 15,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 15: The officer in charge directed the patrol unit to establish observation post Delta on the hilltop. What action was taken?",
+    "question": "Question 15: What occurred during the operational event described?",
+    "options": [
+      "The officer directed the patrol unit to establish observation post Delta on the hilltop",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge directed the patrol unit to establish observation post Delta on the hilltop."
+  },
+  {
+    "id": 16,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 16: The officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty. What action was taken?",
+    "question": "Question 16: What occurred during the operational event described?",
+    "options": [
+      "The officer informed the staff that flight physical examinations begin Monday at zero-eight-thirty",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty."
+  },
+  {
+    "id": 17,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 17: The officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways. What action was taken?",
+    "question": "Question 17: What occurred during the operational event described?",
+    "options": [
+      "The officer cautioned drivers to reduce speed because freezing rain is coating the highways",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways."
+  },
+  {
+    "id": 18,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 18: The officer in charge verified that all cargo manifests were signed by the logistics officer. What action was taken?",
+    "question": "Question 18: What occurred during the operational event described?",
+    "options": [
+      "The officer verified that all cargo manifests were signed by the logistics officer",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge verified that all cargo manifests were signed by the logistics officer."
+  },
+  {
+    "id": 19,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 19: The officer in charge reported that radar contact with the drone was re-established at ten thousand feet. What action was taken?",
+    "question": "Question 19: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that radar contact with the drone was re-established at ten thousand feet",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that radar contact with the drone was re-established at ten thousand feet."
+  },
+  {
+    "id": 20,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 20: The officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint. What action was taken?",
+    "question": "Question 20: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the guards to inspect vehicle trunks at the main gate checkpoint",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint."
+  },
+  {
+    "id": 21,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 21: The officer in charge reported oil pressure dropping rapidly in engine number two. What action was taken?",
+    "question": "Question 21: What occurred during the operational event described?",
+    "options": [
+      "The officer reported oil pressure dropping rapidly in engine number two",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported oil pressure dropping rapidly in engine number two."
+  },
+  {
+    "id": 22,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 22: The officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight. What action was taken?",
+    "question": "Question 22: What occurred during the operational event described?",
+    "options": [
+      "The officer cleared the transport aircraft for immediate takeoff on runway one-eight",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight."
+  },
+  {
+    "id": 23,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 23: The officer in charge instructed the maintenance crew to replace the hydraulic seal. What action was taken?",
+    "question": "Question 23: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the maintenance crew to replace the hydraulic seal",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the maintenance crew to replace the hydraulic seal."
+  },
+  {
+    "id": 24,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 24: The officer in charge ordered the convoy to halt before crossing the damaged culvert. What action was taken?",
+    "question": "Question 24: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered the convoy to halt before crossing the damaged culvert",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered the convoy to halt before crossing the damaged culvert."
+  },
+  {
+    "id": 25,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 25: The officer in charge confirmed that all weapons were locked in the armory vault. What action was taken?",
+    "question": "Question 25: What occurred during the operational event described?",
+    "options": [
+      "The officer confirmed that all weapons were locked in the armory vault",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge confirmed that all weapons were locked in the armory vault."
+  },
+  {
+    "id": 26,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 26: The officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours. What action was taken?",
+    "question": "Question 26: What occurred during the operational event described?",
+    "options": [
+      "The officer scheduled the night reconnaissance flight for twenty-one hundred hours",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours."
+  },
+  {
+    "id": 27,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 27: The officer in charge requested emergency medical evacuation for a wounded soldier. What action was taken?",
+    "question": "Question 27: What occurred during the operational event described?",
+    "options": [
+      "The officer requested emergency medical evacuation for a wounded soldier",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge requested emergency medical evacuation for a wounded soldier."
+  },
+  {
+    "id": 28,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 28: The officer in charge advised that runway three is closed due to rubber debris. What action was taken?",
+    "question": "Question 28: What occurred during the operational event described?",
+    "options": [
+      "The officer advised that runway three is closed due to rubber debris",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge advised that runway three is closed due to rubber debris."
+  },
+  {
+    "id": 29,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 29: The officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule. What action was taken?",
+    "question": "Question 29: What occurred during the operational event described?",
+    "options": [
+      "The officer noted that the fuel truck arrived thirty minutes ahead of schedule",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule."
+  },
+  {
+    "id": 30,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 30: The officer in charge reminded the cadets to wear reflective safety belts during evening runs. What action was taken?",
+    "question": "Question 30: What occurred during the operational event described?",
+    "options": [
+      "The officer reminded the cadets to wear reflective safety belts during evening runs",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reminded the cadets to wear reflective safety belts during evening runs."
+  },
+  {
+    "id": 31,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 31: The officer in charge reported that navigation beacons along the coast are functioning normally. What action was taken?",
+    "question": "Question 31: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that navigation beacons along the coast are functioning normally",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that navigation beacons along the coast are functioning normally."
+  },
+  {
+    "id": 32,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 32: The officer in charge ordered all communications equipment switched to secure alternate frequencies. What action was taken?",
+    "question": "Question 32: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered all communications equipment switched to secure alternate frequencies",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered all communications equipment switched to secure alternate frequencies."
+  },
+  {
+    "id": 33,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 33: The officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow. What action was taken?",
+    "question": "Question 33: What occurred during the operational event described?",
+    "options": [
+      "The officer stated that the supply warehouse will undergo quarterly inventory tomorrow",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow."
+  },
+  {
+    "id": 34,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 34: The officer in charge observed that wind shear was detected on final approach to airfield Bravo. What action was taken?",
+    "question": "Question 34: What occurred during the operational event described?",
+    "options": [
+      "The officer observed that wind shear was detected on final approach to airfield Bravo",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge observed that wind shear was detected on final approach to airfield Bravo."
+  },
+  {
+    "id": 35,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 35: The officer in charge directed the patrol unit to establish observation post Delta on the hilltop. What action was taken?",
+    "question": "Question 35: What occurred during the operational event described?",
+    "options": [
+      "The officer directed the patrol unit to establish observation post Delta on the hilltop",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge directed the patrol unit to establish observation post Delta on the hilltop."
+  },
+  {
+    "id": 36,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 36: The officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty. What action was taken?",
+    "question": "Question 36: What occurred during the operational event described?",
+    "options": [
+      "The officer informed the staff that flight physical examinations begin Monday at zero-eight-thirty",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty."
+  },
+  {
+    "id": 37,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 37: The officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways. What action was taken?",
+    "question": "Question 37: What occurred during the operational event described?",
+    "options": [
+      "The officer cautioned drivers to reduce speed because freezing rain is coating the highways",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways."
+  },
+  {
+    "id": 38,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 38: The officer in charge verified that all cargo manifests were signed by the logistics officer. What action was taken?",
+    "question": "Question 38: What occurred during the operational event described?",
+    "options": [
+      "The officer verified that all cargo manifests were signed by the logistics officer",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge verified that all cargo manifests were signed by the logistics officer."
+  },
+  {
+    "id": 39,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 39: The officer in charge reported that radar contact with the drone was re-established at ten thousand feet. What action was taken?",
+    "question": "Question 39: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that radar contact with the drone was re-established at ten thousand feet",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that radar contact with the drone was re-established at ten thousand feet."
+  },
+  {
+    "id": 40,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 40: The officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint. What action was taken?",
+    "question": "Question 40: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the guards to inspect vehicle trunks at the main gate checkpoint",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint."
+  },
+  {
+    "id": 41,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 41: The officer in charge reported oil pressure dropping rapidly in engine number two. What action was taken?",
+    "question": "Question 41: What occurred during the operational event described?",
+    "options": [
+      "The officer reported oil pressure dropping rapidly in engine number two",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported oil pressure dropping rapidly in engine number two."
+  },
+  {
+    "id": 42,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 42: The officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight. What action was taken?",
+    "question": "Question 42: What occurred during the operational event described?",
+    "options": [
+      "The officer cleared the transport aircraft for immediate takeoff on runway one-eight",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cleared the transport aircraft for immediate takeoff on runway one-eight."
+  },
+  {
+    "id": 43,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 43: The officer in charge instructed the maintenance crew to replace the hydraulic seal. What action was taken?",
+    "question": "Question 43: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the maintenance crew to replace the hydraulic seal",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the maintenance crew to replace the hydraulic seal."
+  },
+  {
+    "id": 44,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 44: The officer in charge ordered the convoy to halt before crossing the damaged culvert. What action was taken?",
+    "question": "Question 44: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered the convoy to halt before crossing the damaged culvert",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered the convoy to halt before crossing the damaged culvert."
+  },
+  {
+    "id": 45,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 45: The officer in charge confirmed that all weapons were locked in the armory vault. What action was taken?",
+    "question": "Question 45: What occurred during the operational event described?",
+    "options": [
+      "The officer confirmed that all weapons were locked in the armory vault",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge confirmed that all weapons were locked in the armory vault."
+  },
+  {
+    "id": 46,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 46: The officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours. What action was taken?",
+    "question": "Question 46: What occurred during the operational event described?",
+    "options": [
+      "The officer scheduled the night reconnaissance flight for twenty-one hundred hours",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge scheduled the night reconnaissance flight for twenty-one hundred hours."
+  },
+  {
+    "id": 47,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 47: The officer in charge requested emergency medical evacuation for a wounded soldier. What action was taken?",
+    "question": "Question 47: What occurred during the operational event described?",
+    "options": [
+      "The officer requested emergency medical evacuation for a wounded soldier",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge requested emergency medical evacuation for a wounded soldier."
+  },
+  {
+    "id": 48,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 48: The officer in charge advised that runway three is closed due to rubber debris. What action was taken?",
+    "question": "Question 48: What occurred during the operational event described?",
+    "options": [
+      "The officer advised that runway three is closed due to rubber debris",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge advised that runway three is closed due to rubber debris."
+  },
+  {
+    "id": 49,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 49: The officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule. What action was taken?",
+    "question": "Question 49: What occurred during the operational event described?",
+    "options": [
+      "The officer noted that the fuel truck arrived thirty minutes ahead of schedule",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge noted that the fuel truck arrived thirty minutes ahead of schedule."
+  },
+  {
+    "id": 50,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 50: The officer in charge reminded the cadets to wear reflective safety belts during evening runs. What action was taken?",
+    "question": "Question 50: What occurred during the operational event described?",
+    "options": [
+      "The officer reminded the cadets to wear reflective safety belts during evening runs",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reminded the cadets to wear reflective safety belts during evening runs."
+  },
+  {
+    "id": 51,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 51: The officer in charge reported that navigation beacons along the coast are functioning normally. What action was taken?",
+    "question": "Question 51: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that navigation beacons along the coast are functioning normally",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that navigation beacons along the coast are functioning normally."
+  },
+  {
+    "id": 52,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 52: The officer in charge ordered all communications equipment switched to secure alternate frequencies. What action was taken?",
+    "question": "Question 52: What occurred during the operational event described?",
+    "options": [
+      "The officer ordered all communications equipment switched to secure alternate frequencies",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge ordered all communications equipment switched to secure alternate frequencies."
+  },
+  {
+    "id": 53,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 53: The officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow. What action was taken?",
+    "question": "Question 53: What occurred during the operational event described?",
+    "options": [
+      "The officer stated that the supply warehouse will undergo quarterly inventory tomorrow",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge stated that the supply warehouse will undergo quarterly inventory tomorrow."
+  },
+  {
+    "id": 54,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 54: The officer in charge observed that wind shear was detected on final approach to airfield Bravo. What action was taken?",
+    "question": "Question 54: What occurred during the operational event described?",
+    "options": [
+      "The officer observed that wind shear was detected on final approach to airfield Bravo",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge observed that wind shear was detected on final approach to airfield Bravo."
+  },
+  {
+    "id": 55,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 55: The officer in charge directed the patrol unit to establish observation post Delta on the hilltop. What action was taken?",
+    "question": "Question 55: What occurred during the operational event described?",
+    "options": [
+      "The officer directed the patrol unit to establish observation post Delta on the hilltop",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge directed the patrol unit to establish observation post Delta on the hilltop."
+  },
+  {
+    "id": 56,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 56: The officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty. What action was taken?",
+    "question": "Question 56: What occurred during the operational event described?",
+    "options": [
+      "The officer informed the staff that flight physical examinations begin Monday at zero-eight-thirty",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge informed the staff that flight physical examinations begin Monday at zero-eight-thirty."
+  },
+  {
+    "id": 57,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 57: The officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways. What action was taken?",
+    "question": "Question 57: What occurred during the operational event described?",
+    "options": [
+      "The officer cautioned drivers to reduce speed because freezing rain is coating the highways",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge cautioned drivers to reduce speed because freezing rain is coating the highways."
+  },
+  {
+    "id": 58,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 58: The officer in charge verified that all cargo manifests were signed by the logistics officer. What action was taken?",
+    "question": "Question 58: What occurred during the operational event described?",
+    "options": [
+      "The officer verified that all cargo manifests were signed by the logistics officer",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge verified that all cargo manifests were signed by the logistics officer."
+  },
+  {
+    "id": 59,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 59: The officer in charge reported that radar contact with the drone was re-established at ten thousand feet. What action was taken?",
+    "question": "Question 59: What occurred during the operational event described?",
+    "options": [
+      "The officer reported that radar contact with the drone was re-established at ten thousand feet",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge reported that radar contact with the drone was re-established at ten thousand feet."
+  },
+  {
+    "id": 60,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "listening",
+    "textToSpeak": "Fórmula 3 Audio Reactivo 60: The officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint. What action was taken?",
+    "question": "Question 60: What occurred during the operational event described?",
+    "options": [
+      "The officer instructed the guards to inspect vehicle trunks at the main gate checkpoint",
+      "Routine training was permanently canceled",
+      "Personnel were dismissed without orders",
+      "The equipment was discarded without inspection"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "The speaker specifically states that the officer in charge instructed the guards to inspect vehicle trunks at the main gate checkpoint."
+  }
+]

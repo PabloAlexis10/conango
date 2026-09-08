@@ -1,0 +1,48 @@
+{
+  "name": "ConanGo - Prep ALCPT",
+  "short_name": "ConanGo",
+  "description": "Plataforma de prÃ¡ctica y simulaciÃ³n oficial para el examen ALCPT con Conan el Husky.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F8FAFC",
+  "theme_color": "#2563EB",
+  "categories": ["education", "books"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Examen Final 100",
+      "short_name": "Examen 100",
+      "description": "Rendir examen completo oficial de 100 preguntas",
+      "url": "/practice?totalQuestions=100&formula=random",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Quiz RÃ¡pido 10",
+      "short_name": "Quiz 10",
+      "description": "PrÃ¡ctica rÃ¡pida de 10 preguntas",
+      "url": "/practice?totalQuestions=10&formula=random",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

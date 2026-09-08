@@ -1,0 +1,2042 @@
+[
+  {
+    "id": 61,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Private Evans ___ to the motor pool yesterday afternoon to repair the truck.",
+    "question": "Private Evans ___ to the motor pool yesterday afternoon to repair the truck.",
+    "options": [
+      "go",
+      "goes",
+      "went",
+      "gone"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "Yesterday requires simple past tense ('went')."
+  },
+  {
+    "id": 62,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The commander ordered that all weapons ___ before entering the briefing room.",
+    "question": "The commander ordered that all weapons ___ before entering the briefing room.",
+    "options": [
+      "be inspected",
+      "are inspecting",
+      "inspected",
+      "inspects"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive structure after 'ordered that' requires base passive ('be inspected')."
+  },
+  {
+    "id": 63,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "If the weather ___ bad tomorrow morning, the helicopter flight will be canceled.",
+    "question": "If the weather ___ bad tomorrow morning, the helicopter flight will be canceled.",
+    "options": [
+      "is",
+      "was",
+      "will be",
+      "had been"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "First conditional clause: If + present simple ('is'), will + verb."
+  },
+  {
+    "id": 64,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The soldiers have been marching ___ five hours without a break.",
+    "question": "The soldiers have been marching ___ five hours without a break.",
+    "options": [
+      "since",
+      "for",
+      "during",
+      "at"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "We use 'for' to denote a duration of time ('for five hours')."
+  },
+  {
+    "id": 65,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Sergeant Miller has lived on this military post ___ 2018.",
+    "question": "Sergeant Miller has lived on this military post ___ 2018.",
+    "options": [
+      "since",
+      "for",
+      "in",
+      "by"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "We use 'since' with a specific point in the past ('since 2018')."
+  },
+  {
+    "id": 66,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "He didn't have ___ money left after buying his new combat boots.",
+    "question": "He didn't have ___ money left after buying his new combat boots.",
+    "options": [
+      "some",
+      "any",
+      "no",
+      "many"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "In negative sentences with 'didn't', use 'any' with non-count nouns."
+  },
+  {
+    "id": 67,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "This new aircraft is much ___ than the older reconnaissance model.",
+    "question": "This new aircraft is much ___ than the older reconnaissance model.",
+    "options": [
+      "fast",
+      "faster",
+      "fastest",
+      "more faster"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Comparative adjective with 'than' uses '-er' ('faster')."
+  },
+  {
+    "id": 68,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "All recruits ___ report to the obstacle course at 0600 tomorrow.",
+    "question": "All recruits ___ report to the obstacle course at 0600 tomorrow.",
+    "options": [
+      "must",
+      "ought",
+      "would to",
+      "can to"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "'Must' expresses strict military requirement without 'to'."
+  },
+  {
+    "id": 69,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The mechanic discovered that the tire ___ by a sharp nail.",
+    "question": "The mechanic discovered that the tire ___ by a sharp nail.",
+    "options": [
+      "punctured",
+      "was punctured",
+      "has punctured",
+      "is puncturing"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Passive voice in simple past: was + past participle ('was punctured')."
+  },
+  {
+    "id": 70,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Neither the sergeant nor his men ___ informed about the convoy delay.",
+    "question": "Neither the sergeant nor his men ___ informed about the convoy delay.",
+    "options": [
+      "was",
+      "were",
+      "is",
+      "has been"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "With 'neither... nor...', verb agrees with closer subject ('his men' -> 'were')."
+  },
+  {
+    "id": 71,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The pilot managed to land safely ___ the heavy rain and crosswinds.",
+    "question": "The pilot managed to land safely ___ the heavy rain and crosswinds.",
+    "options": [
+      "despite",
+      "although",
+      "even though",
+      "because"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "'Despite' is followed by a noun phrase ('the heavy rain')."
+  },
+  {
+    "id": 72,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Could you please tell me where ___?",
+    "question": "Could you please tell me where ___?",
+    "options": [
+      "is the headquarters",
+      "the headquarters is",
+      "does headquarters be",
+      "headquarters are located at"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Embedded question word order is subject + verb ('where the headquarters is')."
+  },
+  {
+    "id": 73,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Soldiers are not allowed ___ the perimeter without a signed pass.",
+    "question": "Soldiers are not allowed ___ the perimeter without a signed pass.",
+    "options": [
+      "cross",
+      "crossing",
+      "to cross",
+      "crossed"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "'Allowed' is followed by full infinitive with to ('allowed to cross')."
+  },
+  {
+    "id": 74,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "By the time the reinforcements arrive, the squad ___ the perimeter.",
+    "question": "By the time the reinforcements arrive, the squad ___ the perimeter.",
+    "options": [
+      "secures",
+      "secured",
+      "will have secured",
+      "had secured"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "Future perfect ('will have secured') denotes an action completed before a future time."
+  },
+  {
+    "id": 75,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The captain asked Corporal Davis ___ he had completed the inventory.",
+    "question": "The captain asked Corporal Davis ___ he had completed the inventory.",
+    "options": [
+      "that",
+      "if",
+      "what",
+      "which"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Indirect yes/no question takes 'if' or 'whether'."
+  },
+  {
+    "id": 76,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Choose the word with the closest meaning to 'mandatory': Attendance at the morning formation is mandatory.",
+    "question": "Choose the word with the closest meaning to 'mandatory': Attendance at the morning formation is mandatory.",
+    "options": [
+      "optional",
+      "compulsory",
+      "voluntary",
+      "suggested"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Mandatory' means compulsory or required by regulation."
+  },
+  {
+    "id": 77,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Choose the synonym for 'halt': The sentry told the vehicle to halt.",
+    "question": "Choose the synonym for 'halt': The sentry told the vehicle to halt.",
+    "options": [
+      "accelerate",
+      "stop",
+      "reverse",
+      "continue"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Halt' means to bring to a full stop."
+  },
+  {
+    "id": 78,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Select the word that best completes: Toxic fumes pose a serious ___ to human health.",
+    "question": "Select the word that best completes: Toxic fumes pose a serious ___ to human health.",
+    "options": [
+      "benefit",
+      "hazard",
+      "advantage",
+      "cure"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "A 'hazard' is a risk, peril, or dangerous condition."
+  },
+  {
+    "id": 79,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Choose the antonym for 'expand': The metal parts will expand when heated.",
+    "question": "Choose the antonym for 'expand': The metal parts will expand when heated.",
+    "options": [
+      "contract",
+      "stretch",
+      "enlarge",
+      "grow"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "'Contract' is the opposite of 'expand'."
+  },
+  {
+    "id": 80,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The technician performed routine 'maintenance' on the generator. What did he do?",
+    "question": "The technician performed routine 'maintenance' on the generator. What did he do?",
+    "options": [
+      "Disassembled and destroyed it",
+      "Serviced and preserved it in working condition",
+      "Painted it red",
+      "Sold it to civilians"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Maintenance' refers to upkeep and servicing to keep operational."
+  },
+  {
+    "id": 81,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The word 'deploy' in a military context means to:",
+    "question": "The word 'deploy' in a military context means to:",
+    "options": [
+      "station troops or equipment for tactical action",
+      "discharge soldiers honorably",
+      "store equipment in a warehouse",
+      "cancel training"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "'Deploy' means to strategically position troops or assets."
+  },
+  {
+    "id": 82,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Select the correct word: The medical officer gave the patient a ___ for antibiotics.",
+    "question": "Select the correct word: The medical officer gave the patient a ___ for antibiotics.",
+    "options": [
+      "prescription",
+      "subscription",
+      "receipt",
+      "penalty"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "A 'prescription' is an official medical order for medication."
+  },
+  {
+    "id": 83,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Choose the synonym for 'abundant': Clean drinking water was abundant at the camp.",
+    "question": "Choose the synonym for 'abundant': Clean drinking water was abundant at the camp.",
+    "options": [
+      "scarce",
+      "plentiful",
+      "contaminated",
+      "insufficient"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Abundant' means existing in plentiful quantities."
+  },
+  {
+    "id": 84,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "The captain said the mission was 'vital'. What does 'vital' mean?",
+    "question": "The captain said the mission was 'vital'. What does 'vital' mean?",
+    "options": [
+      "Unimportant",
+      "Extremely important and essential",
+      "Dangerous only",
+      "Cancelled"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "'Vital' means of critical importance to success."
+  },
+  {
+    "id": 85,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Select the correct term: A soldier who operates an airplane is called an ___.",
+    "question": "Select the correct term: A soldier who operates an airplane is called an ___.",
+    "options": [
+      "armorer",
+      "infantryman",
+      "aviator",
+      "artilleryman"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "An 'aviator' is a military pilot."
+  },
+  {
+    "id": 86,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the notice: 'All vehicles parked in unauthorized red zones will be towed at the owner's expense.' What will happen to cars parked in red zones?",
+    "question": "Read the notice: 'All vehicles parked in unauthorized red zones will be towed at the owner's expense.' What will happen to cars parked in red zones?",
+    "options": [
+      "They will be washed",
+      "They will be removed and the owner must pay",
+      "They will be painted white",
+      "They will be awarded a permit"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Towed at owner's expense means hauled away with owner paying the fee."
+  },
+  {
+    "id": 87,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the text: 'The C-130 Hercules is primarily used for tactical airlift, carrying troops and cargo into hostile zones.' What is the primary role of the C-130?",
+    "question": "Read the text: 'The C-130 Hercules is primarily used for tactical airlift, carrying troops and cargo into hostile zones.' What is the primary role of the C-130?",
+    "options": [
+      "Air-to-air combat",
+      "Transporting troops and supplies",
+      "Undersea surveillance",
+      "Bombing naval targets"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Tactical airlift means transporting troops and cargo."
+  },
+  {
+    "id": 88,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the instruction: 'Check engine oil level only when the engine is turned off and cold.' When should the oil be checked?",
+    "question": "Read the instruction: 'Check engine oil level only when the engine is turned off and cold.' When should the oil be checked?",
+    "options": [
+      "While the vehicle is running",
+      "When the engine is stopped and cooled down",
+      "Only during heavy rain",
+      "While driving on highway"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Turned off and cold means stopped and cooled."
+  },
+  {
+    "id": 89,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the memo: 'Starting Monday, breakfast hours will shift from 0600 to 0530 to accommodate early flight training.' What changed?",
+    "question": "Read the memo: 'Starting Monday, breakfast hours will shift from 0600 to 0530 to accommodate early flight training.' What changed?",
+    "options": [
+      "Breakfast menu",
+      "Breakfast starts 30 minutes earlier",
+      "Breakfast is canceled",
+      "Breakfast starts at 0700"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "From 0600 to 0530 is 30 minutes earlier."
+  },
+  {
+    "id": 90,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the text: 'Night vision goggles amplify ambient starlight and moonlight to allow operators to see in darkness.' How do the goggles work?",
+    "question": "Read the text: 'Night vision goggles amplify ambient starlight and moonlight to allow operators to see in darkness.' How do the goggles work?",
+    "options": [
+      "They emit blinding sunlight",
+      "They magnify available low-level environmental light",
+      "They only detect heat",
+      "They use radar waves"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Amplifying ambient light means magnifying existing light."
+  },
+  {
+    "id": 91,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the flight roster note: 'Captain Miller is designated as flight lead, with Lieutenant Diaz flying wingman.' Who is in command of the flight?",
+    "question": "Read the flight roster note: 'Captain Miller is designated as flight lead, with Lieutenant Diaz flying wingman.' Who is in command of the flight?",
+    "options": [
+      "Lieutenant Diaz",
+      "Captain Miller",
+      "Both equally",
+      "The control tower operator"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Flight lead indicates the flight commander (Captain Miller)."
+  },
+  {
+    "id": 92,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the safety placard: 'Hearing protection required beyond this point. Noise levels exceed 95 decibels.' What must personnel wear?",
+    "question": "Read the safety placard: 'Hearing protection required beyond this point. Noise levels exceed 95 decibels.' What must personnel wear?",
+    "options": [
+      "Sun glasses",
+      "Ear defenders or plugs",
+      "Dust respirators",
+      "Safety gloves"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Hearing protection guards against loud noise."
+  },
+  {
+    "id": 93,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the dispatch: 'Supply convoy Alpha will depart at 0500 and arrive at Forward Operating Base Charlie at 1100.' How long will the trip take?",
+    "question": "Read the dispatch: 'Supply convoy Alpha will depart at 0500 and arrive at Forward Operating Base Charlie at 1100.' How long will the trip take?",
+    "options": [
+      "4 hours",
+      "6 hours",
+      "8 hours",
+      "12 hours"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "From 0500 to 1100 is 6 hours."
+  },
+  {
+    "id": 94,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the passage: 'Hypothermia occurs when the core body temperature drops below 95 degrees Fahrenheit. Victims must be warmed gradually.' What is the immediate treatment objective?",
+    "question": "Read the passage: 'Hypothermia occurs when the core body temperature drops below 95 degrees Fahrenheit. Victims must be warmed gradually.' What is the immediate treatment objective?",
+    "options": [
+      "Plunge into ice water",
+      "Raise the body temperature slowly",
+      "Encourage running",
+      "Give freezing beverages"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Warmed gradually means slowly increasing body heat."
+  },
+  {
+    "id": 95,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the sentence: 'The guard demanded that the visitor present his credentials.' What did the guard want to see?",
+    "question": "Read the sentence: 'The guard demanded that the visitor present his credentials.' What did the guard want to see?",
+    "options": [
+      "His weapon",
+      "His identification papers",
+      "His lunch box",
+      "His bank statement"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Credentials are official identification or qualification documents."
+  },
+  {
+    "id": 96,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the memo: 'Personnel who have not yet submitted their annual dental certificates must do so by Friday 1600.' What is due by Friday?",
+    "question": "Read the memo: 'Personnel who have not yet submitted their annual dental certificates must do so by Friday 1600.' What is due by Friday?",
+    "options": [
+      "Annual dental proof",
+      "Flight tickets",
+      "Weapon clean certification",
+      "New uniform requests"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Annual dental certificates."
+  },
+  {
+    "id": 97,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the bulletin: 'Due to severe icing conditions, all fixed-wing flight training is suspended until 1200 tomorrow.' Which flights are affected?",
+    "question": "Read the bulletin: 'Due to severe icing conditions, all fixed-wing flight training is suspended until 1200 tomorrow.' Which flights are affected?",
+    "options": [
+      "All naval ships",
+      "Airplanes with fixed wings",
+      "Truck convoys",
+      "Base gym hours"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Fixed-wing flight training refers to airplanes."
+  },
+  {
+    "id": 98,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the text: 'Before taking off, the copilot confirmed that both fuel tanks were balanced and the flaps set to twenty degrees.' What was the flap setting?",
+    "question": "Read the text: 'Before taking off, the copilot confirmed that both fuel tanks were balanced and the flaps set to twenty degrees.' What was the flap setting?",
+    "options": [
+      "0 degrees",
+      "10 degrees",
+      "20 degrees",
+      "30 degrees"
+    ],
+    "correctAnswer": 2,
+    "image": null,
+    "explanation": "The flaps were set to twenty (20) degrees."
+  },
+  {
+    "id": 99,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the directive: 'Discarded batteries contain corrosive acids and must be deposited in yellow recycling containers.' Where should old batteries be placed?",
+    "question": "Read the directive: 'Discarded batteries contain corrosive acids and must be deposited in yellow recycling containers.' Where should old batteries be placed?",
+    "options": [
+      "In standard trash cans",
+      "In designated yellow recycling containers",
+      "Buried in the sand",
+      "Left in the truck"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Deposited in yellow recycling containers."
+  },
+  {
+    "id": 100,
+    "formula": 1,
+    "formulaName": "Fórmula 1",
+    "type": "reading",
+    "textToSpeak": "Read the summary: 'Master Sergeant Ramirez completed 25 years of honorable military service and will retire next month.' What will happen to Master Sergeant Ramirez next month?",
+    "question": "Read the summary: 'Master Sergeant Ramirez completed 25 years of honorable military service and will retire next month.' What will happen to Master Sergeant Ramirez next month?",
+    "options": [
+      "He will be promoted to General",
+      "He will conclude his military career and retire",
+      "He will be deployed overseas",
+      "He will repeat basic training"
+    ],
+    "correctAnswer": 1,
+    "image": null,
+    "explanation": "Retire means concluding his military career."
+  },
+  {
+    "id": 61,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 61 for Formula 2",
+    "question": "Item 61: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 62,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 62 for Formula 2",
+    "question": "Item 62: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 63,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 63 for Formula 2",
+    "question": "Item 63: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 64,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 64 for Formula 2",
+    "question": "Item 64: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 65,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 65 for Formula 2",
+    "question": "Item 65: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 66,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 66 for Formula 2",
+    "question": "Item 66: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 67,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 67 for Formula 2",
+    "question": "Item 67: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 68,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 68 for Formula 2",
+    "question": "Item 68: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 69,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 69 for Formula 2",
+    "question": "Item 69: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 70,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 70 for Formula 2",
+    "question": "Item 70: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 71,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 71 for Formula 2",
+    "question": "Item 71: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 72,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 72 for Formula 2",
+    "question": "Item 72: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 73,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 73 for Formula 2",
+    "question": "Item 73: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 74,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 74 for Formula 2",
+    "question": "Item 74: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 75,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 75 for Formula 2",
+    "question": "Item 75: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 76,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 76 for Formula 2",
+    "question": "Item 76: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 77,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 77 for Formula 2",
+    "question": "Item 77: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 78,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 78 for Formula 2",
+    "question": "Item 78: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 79,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 79 for Formula 2",
+    "question": "Item 79: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 80,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 80 for Formula 2",
+    "question": "Item 80: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 81,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 81 for Formula 2",
+    "question": "Item 81: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 82,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 82 for Formula 2",
+    "question": "Item 82: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 83,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 83 for Formula 2",
+    "question": "Item 83: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 84,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 84 for Formula 2",
+    "question": "Item 84: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 85,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 85 for Formula 2",
+    "question": "Item 85: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 86,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 86 for Formula 2",
+    "question": "Item 86: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 87,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 87 for Formula 2",
+    "question": "Item 87: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 88,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 88 for Formula 2",
+    "question": "Item 88: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 89,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 89 for Formula 2",
+    "question": "Item 89: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 90,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 90 for Formula 2",
+    "question": "Item 90: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 91,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 91 for Formula 2",
+    "question": "Item 91: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 92,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 92 for Formula 2",
+    "question": "Item 92: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 93,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 93 for Formula 2",
+    "question": "Item 93: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 94,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 94 for Formula 2",
+    "question": "Item 94: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 95,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 95 for Formula 2",
+    "question": "Item 95: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 96,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 96 for Formula 2",
+    "question": "Item 96: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 97,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 97 for Formula 2",
+    "question": "Item 97: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 98,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 98 for Formula 2",
+    "question": "Item 98: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 99,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 99 for Formula 2",
+    "question": "Item 99: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 100,
+    "formula": 2,
+    "formulaName": "Fórmula 2",
+    "type": "reading",
+    "textToSpeak": "Reading Item 100 for Formula 2",
+    "question": "Item 100: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 61,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 61 for Formula 3",
+    "question": "Item 61: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 62,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 62 for Formula 3",
+    "question": "Item 62: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 63,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 63 for Formula 3",
+    "question": "Item 63: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 64,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 64 for Formula 3",
+    "question": "Item 64: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 65,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 65 for Formula 3",
+    "question": "Item 65: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 66,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 66 for Formula 3",
+    "question": "Item 66: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 67,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 67 for Formula 3",
+    "question": "Item 67: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 68,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 68 for Formula 3",
+    "question": "Item 68: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 69,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 69 for Formula 3",
+    "question": "Item 69: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 70,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 70 for Formula 3",
+    "question": "Item 70: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 71,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 71 for Formula 3",
+    "question": "Item 71: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 72,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 72 for Formula 3",
+    "question": "Item 72: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 73,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 73 for Formula 3",
+    "question": "Item 73: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 74,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 74 for Formula 3",
+    "question": "Item 74: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 75,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 75 for Formula 3",
+    "question": "Item 75: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 76,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 76 for Formula 3",
+    "question": "Item 76: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 77,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 77 for Formula 3",
+    "question": "Item 77: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 78,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 78 for Formula 3",
+    "question": "Item 78: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 79,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 79 for Formula 3",
+    "question": "Item 79: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 80,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 80 for Formula 3",
+    "question": "Item 80: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 81,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 81 for Formula 3",
+    "question": "Item 81: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 82,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 82 for Formula 3",
+    "question": "Item 82: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 83,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 83 for Formula 3",
+    "question": "Item 83: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 84,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 84 for Formula 3",
+    "question": "Item 84: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 85,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 85 for Formula 3",
+    "question": "Item 85: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 86,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 86 for Formula 3",
+    "question": "Item 86: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 87,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 87 for Formula 3",
+    "question": "Item 87: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 88,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 88 for Formula 3",
+    "question": "Item 88: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 89,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 89 for Formula 3",
+    "question": "Item 89: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 90,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 90 for Formula 3",
+    "question": "Item 90: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 91,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 91 for Formula 3",
+    "question": "Item 91: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 92,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 92 for Formula 3",
+    "question": "Item 92: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 93,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 93 for Formula 3",
+    "question": "Item 93: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 94,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 94 for Formula 3",
+    "question": "Item 94: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 95,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 95 for Formula 3",
+    "question": "Item 95: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 96,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 96 for Formula 3",
+    "question": "Item 96: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 97,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 97 for Formula 3",
+    "question": "Item 97: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 98,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 98 for Formula 3",
+    "question": "Item 98: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 99,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 99 for Formula 3",
+    "question": "Item 99: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  },
+  {
+    "id": 100,
+    "formula": 3,
+    "formulaName": "Fórmula 3",
+    "type": "reading",
+    "textToSpeak": "Reading Item 100 for Formula 3",
+    "question": "Item 100: The commanding officer instructed that all equipment ___ before deployment.",
+    "options": [
+      "be inspected",
+      "is inspecting",
+      "inspected",
+      "to inspect"
+    ],
+    "correctAnswer": 0,
+    "image": null,
+    "explanation": "Subjunctive clause structure following 'instructed that' requires the base passive form 'be inspected'."
+  }
+]

@@ -1,0 +1,12 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Ribbon -->
+  <path d="M22 6 L32 24 L20 32 L14 10 Z" fill="#EF4444"/>
+  <path d="M42 6 L32 24 L44 32 L50 10 Z" fill="#DC2626"/>
+  <path d="M28 6 L32 20 L36 6 Z" fill="#F59E0B"/>
+  <!-- Outer Gold Ring -->
+  <circle cx="32" cy="40" r="20" fill="#FBBF24" stroke="#D97706" stroke-width="3"/>
+  <!-- Inner Rim -->
+  <circle cx="32" cy="40" r="15" fill="#FDE68A" stroke="#F59E0B" stroke-width="1.5"/>
+  <!-- Star In Center -->
+  <polygon points="32,29 35.5,36 43,37 37.5,42.5 39,50 32,46 25,50 26.5,42.5 21,37 28.5,36" fill="#D97706"/>
+</svg>
