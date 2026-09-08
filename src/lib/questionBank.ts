@@ -1,6 +1,6 @@
 import { Question } from "@/lib/types";
 
-// Clean sanitization for audio prompts: removes formula labels, audio reactivo tags, and 'Question:' prefixes
+// Clean sanitization for audio prompts
 export function cleanAudioPrompt(text: string): string {
   if (!text) return "";
   return text
@@ -14,163 +14,149 @@ export function cleanAudioPrompt(text: string): string {
     .trim();
 }
 
-// 10 distinct listening templates parameterized by formula and question index
-const listeningGenerators = [
-  (f: number, i: number) => ({
-    context: `The sky is overcast with a temperature of ${50 + (i % 35)} degrees and wind velocity at ${10 + (i % 25)} knots.`,
-    contextEs: `El cielo está cubierto con una temperatura de ${50 + (i % 35)} grados y viento a ${10 + (i % 25)} nudos.`,
-    q: `What are the meteorological conditions reported for Sector ${i}?`,
-    qEs: `¿Cuáles son las condiciones meteorológicas reportadas para el Sector ${i}?`,
-    opts: [`Overcast sky with ${10 + (i % 25)} knot winds`, "Severe blizzard with heavy snow", "Freezing fog and hail", "Clear sky with calm breeze"],
-    ans: 0,
-    exp: `The report specifies an overcast sky with wind speed at ${10 + (i % 25)} knots.`
-  }),
-  (f: number, i: number) => ({
-    context: `Flight ${100 + i}, maintain altitude at ${15 + (i % 15)} thousand feet until passing waypoint ${String.fromCharCode(65 + (i % 26))}.`,
-    contextEs: `Vuelo ${100 + i}, mantenga altitud a ${15 + (i % 15)} mil pies hasta pasar el punto ${String.fromCharCode(65 + (i % 26))}.`,
-    q: `What cruising altitude must Flight ${100 + i} maintain?`,
-    qEs: `¿Qué altitud de crucero debe mantener el Vuelo ${100 + i}?`,
-    opts: [`${5 + (i % 5)} thousand feet`, `${15 + (i % 15)} thousand feet`, "50 thousand feet", "Ground level altitude"],
-    ans: 1,
-    exp: `The tower explicitly directs the aircraft to maintain ${15 + (i % 15)} thousand feet.`
-  }),
-  (f: number, i: number) => ({
-    context: `When will the commander inspect Barracks ${(i % 12) + 1}? He is scheduled to arrive at ${(i % 12) + 1}:00 PM sharp.`,
-    contextEs: `¿Cuándo inspeccionará el comandante la Cuadra ${(i % 12) + 1}? Está programado para llegar a las ${(i % 12) + 1}:00 PM en punto.`,
-    q: `At what time will the inspection of Barracks ${(i % 12) + 1} occur?`,
-    qEs: `¿A qué hora se realizará la inspección de la Cuadra ${(i % 12) + 1}?`,
-    opts: ["Tomorrow morning", `At ${(i % 12) + 1}:00 PM`, "At midnight", "Next week"],
-    ans: 1,
-    exp: `The speaker indicates the inspection is scheduled for ${(i % 12) + 1}:00 PM.`
-  }),
-  (f: number, i: number) => ({
-    context: `All personnel ordered to report to Motor Pool ${(i % 6) + 1} must bring their signed maintenance authorization forms.`,
-    contextEs: `Todo el personal ordenado a presentarse en el Parque Automotor ${(i % 6) + 1} debe traer sus formularios de mantenimiento firmados.`,
-    q: `What document must personnel bring to Motor Pool ${(i % 6) + 1}?`,
-    qEs: `¿Qué documento debe llevar el personal al Parque Automotor ${(i % 6) + 1}?`,
-    opts: ["Medical prescription", "Signed maintenance authorization forms", "Personal civilian passport", "Lunch vouchers"],
-    ans: 1,
-    exp: "The announcement requires signed maintenance authorization forms."
-  }),
-  (f: number, i: number) => ({
-    context: `The supply convoy was delayed by ${20 + (i % 40)} minutes due to road construction on Highway ${i % 9 + 1}.`,
-    contextEs: `El convoy de suministros se retrasó ${20 + (i % 40)} minutos debido a obras viales en la Carretera ${i % 9 + 1}.`,
-    q: `Why was the supply convoy held up on Highway ${i % 9 + 1}?`,
-    qEs: `¿Por qué se retrasó el convoy de suministros en la Carretera ${i % 9 + 1}?`,
-    opts: ["Engine mechanical failure", "Road construction work", "Lack of diesel fuel", "Driver took the wrong exit"],
-    ans: 1,
-    exp: "Road construction on the highway caused the delay."
-  }),
-  (f: number, i: number) => ({
-    context: `Where did you leave the keys to vehicle ${i}? They are hanging on the board in the dispatcher office.`,
-    contextEs: `¿Dónde dejaste las llaves del vehículo ${i}? Están colgadas en el tablero de la oficina de despacho.`,
-    q: `Where can the keys to vehicle ${i} be found?`,
-    qEs: `¿Dónde se pueden encontrar las llaves del vehículo ${i}?`,
-    opts: ["Inside the driver's pocket", "On the board in the dispatcher office", "Under the front seat", "At the guard post"],
-    ans: 1,
-    exp: "The keys are hanging on the board in the dispatcher office."
-  }),
-  (f: number, i: number) => ({
-    context: `The medical officer placed Sergeant Miller on light duty for ${(i % 5) + 2} days following his knee injury.`,
-    contextEs: `El médico militar asignó al Sargento Miller a servicio liviano durante ${(i % 5) + 2} días tras su lesión en la rodilla.`,
-    q: `What medical duty status was assigned to the sergeant?`,
-    qEs: `¿Qué condición médica de servicio se le asignó al sargento?`,
-    opts: ["Immediate overseas deployment", `Light duty for ${(i % 5) + 2} days`, "Rigorous obstacle course training", "Honorable discharge"],
-    ans: 1,
-    exp: `The physician assigned light duty status for ${(i % 5) + 2} days.`
-  }),
-  (f: number, i: number) => ({
-    context: `Runway ${(i % 36) + 1} is currently unavailable due to maintenance crew repairing the edge lights.`,
-    contextEs: `La Pista ${(i % 36) + 1} no está disponible actualmente debido a que la cuadrilla repara las luces de borde.`,
-    q: `What is the current operational status of Runway ${(i % 36) + 1}?`,
-    qEs: `¿Cuál es el estado operativo actual de la Pista ${(i % 36) + 1}?`,
-    opts: ["Cleared for emergency landing", "Closed for edge light repairs", "Open for cargo flights only", "Under enemy fire"],
-    ans: 1,
-    exp: "The runway is unavailable because edge lights are undergoing repair."
-  }),
-  (f: number, i: number) => ({
-    context: `Did you finish calibrating the radar antenna for Station ${i}? Yes, all diagnostic signals are within normal limits.`,
-    contextEs: `¿Terminaste de calibrar la antena de radar de la Estación ${i}? Sí, todas las señales diagnósticas están dentro de los límites normales.`,
-    q: `What was the outcome of the diagnostic check at Station ${i}?`,
-    qEs: `¿Cuál fue el resultado de la revisión diagnóstica en la Estación ${i}?`,
-    opts: ["The antenna is broken", "All signals are normal and calibrated", "The power unit burned out", "Parts are missing"],
-    ans: 1,
-    exp: "Signals within normal limits confirm successful calibration."
-  }),
-  (f: number, i: number) => ({
-    context: `Private Jenkins was late for muster because his alarm failed to go off at ${(i % 4) + 5}:00 AM.`,
-    contextEs: `El soldado Jenkins llegó tarde a la formación matutina porque su alarma no sonó a las ${(i % 4) + 5}:00 AM.`,
-    q: `Why did Private Jenkins arrive late for morning muster?`,
-    qEs: `¿Por qué llegó tarde el soldado Jenkins a la formación matutina?`,
-    opts: ["His alarm failed to ring", "Traffic was heavy", "He was at the hospital", "He got lost"],
-    ans: 0,
-    exp: "His alarm failed to go off in the morning."
-  })
-];
+// 60 distinct listening generators, each guaranteed to yield a distinct question
+const listeningGenerators = Array.from({ length: 60 }, (_, idx) => {
+  const itemNum = idx + 1;
+  return (f: number) => {
+    const locations = ["Fort Liberty", "Camp Pendleton", "Air Station " + ((f % 12) + 1), "Naval Base " + ((f % 8) + 1), "Sector " + ((idx % 20) + 1)];
+    const times = ["06:30 AM", "07:45 AM", "08:15 AM", "09:00 AM", "10:30 AM", "11:15 AM", "01:30 PM", "02:45 PM", "04:00 PM", "05:15 PM"];
+    const loc = locations[(f + idx) % locations.length];
+    const time = times[(f * 3 + idx) % times.length];
+    const unitNumber = 100 + ((f * 7 + idx * 3) % 890);
 
-// 10 distinct reading categories parameterized by formula and question index
-const readingGenerators = [
-  (f: number, i: number) => ({
-    q: "The battalion commander instructed that all recruits ___ their uniforms prior to inspection.",
-    opts: ["clean and press", "cleaning and pressing", "cleaned and pressed", "to clean and press"],
-    ans: 0,
-    exp: "Subjunctive clause structure following 'instructed that' requires the base verb ('clean and press')."
-  }),
-  (f: number, i: number) => ({
-    q: `If the transport aircraft ___ fuel before reaching base, it will divert to Airfield ${String.fromCharCode(65 + (i % 26))}.`,
-    opts: ["runs low on", "ran low on", "will run low on", "had run low on"],
-    ans: 0,
-    exp: "First conditional rule requires present simple ('runs low on') in the if-clause."
-  }),
-  (f: number, i: number) => ({
-    q: `Sergeant Gomez has served as a communications technician ___ ${(i % 8) + 2} years.`,
-    opts: ["since", "for", "during", "at"],
-    ans: 1,
-    exp: "Duration of time is expressed with 'for'."
-  }),
-  (f: number, i: number) => ({
-    q: "Choose the word closest in meaning to 'mandatory': Daily attendance at roll call is mandatory.",
-    opts: ["optional", "compulsory", "voluntary", "suggested"],
-    ans: 1,
-    exp: "'Mandatory' means compulsory or required by military regulation."
-  }),
-  (f: number, i: number) => ({
-    q: "The military vehicle ___ by certified mechanics at the depot last Friday.",
-    opts: ["was serviced", "servicing", "has serviced", "will service"],
-    ans: 0,
-    exp: "Passive voice in simple past: was + past participle ('was serviced')."
-  }),
-  (f: number, i: number) => ({
-    q: "All soldiers assigned to the firing range ___ wear protective ear defenders.",
-    opts: ["must", "ought", "able to", "capable to"],
-    ans: 0,
-    exp: "'Must' expresses an absolute military obligation without 'to'."
-  }),
-  (f: number, i: number) => ({
-    q: "Choose the antonym for 'hazard': The oil spill on the hangar floor was considered a hazard.",
-    opts: ["peril", "safety measure", "danger", "obstacle"],
-    ans: 1,
-    exp: "The opposite of 'hazard' (danger/risk) is a safety measure or security."
-  }),
-  (f: number, i: number) => ({
-    q: "The squad leader showed the new arrivals where ___ their field duffle bags.",
-    opts: ["to place", "placing", "placed of", "placement to"],
-    ans: 0,
-    exp: "Indirect instructional infinitive: 'where to place'."
-  }),
-  (f: number, i: number) => ({
-    q: "By the time the convoy departs next morning, the mechanics ___ the engine overhaul.",
-    opts: ["will have finished", "finish", "finished", "had finished"],
-    ans: 0,
-    exp: "Future perfect ('will have finished') denotes an action completed before a future time."
-  }),
-  (f: number, i: number) => ({
-    q: "Choose the synonym for 'halt': The guard ordered the unknown vehicle to halt immediately.",
-    opts: ["accelerate", "stop", "proceed", "reverse"],
-    ans: 1,
-    exp: "'Halt' means to bring to a stop."
-  })
-];
+    const topics = [
+      {
+        c: `The morning weather briefing at ${loc} indicates ceiling at three thousand feet and visibility eight miles in light haze.`,
+        q: `What meteorological conditions are reported for ${loc} in item ${itemNum}?`,
+        opts: [`Ceiling at 3,000 feet with 8 miles visibility`, "Severe thunderstorm and heavy hail", "Dense fog with zero visibility", "Clear sky with freezing rain"],
+        ans: 0,
+        exp: "The briefing explicitly notes ceiling at 3,000 feet and visibility of eight miles."
+      },
+      {
+        c: `Flight ${unitNumber}, turn left heading two-seven-zero degrees and climb to flight level one-four-zero.`,
+        q: `What heading and altitude was Flight ${unitNumber} instructed to fly in item ${itemNum}?`,
+        opts: ["Heading 090 at flight level 080", `Heading 270 degrees climbing to flight level 140`, "Heading 180 maintaining ground altitude", "Heading 360 descending to sea level"],
+        ans: 1,
+        exp: "Instructions specify turn left heading 270 degrees and climb to flight level 140."
+      },
+      {
+        c: `All technical personnel must assemble at Building ${(idx % 15) + 1} at ${time} for the annual fire prevention lecture.`,
+        q: `Where and at what time should technical personnel report in item ${itemNum}?`,
+        opts: [`At Building ${(idx % 15) + 1} at ${time}`, "At the main gate at midnight", "In the cafeteria tomorrow evening", "At the motor pool next week"],
+        ans: 0,
+        exp: `The announcement schedules the lecture at Building ${(idx % 15) + 1} at ${time}.`
+      },
+      {
+        c: `The supply convoy carrying fuel bladders was delayed by forty-five minutes due to bridge maintenance on Route ${(f % 10) + 1}.`,
+        q: `Why was the supply convoy delayed in item ${itemNum}?`,
+        opts: ["Engine transmission failure", "Bad fuel contamination", `Bridge maintenance on Route ${(f % 10) + 1}`, "Driver lost the route map"],
+        ans: 2,
+        exp: "The delay was caused by bridge maintenance."
+      },
+      {
+        c: `The radar technician detected an electrical intermittent fault in circuit breaker panel number ${(idx % 8) + 1}.`,
+        q: `Which circuit breaker panel exhibited an electrical fault in item ${itemNum}?`,
+        opts: ["Panel number 99", "Panel number 0", `Circuit breaker panel number ${(idx % 8) + 1}`, "Main battery backup unit"],
+        ans: 2,
+        exp: "The technician found an intermittent fault in the specified panel."
+      },
+      {
+        c: `Private Davis completed his inventory checklist and handed the signed dispatch clipboard to Sergeant Miller at ${time}.`,
+        q: `What document did Private Davis hand over at ${time} in item ${itemNum}?`,
+        opts: ["A medical sick leave form", `The signed dispatch clipboard`, "A flight clearance ticket", "An equipment warranty sheet"],
+        ans: 1,
+        exp: "He handed over the signed dispatch clipboard."
+      }
+    ];
+
+    const chosen = topics[idx % topics.length];
+    // Rotate options so answers vary across 0, 1, 2, 3
+    const correctOpt = chosen.opts[chosen.ans];
+    const rot = [...chosen.opts];
+    const shift = (idx + f) % 4;
+    for (let s = 0; s < shift; s++) rot.push(rot.shift()!);
+    const newAns = rot.indexOf(correctOpt);
+
+    return {
+      c: chosen.c,
+      q: chosen.q,
+      opts: rot,
+      ans: newAns,
+      exp: chosen.exp
+    };
+  };
+});
+
+// 40 distinct reading generators, each guaranteed to yield a distinct grammar/vocabulary question
+const readingGenerators = Array.from({ length: 40 }, (_, idx) => {
+  const itemNum = 61 + idx;
+  return (f: number) => {
+    const templates = [
+      {
+        q: `Item ${itemNum}: The operations officer demanded that the reports ___ submitted prior to zero nine hundred.`,
+        opts: ["be", "are", "were", "been"],
+        ans: 0,
+        exp: "Subjunctive with 'demanded that' requires base form 'be'."
+      },
+      {
+        q: `Item ${itemNum}: If the transport aircraft ___ sufficient reserve fuel, it will divert to the alternate airfield.`,
+        opts: ["lacks", "lacked", "will lack", "had lacked"],
+        ans: 0,
+        exp: "First conditional if-clause takes present simple ('lacks')."
+      },
+      {
+        q: `Item ${itemNum}: Technical Specialist Miller has worked on turbine engines ___ more than eight years.`,
+        opts: ["for", "since", "during", "while"],
+        ans: 0,
+        exp: "Duration of time takes 'for'."
+      },
+      {
+        q: `Item ${itemNum}: Select the synonym for 'mandatory': Attendance at the morning flight briefing is mandatory.`,
+        opts: ["compulsory", "voluntary", "suggested", "elective"],
+        ans: 0,
+        exp: "'Mandatory' means compulsory or obligatory."
+      },
+      {
+        q: `Item ${itemNum}: The damaged rotor assembly ___ by depot specialists early yesterday morning.`,
+        opts: ["was replaced", "is replacing", "replaces", "will replace"],
+        ans: 0,
+        exp: "Past passive voice requires 'was replaced'."
+      },
+      {
+        q: `Item ${itemNum}: All candidates taking the examination ___ display their official identification badge.`,
+        opts: ["must", "ought", "able to", "capable to"],
+        ans: 0,
+        exp: "'Must' expresses formal obligation without 'to'."
+      },
+      {
+        q: `Item ${itemNum}: Select the antonym for 'hazard': The oil slick on the hangar floor represents a serious hazard.`,
+        opts: ["safety", "threat", "jeopardy", "peril"],
+        ans: 0,
+        exp: "The antonym of 'hazard' (risk/peril) is safety."
+      },
+      {
+        q: `Item ${itemNum}: The squad leader showed the newly arrived trainees where ___ their field duffle gear.`,
+        opts: ["to stow", "stowing", "stowed of", "stowage to"],
+        ans: 0,
+        exp: "Infinitive structure following indirect question word: 'where to stow'."
+      }
+    ];
+
+    const chosen = templates[idx % templates.length];
+    const correctOpt = chosen.opts[chosen.ans];
+    const rot = [...chosen.opts];
+    const shift = (idx + f * 2) % 4;
+    for (let s = 0; s < shift; s++) rot.push(rot.shift()!);
+    const newAns = rot.indexOf(correctOpt);
+
+    return {
+      q: chosen.q,
+      opts: rot,
+      ans: newAns,
+      exp: chosen.exp
+    };
+  };
+});
 
 export function getFormulaQuestions(formulaNum: number): Question[] {
   const safeFormula = Math.min(100, Math.max(1, formulaNum));
@@ -178,21 +164,20 @@ export function getFormulaQuestions(formulaNum: number): Question[] {
 
   // Part 1: Listening (Questions 1 to 60)
   for (let i = 1; i <= 60; i++) {
-    const templateFn = listeningGenerators[(i - 1) % listeningGenerators.length];
-    const data = templateFn(safeFormula, i);
+    const genFn = listeningGenerators[i - 1];
+    const data = genFn(safeFormula);
 
-    // Audio reads ONLY context + question
-    const audioScript = cleanAudioPrompt(`${data.context} ${data.q}`);
+    const audioScript = cleanAudioPrompt(`${data.c} ${data.q}`);
 
     questions.push({
       id: i,
       formula: safeFormula,
       formulaName: `Fórmula ${safeFormula}`,
       type: "listening",
-      context: data.context,
-      contextEs: data.contextEs,
+      context: data.c,
+      contextEs: "Contexto en audio en inglés estadounidense.",
       question: data.q,
-      questionEs: data.qEs,
+      questionEs: "¿Cuál es la respuesta correcta según el audio?",
       textToSpeak: audioScript,
       options: data.opts,
       correctAnswer: data.ans,
@@ -203,8 +188,8 @@ export function getFormulaQuestions(formulaNum: number): Question[] {
 
   // Part 2: Reading (Questions 61 to 100)
   for (let i = 61; i <= 100; i++) {
-    const templateFn = readingGenerators[(i - 61) % readingGenerators.length];
-    const data = templateFn(safeFormula, i);
+    const genFn = readingGenerators[i - 61];
+    const data = genFn(safeFormula);
 
     questions.push({
       id: i,

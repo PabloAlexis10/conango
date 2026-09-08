@@ -105,12 +105,14 @@ export default function QuestionCard({
           <div className="mb-4">
             <AudioPlayer
               audioUrl={question.audioUrl}
+              context={question.context}
+              questionText={question.question}
               textToSpeak={question.textToSpeak || question.question}
             />
           </div>
         )}
 
-        {/* Subtítulo del Contexto del Audio en Inglés Norteamericano (Listening) */}
+        {/* Subtítulo del Contexto del Audio en Inglés Estadounidense (Listening) */}
         {isListening && (
           <div className="mb-6 bg-[#FAF6F0] rounded-2xl border-2 border-[#E5D5C5] p-4 shadow-sm">
             <div className="flex items-center justify-between mb-2.5">

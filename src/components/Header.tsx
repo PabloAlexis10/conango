@@ -141,7 +141,7 @@ export default function Header({
                       className="w-full text-left px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl flex items-center gap-2 transition-colors"
                     >
                       <BookOpen className="w-3.5 h-3.5 text-[#F59E0B]" />
-                      <span>Vocabulario (Definiciones)</span>
+                      <span>Vocabulario (Pronunciación)</span>
                     </Link>
 
                     <Link

@@ -6,11 +6,11 @@ import { matchingPairs, MatchingPair } from "@/lib/vocabularyData";
 import ConanMascot from "@/components/ConanMascot";
 import Header from "@/components/Header";
 import { soundEffects } from "@/lib/soundEffects";
-import { ArrowLeft, RotateCcw, Sparkles, Check, Volume2, Trophy } from "lucide-react";
+import { ArrowLeft, RotateCcw, Sparkles, Check, Volume2, Trophy, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface CardItem {
-  uid: string; // unique ID for card
+interface ColumnCard {
+  uid: string;
   pairId: number;
   text: string;
   lang: "es" | "en";
@@ -25,106 +25,175 @@ function shuffle<T>(array: T[]): T[] {
   return arr;
 }
 
+const VISIBLE_COUNT = 5;
+
 export default function VocabularyMatchingPage() {
-  const [round, setRound] = useState(1);
-  const [cards, setCards] = useState<CardItem[]>([]);
-  const [selectedCard, setSelectedCard] = useState<CardItem | null>(null);
-  const [matchedPairIds, setMatchedPairIds] = useState<number[]>([]);
-  const [wrongPairUids, setWrongPairUids] = useState<string[]>([]);
-  const [moves, setMoves] = useState(0);
-  const [isRoundFinished, setIsRoundFinished] = useState(false);
+  const [reservePool, setReservePool] = useState<MatchingPair[]>([]);
+  const [leftCards, setLeftCards] = useState<ColumnCard[]>([]);
+  const [rightCards, setRightCards] = useState<ColumnCard[]>([]);
 
-  // Setup round with 6 pairs
-  const startRound = (roundNum: number) => {
-    const startIndex = ((roundNum - 1) * 6) % matchingPairs.length;
-    let chosen: MatchingPair[] = [];
-    for (let i = 0; i < 6; i++) {
-      chosen.push(matchingPairs[(startIndex + i) % matchingPairs.length]);
-    }
+  const [selectedLeft, setSelectedLeft] = useState<ColumnCard | null>(null);
+  const [selectedRight, setSelectedRight] = useState<ColumnCard | null>(null);
 
-    const cardItems: CardItem[] = [];
-    chosen.forEach((pair) => {
-      cardItems.push({
-        uid: `${pair.id}_es`,
-        pairId: pair.id,
-        text: pair.spanish,
-        lang: "es",
-      });
-      cardItems.push({
-        uid: `${pair.id}_en`,
-        pairId: pair.id,
-        text: pair.english,
+  const [matchedUids, setMatchedUids] = useState<string[]>([]);
+  const [wrongUids, setWrongUids] = useState<string[]>([]);
+
+  const [totalMatched, setTotalMatched] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+
+  // Initialize game
+  const initGame = () => {
+    const shuffledBank = shuffle([...matchingPairs]);
+    const initialActive = shuffledBank.slice(0, VISIBLE_COUNT);
+    const initialReserve = shuffledBank.slice(VISIBLE_COUNT);
+
+    const left: ColumnCard[] = initialActive.map((p) => ({
+      uid: `${p.id}_es_${Math.random()}`,
+      pairId: p.id,
+      text: p.spanish,
+      lang: "es",
+    }));
+
+    const right: ColumnCard[] = shuffle(
+      initialActive.map((p) => ({
+        uid: `${p.id}_en_${Math.random()}`,
+        pairId: p.id,
+        text: p.english,
         lang: "en",
-      });
-    });
+      }))
+    );
 
-    setCards(shuffle(cardItems));
-    setSelectedCard(null);
-    setMatchedPairIds([]);
-    setWrongPairUids([]);
-    setMoves(0);
-    setIsRoundFinished(false);
+    setLeftCards(left);
+    setRightCards(right);
+    setReservePool(initialReserve);
+    setSelectedLeft(null);
+    setSelectedRight(null);
+    setMatchedUids([]);
+    setWrongUids([]);
+    setTotalMatched(0);
+    setStreak(0);
+    setIsFinished(false);
   };
 
   useEffect(() => {
-    startRound(round);
-  }, [round]);
+    initGame();
+  }, []);
 
-  const handleCardClick = (card: CardItem) => {
-    if (matchedPairIds.includes(card.pairId)) return;
-    if (selectedCard && selectedCard.uid === card.uid) return;
+  const speakEnglishWord = (word: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = "en-US";
+    u.rate = 0.95;
+    window.speechSynthesis.speak(u);
+  };
 
-    if (!selectedCard) {
-      setSelectedCard(card);
-      setWrongPairUids([]);
-      return;
-    }
-
-    // A second card was selected
-    setMoves((prev) => prev + 1);
-
-    if (selectedCard.pairId === card.pairId && selectedCard.lang !== card.lang) {
+  // Evaluate pair when both left and right are selected
+  const checkPair = (leftCard: ColumnCard, rightCard: ColumnCard) => {
+    if (leftCard.pairId === rightCard.pairId) {
       // MATCH!
       soundEffects.playCorrect();
-      const newMatched = [...matchedPairIds, card.pairId];
-      setMatchedPairIds(newMatched);
-      setSelectedCard(null);
-      setWrongPairUids([]);
+      speakEnglishWord(rightCard.text);
 
-      // If word in English, speak it
-      const enWord = card.lang === "en" ? card.text : selectedCard.text;
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        const u = new SpeechSynthesisUtterance(enWord);
-        u.lang = "en-US";
-        u.rate = 0.95;
-        window.speechSynthesis.speak(u);
-      }
+      const matchedPairId = leftCard.pairId;
+      setMatchedUids([leftCard.uid, rightCard.uid]);
+      setTotalMatched((prev) => prev + 1);
+      setStreak((prev) => prev + 1);
 
-      // Check if all pairs matched
-      if (newMatched.length === 6) {
-        setTimeout(() => {
-          setIsRoundFinished(true);
-          soundEffects.playLevelUp();
-        }, 500);
-      }
-    } else {
-      // MISMATCH!
-      soundEffects.playIncorrect();
-      setWrongPairUids([selectedCard.uid, card.uid]);
       setTimeout(() => {
-        setSelectedCard(null);
-        setWrongPairUids([]);
-      }, 700);
+        // Remove matched pair from columns
+        setLeftCards((prev) => prev.filter((c) => c.uid !== leftCard.uid));
+        setRightCards((prev) => prev.filter((c) => c.uid !== rightCard.uid));
+
+        // Pull next pair from reserve pool
+        setReservePool((prevPool) => {
+          if (prevPool.length > 0) {
+            const nextPair = prevPool[0];
+            const remainingPool = prevPool.slice(1);
+
+            const newLeft: ColumnCard = {
+              uid: `${nextPair.id}_es_${Math.random()}`,
+              pairId: nextPair.id,
+              text: nextPair.spanish,
+              lang: "es",
+            };
+
+            const newRight: ColumnCard = {
+              uid: `${nextPair.id}_en_${Math.random()}`,
+              pairId: nextPair.id,
+              text: nextPair.english,
+              lang: "en",
+            };
+
+            setLeftCards((prev) => [...prev, newLeft]);
+            // Insert new right card at random position so it's shuffled
+            setRightCards((prev) => {
+              const copy = [...prev];
+              const randomPos = Math.floor(Math.random() * (copy.length + 1));
+              copy.splice(randomPos, 0, newRight);
+              return copy;
+            });
+
+            return remainingPool;
+          } else {
+            // Check if board is cleared
+            setLeftCards((prev) => {
+              if (prev.length <= 1) {
+                setIsFinished(true);
+                soundEffects.playLevelUp();
+              }
+              return prev;
+            });
+            return [];
+          }
+        });
+
+        setSelectedLeft(null);
+        setSelectedRight(null);
+        setMatchedUids([]);
+      }, 380);
+    } else {
+      // MISMATCH
+      soundEffects.playIncorrect();
+      setWrongUids([leftCard.uid, rightCard.uid]);
+      setStreak(0);
+
+      setTimeout(() => {
+        setWrongUids([]);
+        setSelectedLeft(null);
+        setSelectedRight(null);
+      }, 550);
+    }
+  };
+
+  const handleLeftClick = (card: ColumnCard) => {
+    if (matchedUids.includes(card.uid)) return;
+    setSelectedLeft(card);
+    setWrongUids([]);
+
+    if (selectedRight) {
+      checkPair(card, selectedRight);
+    }
+  };
+
+  const handleRightClick = (card: ColumnCard) => {
+    if (matchedUids.includes(card.uid)) return;
+    setSelectedRight(card);
+    setWrongUids([]);
+
+    if (selectedLeft) {
+      checkPair(selectedLeft, card);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans text-[#6B4423]">
-      <Header sessionTitle="Emparejamiento de Cartas" />
+      <Header sessionTitle="Vocabulario en Dos Columnas" />
 
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
-        {/* Top Header */}
-        <div className="flex items-center justify-between mb-4">
+        {/* Top Header Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <Link
             href="/"
             className="flex items-center gap-1.5 text-xs font-bold text-[#A67B5B] hover:text-[#6B4423] transition-colors"
@@ -133,128 +202,205 @@ export default function VocabularyMatchingPage() {
             <span>Volver al Inicio</span>
           </Link>
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-black px-3 py-1 bg-white rounded-full border border-[#E5D5C5] shadow-xs text-[#F59E0B]">
-              Ronda {round} • Movimientos: {moves}
-            </span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-[#E5D5C5] shadow-xs text-xs font-black text-amber-800">
+              <Zap className="w-3.5 h-3.5 text-[#F59E0B]" />
+              <span>Racha: {streak}</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-[#E5D5C5] shadow-xs text-xs font-black text-emerald-800">
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Pares: {totalMatched}</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={initGame}
+              className="p-2 text-[#A67B5B] hover:text-[#6B4423] hover:bg-white rounded-xl border border-[#E5D5C5] transition-colors"
+              title="Reiniciar con nuevas cartas"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
-        {!isRoundFinished ? (
-          <div className="bg-white rounded-3xl border-2 border-[#A67B5B] shadow-conan-card p-6 sm:p-8">
-            {/* Title & Instructions */}
-            <div className="flex items-center justify-between border-b border-[#E5D5C5] pb-4 mb-6">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-black text-[#6B4423] tracking-tight">
-                  Empareja las Cartas
-                </h2>
-                <p className="text-xs sm:text-sm text-[#A67B5B] font-semibold mt-0.5">
-                  Toca una carta en español y su pareja en inglés (ejemplo: <em>Rojo ↔ Red</em>).
-                </p>
+        {/* Mascot & Instruction */}
+        <div className="flex items-center justify-between bg-white p-4 sm:p-5 rounded-3xl border-2 border-[#E5D5C5] shadow-sm mb-6">
+          <div className="flex items-center gap-3.5">
+            <ConanMascot
+              size="sm"
+              mood={isFinished ? "celebrate" : streak > 2 ? "celebrate" : "thinking"}
+            />
+            <div>
+              <h2 className="text-base sm:text-lg font-black text-[#6B4423]">
+                Emparejamiento por Columnas
+              </h2>
+              <p className="text-xs sm:text-sm text-[#A67B5B] font-medium">
+                Toca una palabra en <strong className="text-[#6B4423]">Español</strong> (izquierda) y su pareja en <strong className="text-[#6B4423]">Inglés</strong> (derecha). ¡Al acertar se eliminan y aparecen más!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {!isFinished ? (
+          /* TWO-COLUMN BOARD */
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {/* LEFT COLUMN: SPANISH */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between px-2 pb-1 border-b border-[#E5D5C5]">
+                <span className="text-xs font-black uppercase tracking-wider text-[#A67B5B] flex items-center gap-1.5">
+                  <span>🇪🇸</span>
+                  <span>Columna en Español</span>
+                </span>
+                <span className="text-[11px] font-bold text-[#A67B5B]">
+                  {leftCards.length} activas
+                </span>
               </div>
 
-              <ConanMascot
-                size="sm"
-                mood={matchedPairIds.length > 0 ? "happy" : "thinking"}
-                animate={true}
-              />
+              <div className="space-y-2.5 min-h-[320px]">
+                <AnimatePresence>
+                  {leftCards.map((card) => {
+                    const isSelected = selectedLeft?.uid === card.uid;
+                    const isMatched = matchedUids.includes(card.uid);
+                    const isWrong = wrongUids.includes(card.uid);
+
+                    let cardClass = "bg-white border-[#E5D5C5] text-[#6B4423] hover:border-[#F59E0B]";
+                    if (isSelected) {
+                      cardClass = "bg-amber-50 border-[#F59E0B] text-[#92400E] shadow-[0_3px_0_0_#D97706] scale-[1.02]";
+                    }
+                    if (isMatched) {
+                      cardClass = "bg-emerald-50 border-emerald-500 text-emerald-800 shadow-[0_3px_0_0_#10B981]";
+                    }
+                    if (isWrong) {
+                      cardClass = "bg-red-50 border-red-500 text-red-800 shadow-[0_3px_0_0_#EF4444] animate-shake";
+                    }
+
+                    return (
+                      <motion.button
+                        key={card.uid}
+                        layout
+                        initial={{ opacity: 0, x: -20, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8, x: -30 }}
+                        transition={{ duration: 0.25 }}
+                        type="button"
+                        onClick={() => handleLeftClick(card)}
+                        className={`w-full p-4 rounded-2xl border-2 font-bold text-sm sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
+                      >
+                        <span className="font-extrabold">{card.text}</span>
+                        {isSelected && <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] animate-ping" />}
+                        {isMatched && <Check className="w-5 h-5 text-emerald-600" />}
+                      </motion.button>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
             </div>
 
-            {/* Grid of 12 Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
-              {cards.map((card) => {
-                const isMatched = matchedPairIds.includes(card.pairId);
-                const isSelected = selectedCard?.uid === card.uid;
-                const isWrong = wrongPairUids.includes(card.uid);
+            {/* RIGHT COLUMN: ENGLISH */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between px-2 pb-1 border-b border-[#E5D5C5]">
+                <span className="text-xs font-black uppercase tracking-wider text-indigo-700 flex items-center gap-1.5">
+                  <span>🇺🇸</span>
+                  <span>Columna en Inglés</span>
+                </span>
+                <span className="text-[11px] font-bold text-[#A67B5B]">
+                  {rightCards.length} activas
+                </span>
+              </div>
 
-                let cardStyle = "border-[#E5D5C5] bg-white text-[#6B4423] hover:border-[#A67B5B] hover:bg-[#FAF6F0] shadow-sm";
+              <div className="space-y-2.5 min-h-[320px]">
+                <AnimatePresence>
+                  {rightCards.map((card) => {
+                    const isSelected = selectedRight?.uid === card.uid;
+                    const isMatched = matchedUids.includes(card.uid);
+                    const isWrong = wrongUids.includes(card.uid);
 
-                if (isMatched) {
-                  cardStyle = "border-green-500 bg-green-50 text-green-800 opacity-80 cursor-default shadow-none";
-                } else if (isWrong) {
-                  cardStyle = "border-red-500 bg-red-50 text-red-800 animate-shake shadow-md";
-                } else if (isSelected) {
-                  cardStyle = "border-[#F59E0B] bg-[#FFFBEB] text-[#92400E] shadow-md scale-102 ring-2 ring-[#F59E0B]";
-                }
+                    let cardClass = "bg-white border-[#E5D5C5] text-[#4338CA] hover:border-indigo-500";
+                    if (isSelected) {
+                      cardClass = "bg-indigo-50 border-indigo-600 text-indigo-900 shadow-[0_3px_0_0_#4F46E5] scale-[1.02]";
+                    }
+                    if (isMatched) {
+                      cardClass = "bg-emerald-50 border-emerald-500 text-emerald-800 shadow-[0_3px_0_0_#10B981]";
+                    }
+                    if (isWrong) {
+                      cardClass = "bg-red-50 border-red-500 text-red-800 shadow-[0_3px_0_0_#EF4444] animate-shake";
+                    }
 
-                return (
-                  <motion.button
-                    key={card.uid}
-                    type="button"
-                    whileTap={!isMatched ? { scale: 0.96 } : {}}
-                    onClick={() => handleCardClick(card)}
-                    disabled={isMatched}
-                    className={`h-24 sm:h-28 rounded-2xl border-2 p-3 text-center flex flex-col items-center justify-center transition-all font-extrabold relative select-none ${cardStyle}`}
-                  >
-                    {/* Language Badge */}
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#A67B5B] mb-1">
-                      {card.lang === "es" ? "🇪🇸 Español" : "🇺🇸 English"}
-                    </span>
-
-                    {/* Word text */}
-                    <span className="text-sm sm:text-base leading-snug">
-                      {card.text}
-                    </span>
-
-                    {/* Matched check icon */}
-                    {isMatched && (
-                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-green-500 text-white flex items-center justify-center">
-                        <Check className="w-3 h-3 stroke-[3]" />
-                      </div>
-                    )}
-                  </motion.button>
-                );
-              })}
-            </div>
-
-            {/* Progress Bar */}
-            <div className="flex items-center justify-between text-xs font-bold text-[#A67B5B] pt-2 border-t border-[#E5D5C5]">
-              <span>Parejas completadas: {matchedPairIds.length} de 6</span>
-              <div className="w-32 bg-[#FAF6F0] h-2.5 rounded-full overflow-hidden border border-[#E5D5C5]">
-                <div
-                  className="bg-green-500 h-full transition-all duration-300 rounded-full"
-                  style={{ width: `${(matchedPairIds.length / 6) * 100}%` }}
-                />
+                    return (
+                      <motion.button
+                        key={card.uid}
+                        layout
+                        initial={{ opacity: 0, x: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8, x: 30 }}
+                        transition={{ duration: 0.25 }}
+                        type="button"
+                        onClick={() => handleRightClick(card)}
+                        className={`w-full p-4 rounded-2xl border-2 font-bold text-sm sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
+                      >
+                        <span className="font-extrabold">{card.text}</span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              speakEnglishWord(card.text);
+                            }}
+                            className="p-1 text-gray-400 hover:text-indigo-600 rounded-lg"
+                            title="Escuchar pronunciación"
+                          >
+                            <Volume2 className="w-4 h-4" />
+                          </button>
+                          {isSelected && <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-ping" />}
+                          {isMatched && <Check className="w-5 h-5 text-emerald-600" />}
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                </AnimatePresence>
               </div>
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border-2 border-[#A67B5B] shadow-conan-card p-8 text-center">
-            <ConanMascot size="hero" mood="celebrate" animate={true} />
-            <h2 className="text-3xl font-black text-[#6B4423] mt-4 mb-2">
-              ¡Ronda {round} Superada con Éxito!
+          /* VICTORY SCREEN */
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-3xl border-2 border-[#A67B5B] shadow-conan-card p-8 text-center max-w-md mx-auto"
+          >
+            <div className="w-16 h-16 rounded-3xl bg-amber-100 text-[#F59E0B] flex items-center justify-center mx-auto mb-4">
+              <Trophy className="w-8 h-8" />
+            </div>
+
+            <h2 className="text-2xl font-black text-[#6B4423] mb-2">
+              ¡Misión Cumplida!
             </h2>
+
             <p className="text-sm text-[#A67B5B] font-medium mb-6">
-              ¡Completaste las 6 parejas de vocabulario en {moves} movimientos!
+              ¡Completaste todos los pares de vocabulario disponibles en el banco con excelente precisión táctica!
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={() => setRound((prev) => prev + 1)}
-                className="w-full sm:w-auto px-6 py-3.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-2xl shadow-conan-btn flex items-center justify-center gap-2 text-sm transition-transform active:scale-98"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Siguiente Ronda (Nuevas Palabras)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => startRound(round)}
-                className="w-full sm:w-auto px-6 py-3.5 bg-white hover:bg-[#FAF6F0] text-[#6B4423] border-2 border-[#E5D5C5] font-black rounded-2xl flex items-center justify-center gap-2 text-sm shadow-sm"
-              >
-                <RotateCcw className="w-4 h-4" />
-                <span>Repetir Ronda {round}</span>
-              </button>
-
-              <Link
-                href="/vocabulary/definitions"
-                className="w-full sm:w-auto px-6 py-3.5 bg-white hover:bg-[#FAF6F0] text-[#6B4423] border-2 border-[#E5D5C5] font-black rounded-2xl flex items-center justify-center gap-2 text-sm shadow-sm"
-              >
-                <span>Ir a Definiciones en Inglés</span>
-              </Link>
+            <div className="p-4 bg-[#FAF6F0] rounded-2xl border border-[#E5D5C5] mb-6 flex justify-around">
+              <div>
+                <span className="text-xs text-[#A67B5B] font-bold block">Pares logrados</span>
+                <span className="text-2xl font-black text-[#6B4423]">{totalMatched}</span>
+              </div>
+              <div>
+                <span className="text-xs text-[#A67B5B] font-bold block">Mejor racha</span>
+                <span className="text-2xl font-black text-[#F59E0B]">{streak}</span>
+              </div>
             </div>
-          </div>
+
+            <button
+              type="button"
+              onClick={initGame}
+              className="w-full py-3.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-2xl shadow-conan-btn flex items-center justify-center gap-2 transition-transform active:scale-98"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Jugar otra ronda</span>
+            </button>
+          </motion.div>
         )}
       </main>
     </div>
