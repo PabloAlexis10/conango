@@ -61,16 +61,17 @@ export const CONAN_ACCESSORIES: ConanAccessory[] = [
 ];
 
 export const MILITARY_RANKS = [
-  { level: 1, name: "Recluta Táctico", minXp: 0, badge: "🥉" },
-  { level: 2, name: "Soldado Primero", minXp: 150, badge: "🎖️" },
-  { level: 3, name: "Cabo de Escuadra", minXp: 400, badge: "⭐" },
-  { level: 4, name: "Sargento Segundo", minXp: 800, badge: "⭐⭐" },
-  { level: 5, name: "Suboficial Mayor", minXp: 1500, badge: "⭐⭐⭐" },
-  { level: 6, name: "Teniente de Operaciones", minXp: 2600, badge: "🏅" },
-  { level: 7, name: "Capitán de Vuelo", minXp: 4200, badge: "💎" },
-  { level: 8, name: "Mayor de Inteligencia", minXp: 6500, badge: "🛡️" },
-  { level: 9, name: "Coronel en Jefe", minXp: 9500, badge: "🦅" },
-  { level: 10, name: "General Supremo Conan", minXp: 14000, badge: "👑" },
+  { level: 1, name: "PVT K9 • Recruit Pup", minXp: 0, badge: "🐾", usGrade: "E-1 Private", desc: "Recluta canino en adiestramiento básico de obediencia y señales tácticas." },
+  { level: 2, name: "PFC K9 • Scout Dog", minXp: 150, badge: "🥉", usGrade: "E-3 Private First Class", desc: "Perro rastreador de vanguardia para detección de objetivos." },
+  { level: 3, name: "SPC K9 • Patrol Specialist", minXp: 400, badge: "🎖️", usGrade: "E-4 Specialist", desc: "Especialista canino en seguridad perimétrica y rondas tácticas." },
+  { level: 4, name: "SGT K9 • Tactical Sentry Dog", minXp: 800, badge: "⭐", usGrade: "E-5 Sergeant", desc: "Sargento K9 de centinela y patrulla armada con certificación de combate." },
+  { level: 5, name: "SSG K9 • Combat Assault K9", minXp: 1500, badge: "⭐⭐", usGrade: "E-6 Staff Sergeant", desc: "Líder canino de escuadra para asalto táctico y neutralización rápida." },
+  { level: 6, name: "SFC K9 • Search & Rescue Lead", minXp: 2600, badge: "⭐⭐⭐", usGrade: "E-7 Sergeant First Class", desc: "Sargento Primero canino, especialista jefe en búsqueda, rescate y radio." },
+  { level: 7, name: "1SG K9 • Operations Master Dog", minXp: 4200, badge: "🏅", usGrade: "E-8 First Sergeant", desc: "Primer Sargento canino a cargo de la disciplina y disciplina de compañía." },
+  { level: 8, name: "CSM K9 • Command Sergeant Major", minXp: 6500, badge: "🛡️", usGrade: "E-9 Command Sergeant Major", desc: "Suboficial mayor canino superior, consejero táctico del comando." },
+  { level: 9, name: "CPT K9 • Special Recon Commander", minXp: 9500, badge: "💎", usGrade: "O-3 Captain", desc: "Oficial canino al mando de misiones de reconocimiento avanzado." },
+  { level: 10, name: "COL K9 • Brigade Chief Canine", minXp: 13000, badge: "🦅", usGrade: "O-6 Colonel", desc: "Coronel canino al mando de todas las brigadas tácticas K9." },
+  { level: 11, name: "GEN Conan • Supreme K9 Commander", minXp: 18000, badge: "👑", usGrade: "O-10 General", desc: "Comandante General Supremo K9 de todas las fuerzas militares Conan." },
 ];
 
 export function getRankByXp(xp: number) {

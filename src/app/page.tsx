@@ -245,6 +245,8 @@ export default function HomePage() {
           </button>
         </section>
 
+        <AdBanner className="mb-8" />
+
         {/* CORE SECTION: EVALUACIONES OFICIALES */}
         <section className="mb-10">
           <div className="text-center mb-6">
