@@ -178,6 +178,15 @@ function ResultsContent() {
           </div>
         </div>
 
+        {/* Google Ads Placement after Exam */}
+        <AdBanner
+          className="my-6"
+          slotId="2345678901"
+          sponsorTitle="Plan de Refuerzo Personalizado según tus Fallos 📊"
+          sponsorDescription="Recibe un diagnóstico detallado de tus puntos débiles en gramática y listening para tu próximo intento."
+          sponsorCta="Obtener Plan de Estudio"
+        />
+
         {/* Section: Review Wrong Questions */}
         <section className="mt-8">
           <div className="flex items-center justify-between mb-4">

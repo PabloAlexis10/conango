@@ -13,6 +13,7 @@ import GuestLimitWall from "@/components/GuestLimitWall";
 import AuthModal from "@/components/AuthModal";
 import RewardedVideoModal from "@/components/RewardedVideoModal";
 import ProSubscriptionModal from "@/components/ProSubscriptionModal";
+import AdBanner from "@/components/AdBanner";
 import { updateUserStreak, addExperience } from "@/lib/supabase";
 import { Video, Crown } from "lucide-react";
 import { RotateCcw, Home, Loader2, AlertCircle } from "lucide-react";
@@ -269,14 +270,25 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
         </div>
 
         {currentQuestion && !isGameOver && (
-          <QuestionCard
-            question={currentQuestion}
-            currentIndex={currentIndex + 1}
-            totalQuestions={questions.length}
-            onAnswer={handleAnswer}
-            onNext={handleNext}
-            disabled={isGameOver || isSaving}
-          />
+          <>
+            <QuestionCard
+              question={currentQuestion}
+              currentIndex={currentIndex + 1}
+              totalQuestions={questions.length}
+              onAnswer={handleAnswer}
+              onNext={handleNext}
+              disabled={isGameOver || isSaving}
+            />
+
+            {/* Google Ads Banner during practice/exam */}
+            <AdBanner
+              className="mt-6"
+              slotId="3456789012"
+              sponsorTitle="Asesoría Táctica ALCPT con Profesores Nativos 🇺🇸"
+              sponsorDescription="Clases particulares personalizadas para asegurar sobre 85 puntos en tu examen oficial de inglés."
+              sponsorCta="Consultar Clases"
+            />
+          </>
         )}
 
         <AnimatePresence>

@@ -217,7 +217,7 @@ export default function ConanFreakFacts() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
-  const DURATION_MS = 4000; // Strictly 4 seconds as requested
+  const DURATION_MS = 8000; // Aumentado a 8 segundos para lectura cómoda bilingüe
   const STEP_MS = 50;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -296,7 +296,7 @@ export default function ConanFreakFacts() {
               </span>
             </div>
             <h3 className="text-xs sm:text-sm font-black text-[#6B4423]">
-              ⚡ Ventana Freak de Conan &bull; 4 Segundos Auto
+              ⚡ Ventana Freak de Conan &bull; 8 Segundos Auto
             </h3>
           </div>
         </div>
@@ -399,7 +399,7 @@ export default function ConanFreakFacts() {
           <div className="flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>
-              {isPaused ? "Pausado (pasa el cursor para leer con calma)" : "Avanza solo cada 4 segundos"}
+              {isPaused ? "Pausado (pasa el cursor para leer con calma)" : "Avanza solo cada 8 segundos"}
             </span>
           </div>
 

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import ConanMascot from "@/components/ConanMascot";
 import AuthModal from "@/components/AuthModal";
+import AdBanner from "@/components/AdBanner";
 import { ExamResult, SessionResult, UserProfile } from "@/lib/types";
 import {
   getCurrentUser,
@@ -271,6 +272,15 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Google Ads Placement in Cadete Profile */}
+        <AdBanner
+          className="mb-8"
+          slotId="8765432109"
+          sponsorTitle="Simulacros Oficiales con Certificación de Rendimiento ALCPT 🎖️"
+          sponsorDescription="Valida tus resultados con informes oficiales de competencia militar y nivel de inglés OACI / ALCPT."
+          sponsorCta="Ver Certificaciones"
+        />
 
         {/* Account Security & Password Section */}
         <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 mb-10 shadow-sm">

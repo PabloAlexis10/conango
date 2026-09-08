@@ -384,6 +384,16 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* VENTANA DE ANUNCIOS 2: INTERMEDIO ENTRE EVALUACIONES Y VOCABULARIO */}
+        <AdBanner
+          className="mb-10"
+          slotId="9876543210"
+          sponsorTitle="Diccionario Militar Táctico & Slang Americano 📚"
+          sponsorDescription="Descarga el glosario completo del ALCPT con audios de pronunciación nativa, modismos cotidianos y tablas gramaticales."
+          sponsorCta="Descargar Glosario"
+          sponsorLink="https://wa.me/?text=Hola%2C+quiero+el+glosario+militar+y+slang+americano+ALCPT"
+        />
+
         {/* NEW SECTION: ENTRENAMIENTO DE VOCABULARIO INTERACTIVO */}
         <section className="mb-10">
           <div className="text-center mb-6">
@@ -460,6 +470,16 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* VENTANA DE ANUNCIOS 3: PREPARACIÓN Y CERTIFICACIÓN AERO-MILITAR */}
+        <AdBanner
+          className="mb-10"
+          slotId="4567890123"
+          sponsorTitle="Certificación de Inglés para Aviación & Fuerzas Armadas ✈️"
+          sponsorDescription="Capacitación especializada para pilotos, personal militar y técnicos aeronáuticos con simulaciones OACI y ALCPT."
+          sponsorCta="Postular a Cupo"
+          sponsorLink="https://wa.me/?text=Hola%2C+quiero+información+sobre+certificaciones+de+inglés+aero-militar"
+        />
+
         {/* MOBILE APP PROMO SECTION */}
         <section className="mb-10 bg-gradient-to-r from-blue-900 via-indigo-900 to-blue-950 text-white rounded-3xl p-6 sm:p-8 shadow-conan-card flex flex-col sm:flex-row items-center justify-between gap-6 border-2 border-blue-700/40">
           <div className="flex items-center gap-4">
@@ -504,6 +524,16 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* VENTANA DE ANUNCIOS 4: EQUIPAMIENTO TÁCTICO PARA LISTENING */}
+        <AdBanner
+          className="mt-10"
+          slotId="5678901234"
+          sponsorTitle="Audífonos Tácticos con Cancelación de Ruido Activa 🎧"
+          sponsorDescription="Mejora tu precisión en los 60 reactivos de listening con aislamiento sonoro profesional y nitidez de frecuencias nativas."
+          sponsorCta="Ver Equipamiento"
+          sponsorLink="https://wa.me/?text=Hola%2C+quiero+detalles+sobre+audífonos+para+listening+ALCPT"
+        />
       </main>
 
       {/* PRO Modal */}
