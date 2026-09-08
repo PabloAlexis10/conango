@@ -83,7 +83,7 @@ export default function ProSubscriptionModal({
         {/* Premium Banner Header */}
         <div className="bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 p-5 sm:p-7 text-center text-white relative">
           <div className="flex justify-center mb-2">
-            <ConanMascot size="lg" mood="celebrate" accessory="crown" animate={true} />
+            <ConanMascot size="lg" mood="celebrate" animate={true} />
           </div>
 
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-black uppercase tracking-wider mb-2">

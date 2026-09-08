@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { ExamResult, SessionResult, UserProfile, FriendChallenge } from "./types";
+import { ExamResult, SessionResult, UserProfile, FriendChallenge, DailyQuest, ShopPowerUp } from "./types";
 import { getRankByXp } from "./accessories";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -549,9 +549,8 @@ export function updateUserStreak(): { streak: number; increased: boolean } {
       xp: 0,
       coins: 20,
       level: 1,
-      rankName: "Recluta Táctico",
-      unlockedAccessories: ["sunglasses"],
-      activeAccessory: "sunglasses",
+      gems: 50,
+      streakFreeze: 0,
       created_at: new Date().toISOString(),
     };
   }
@@ -563,16 +562,20 @@ export function updateUserStreak(): { streak: number; increased: boolean } {
   let increased = false;
 
   if (lastDate === today) {
-    // Already studied today, streak is safe
     return { streak: currentStreak, increased: false };
   } else if (lastDate === yesterday) {
-    // Studied yesterday, consecutive streak!
     newStreak = currentStreak + 1;
     increased = true;
   } else {
-    // Broke streak or starting fresh
-    newStreak = 1;
-    increased = true;
+    // Check if user has a Streak Freeze (Protector de Racha estilo Duolingo)
+    if ((user.streakFreeze || 0) > 0 && currentStreak > 0) {
+      user.streakFreeze = (user.streakFreeze || 0) - 1;
+      newStreak = currentStreak + 1;
+      increased = true;
+    } else {
+      newStreak = 1;
+      increased = true;
+    }
   }
 
   user.streakDays = newStreak;
@@ -608,9 +611,9 @@ export function getDoubleXpTimeRemaining(): number {
   return Math.max(0, Math.floor(diff / 1000));
 }
 
-export function activateDoubleXp(minutes: number = 15): void {
+export function activateDoubleXp(minutes: number = 15): boolean {
   const user = getCurrentUser();
-  if (!user) return;
+  if (!user) return false;
 
   const expiresAt = new Date(Date.now() + minutes * 60 * 1000).toISOString();
   user.doubleXpExpiresAt = expiresAt;
@@ -628,6 +631,7 @@ export function activateDoubleXp(minutes: number = 15): void {
   }
 
   notifyAuthListeners(user);
+  return true;
 }
 
 export function addExperience(baseAmount: number): { addedXp: number; newXp: number; levelUp: boolean; newRank: string } {
@@ -682,21 +686,16 @@ export function setProStatus(isPro: boolean): void {
       streakDays: 1,
       xp: 500,
       coins: 1000,
-      level: 3,
-      rankName: "Cabo de Escuadra",
-      unlockedAccessories: ["sunglasses", "beret", "crown"],
-      activeAccessory: "crown",
+      gems: 9999,
+      streakFreeze: 5,
       created_at: new Date().toISOString(),
     };
   } else {
     user.isPro = isPro;
     if (isPro) {
       user.medals = 9999;
-      // Auto-unlock crown for Pro
-      const unlocked = new Set(user.unlockedAccessories || ["sunglasses"]);
-      unlocked.add("crown");
-      user.unlockedAccessories = Array.from(unlocked);
-      user.activeAccessory = "crown";
+      user.gems = 9999;
+      user.streakFreeze = (user.streakFreeze || 0) + 5;
     }
   }
 
@@ -709,8 +708,8 @@ export function setProStatus(isPro: boolean): void {
     if (idx !== -1) {
       accounts[idx].isPro = user.isPro;
       accounts[idx].medals = user.medals;
-      accounts[idx].unlockedAccessories = user.unlockedAccessories;
-      accounts[idx].activeAccessory = user.activeAccessory;
+      accounts[idx].gems = user.gems;
+      accounts[idx].streakFreeze = user.streakFreeze;
       localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
     }
   }
@@ -739,11 +738,32 @@ export function restoreMedalsAfterAd(): void {
   notifyAuthListeners(user);
 }
 
-export function equipAccessory(accessoryId: string | null): boolean {
-  const user = getCurrentUser();
-  if (!user) return false;
+// ----------------------------------------------------
+// DUOLINGO POWERUPS SHOP & DAILY QUESTS
+// ----------------------------------------------------
 
-  user.activeAccessory = accessoryId;
+export function buyPowerUp(powerUpId: string): { success: boolean; error?: string } {
+  const user = getCurrentUser();
+  if (!user) return { success: false, error: "Debes iniciar sesión para acceder a la Tienda de Potenciadores." };
+
+  const gems = user.gems ?? user.coins ?? 100;
+
+  if (powerUpId === "double_xp_15") {
+    if (gems < 100) return { success: false, error: "Necesitas 100 gemas para la Poción de 2x XP." };
+    user.gems = gems - 100;
+    user.coins = user.gems;
+    activateDoubleXp(15);
+  } else if (powerUpId === "streak_freeze") {
+    if (gems < 200) return { success: false, error: "Necesitas 200 gemas para el Protector de Racha." };
+    user.gems = gems - 200;
+    user.coins = user.gems;
+    user.streakFreeze = (user.streakFreeze || 0) + 1;
+  } else if (powerUpId === "refill_hearts") {
+    if (gems < 150) return { success: false, error: "Necesitas 150 gemas para recargar tus vidas." };
+    user.gems = gems - 150;
+    user.coins = user.gems;
+    user.medals = 5;
+  }
 
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
@@ -752,50 +772,134 @@ export function equipAccessory(accessoryId: string | null): boolean {
     );
     const idx = accounts.findIndex((a) => a.id === user.id);
     if (idx !== -1) {
-      accounts[idx].activeAccessory = accessoryId;
-      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
-    }
-  }
-
-  notifyAuthListeners(user);
-  return true;
-}
-
-export function buyAccessory(accessoryId: string, price: number): { success: boolean; error?: string } {
-  const user = getCurrentUser();
-  if (!user) return { success: false, error: "Debes iniciar sesión para comprar accesorios." };
-
-  const currentCoins = user.coins || 0;
-  if (currentCoins < price) {
-    return { success: false, error: `Necesitas ${price} monedas (tienes ${currentCoins}).` };
-  }
-
-  const unlocked = new Set(user.unlockedAccessories || ["sunglasses"]);
-  if (unlocked.has(accessoryId)) {
-    return { success: true };
-  }
-
-  user.coins = currentCoins - price;
-  unlocked.add(accessoryId);
-  user.unlockedAccessories = Array.from(unlocked);
-  user.activeAccessory = accessoryId;
-
-  if (typeof window !== "undefined") {
-    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
-    const accounts: UserProfile[] = JSON.parse(
-      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
-    );
-    const idx = accounts.findIndex((a) => a.id === user.id);
-    if (idx !== -1) {
-      accounts[idx].coins = user.coins;
-      accounts[idx].unlockedAccessories = user.unlockedAccessories;
-      accounts[idx].activeAccessory = user.activeAccessory;
+      accounts[idx] = { ...accounts[idx], ...user };
       localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
     }
   }
 
   notifyAuthListeners(user);
   return { success: true };
+}
+
+export function getDailyQuests(): DailyQuest[] {
+  let user = getCurrentUser();
+  const today = getTodayStr();
+
+  const xpEarned = user?.dailyQuestsDate === today ? (user.dailyXpEarned || 0) : 0;
+  const lessonsCompleted = user?.dailyQuestsDate === today ? (user.dailyLessonsCompleted || 0) : 0;
+  const bestScore = user?.dailyQuestsDate === today ? (user.dailyBestScore || 0) : 0;
+  const claimed = new Set(user?.claimedQuests || []);
+
+  return [
+    {
+      id: "quest_xp",
+      title: "Gana 50 XP hoy",
+      emoji: "⚡",
+      description: "Responde preguntas correctas en cualquier evaluación para ganar experiencia.",
+      target: 50,
+      current: Math.min(50, xpEarned),
+      rewardType: "gems",
+      rewardValue: 25,
+      completed: xpEarned >= 50,
+      claimed: claimed.has("quest_xp"),
+    },
+    {
+      id: "quest_lessons",
+      title: "Completa 2 lecciones",
+      emoji: "📚",
+      description: "Rinde y finaliza 2 sesiones cortas de práctica o vocabulario.",
+      target: 2,
+      current: Math.min(2, lessonsCompleted),
+      rewardType: "gems",
+      rewardValue: 40,
+      completed: lessonsCompleted >= 2,
+      claimed: claimed.has("quest_lessons"),
+    },
+    {
+      id: "quest_score",
+      title: "Acierta 80% o más",
+      emoji: "🎯",
+      description: "Supera el 80% de aciertos en cualquier evaluación.",
+      target: 80,
+      current: Math.min(80, bestScore),
+      rewardType: "double_xp",
+      rewardValue: 15,
+      completed: bestScore >= 80,
+      claimed: claimed.has("quest_score"),
+    },
+  ];
+}
+
+export function claimQuestReward(questId: string): { success: boolean; rewardText: string } {
+  const user = getCurrentUser();
+  if (!user) return { success: false, rewardText: "Inicia sesión para reclamar recompensas." };
+
+  const quests = getDailyQuests();
+  const quest = quests.find((q) => q.id === questId);
+  if (!quest || !quest.completed || quest.claimed) {
+    return { success: false, rewardText: "Esta misión aún no se ha completado o ya fue reclamada." };
+  }
+
+  const claimed = new Set(user.claimedQuests || []);
+  claimed.add(questId);
+  user.claimedQuests = Array.from(claimed);
+
+  let rewardText = "";
+  if (quest.rewardType === "double_xp") {
+    activateDoubleXp(15);
+    rewardText = "¡Activado Potenciador 2x XP por 15 Minutos!";
+  } else {
+    user.gems = (user.gems ?? user.coins ?? 100) + quest.rewardValue;
+    user.coins = user.gems;
+    rewardText = `¡Has ganado +${quest.rewardValue} Gemas!`;
+  }
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx] = { ...accounts[idx], ...user };
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+  return { success: true, rewardText };
+}
+
+export function recordLessonProgress(xpGain: number, percentage: number): void {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  const today = getTodayStr();
+  if (user.dailyQuestsDate !== today) {
+    user.dailyQuestsDate = today;
+    user.dailyXpEarned = 0;
+    user.dailyLessonsCompleted = 0;
+    user.dailyBestScore = 0;
+    user.claimedQuests = [];
+  }
+
+  user.dailyXpEarned = (user.dailyXpEarned || 0) + xpGain;
+  user.dailyLessonsCompleted = (user.dailyLessonsCompleted || 0) + 1;
+  user.dailyBestScore = Math.max(user.dailyBestScore || 0, percentage);
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx] = { ...accounts[idx], ...user };
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
 }
 
 // ----------------------------------------------------

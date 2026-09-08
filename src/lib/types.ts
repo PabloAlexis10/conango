@@ -68,24 +68,41 @@ export interface UserProfile {
   isPro?: boolean;
   streakDays?: number;
   lastStreakDate?: string;
+  streakFreeze?: number; // Congelador de racha estilo Duolingo
   xp?: number;
   level?: number;
   rankName?: string;
   doubleXpExpiresAt?: string | null;
-  unlockedAccessories?: string[];
-  activeAccessory?: string | null;
+  gems?: number; // Gemas azules estilo Duolingo
   coins?: number;
+  dailyQuestsDate?: string;
+  dailyXpEarned?: number;
+  dailyLessonsCompleted?: number;
+  dailyBestScore?: number;
+  claimedQuests?: string[];
   created_at: string;
 }
 
-export interface ConanAccessory {
+export interface ShopPowerUp {
   id: string;
   name: string;
   emoji: string;
-  category: "head" | "eyes" | "neck" | "special";
   description: string;
-  price: number;
-  isProOnly?: boolean;
+  priceGems: number;
+  category: "booster" | "streak" | "hearts" | "pro";
+}
+
+export interface DailyQuest {
+  id: string;
+  title: string;
+  emoji: string;
+  description: string;
+  target: number;
+  current: number;
+  rewardType: "double_xp" | "gems";
+  rewardValue: number;
+  completed: boolean;
+  claimed: boolean;
 }
 
 export interface FriendChallenge {

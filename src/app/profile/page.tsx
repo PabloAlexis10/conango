@@ -193,15 +193,28 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-orange-700">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-orange-700 shadow-xs">
                 <span>🔥</span>
-                <span>{user?.streakDays || 1} Días de Racha</span>
+                <span>{user?.streakDays || 1} Días</span>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-amber-900">
-                <Coins className="w-4 h-4 text-amber-500" />
-                <span>{user?.coins || 0} Monedas</span>
+              {(user?.streakFreeze || 0) > 0 && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 rounded-xl border border-sky-200 text-xs font-black text-sky-700 shadow-xs">
+                  <span>❄️</span>
+                  <span>{user?.streakFreeze} Congelador</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-sky-600 shadow-xs">
+                <span>💎</span>
+                <span>{user?.gems ?? user?.coins ?? 50} Gemas</span>
               </div>
+              <Link
+                href="/shop"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-xl text-xs font-black shadow-xs transition-transform active:scale-95"
+              >
+                <span>🏪</span>
+                <span>Tienda</span>
+              </Link>
             </div>
           </div>
 

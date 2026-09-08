@@ -8,6 +8,7 @@ import Timer from "./Timer";
 import AuthModal from "./AuthModal";
 import StreakModal from "./StreakModal";
 import BoosterModal from "./BoosterModal";
+import DailyQuestsModal from "./DailyQuestsModal";
 import ProSubscriptionModal from "./ProSubscriptionModal";
 import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords } from "lucide-react";
 import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive } from "@/lib/supabase";
@@ -36,6 +37,7 @@ export default function Header({
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [streakModalOpen, setStreakModalOpen] = useState(false);
   const [boosterModalOpen, setBoosterModalOpen] = useState(false);
+  const [questsModalOpen, setQuestsModalOpen] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasDoubleXp, setHasDoubleXp] = useState(false);
@@ -108,9 +110,9 @@ export default function Header({
             </div>
           ) : null}
 
-          {/* Right Status Controls */}
+          {/* Right Status Controls (DUOLINGO STYLE) */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Daily Streak Button (ONLY VISIBLE IF USER IS LOGGED IN) */}
+            {/* 1. Daily Streak Button (ONLY VISIBLE IF USER IS LOGGED IN) */}
             {user && (
               <button
                 type="button"
@@ -123,35 +125,62 @@ export default function Header({
               </button>
             )}
 
-            {/* 2x XP Booster Button */}
-            <button
-              type="button"
-              onClick={() => setBoosterModalOpen(true)}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black transition-all shadow-xs ${
-                hasDoubleXp
-                  ? "bg-amber-100 border border-amber-400 text-amber-900 animate-pulse"
-                  : "bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100"
-              }`}
-              title="Potenciador Doble Experiencia"
-            >
-              <Zap className="w-3 h-3 text-amber-500" />
-              <span className="hidden sm:inline">{hasDoubleXp ? "2x ACTIVO" : "2x XP"}</span>
-            </button>
+            {/* 2. Gems Counter & Shop Link (ONLY VISIBLE IF LOGGED IN) */}
+            {user && (
+              <Link
+                href="/shop"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-900 text-xs font-black transition-colors shadow-xs"
+                title="Gemas y Tienda de Potenciadores"
+              >
+                <span className="text-xs">💎</span>
+                <span>{user.gems ?? user.coins ?? 100}</span>
+              </Link>
+            )}
 
-            {/* Closet Link */}
+            {/* 3. Daily Quests Button (ONLY VISIBLE IF LOGGED IN) */}
+            {user && (
+              <button
+                type="button"
+                onClick={() => setQuestsModalOpen(true)}
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200 hover:bg-purple-100 text-purple-900 text-xs font-black transition-colors shadow-xs"
+                title="Misiones Diarias"
+              >
+                <span>🎯</span>
+                <span className="hidden md:inline">Misiones</span>
+              </button>
+            )}
+
+            {/* 4. 2x XP Booster Button (ONLY VISIBLE IF LOGGED IN OR SUBSCRIBED) */}
+            {user && (
+              <button
+                type="button"
+                onClick={() => setBoosterModalOpen(true)}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black transition-all shadow-xs ${
+                  hasDoubleXp || user.isPro
+                    ? "bg-amber-100 border border-amber-400 text-amber-900 animate-pulse ring-1 ring-amber-300"
+                    : "bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100"
+                }`}
+                title="Potenciador Doble Experiencia"
+              >
+                <Zap className="w-3 h-3 text-amber-500" />
+                <span className="hidden sm:inline">{user.isPro ? "2x PRO" : hasDoubleXp ? "2x ACTIVO" : "2x XP"}</span>
+              </button>
+            )}
+
+            {/* 5. Shop Link */}
             <Link
-              href="/closet"
+              href="/shop"
               className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FAF6F0] border border-[#E5D5C5] hover:bg-[#F5EFEB] text-[#6B4423] text-xs font-black transition-colors shadow-xs"
-              title="Armario y Atuendos de Conan"
+              title="Tienda de Potenciadores"
             >
-              <span>🐶</span>
-              <span className="hidden md:inline">Armario</span>
+              <span>🏪</span>
+              <span className="hidden md:inline">Tienda</span>
             </Link>
 
-            {/* Friend Challenge Link */}
+            {/* 6. Friend Challenge Link */}
             <Link
               href="/challenge"
-              className="hidden lg:flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FAF6F0] border border-[#E5D5C5] hover:bg-[#F5EFEB] text-[#6B4423] text-xs font-black transition-colors shadow-xs"
+              className="hidden xl:flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FAF6F0] border border-[#E5D5C5] hover:bg-[#F5EFEB] text-[#6B4423] text-xs font-black transition-colors shadow-xs"
               title="Duelos y Desafíos con Amigos"
             >
               <Swords className="w-3 h-3 text-[#F59E0B]" />
@@ -216,13 +245,25 @@ export default function Header({
                     </Link>
 
                     <Link
-                      href="/closet"
+                      href="/shop"
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl transition-colors"
                     >
-                      <span>🐶</span>
-                      <span>Armario de Conan</span>
+                      <span>🏪</span>
+                      <span>Tienda de Potenciadores</span>
                     </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        setQuestsModalOpen(true);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl transition-colors text-left"
+                    >
+                      <span>🎯</span>
+                      <span>Misiones Diarias</span>
+                    </button>
 
                     <Link
                       href="/challenge"
@@ -289,6 +330,12 @@ export default function Header({
       <BoosterModal
         isOpen={boosterModalOpen}
         onClose={() => setBoosterModalOpen(false)}
+      />
+
+      {/* Daily Quests Modal */}
+      <DailyQuestsModal
+        isOpen={questsModalOpen}
+        onClose={() => setQuestsModalOpen(false)}
       />
 
       {/* Pro Subscription Modal */}

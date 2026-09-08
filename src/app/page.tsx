@@ -25,6 +25,7 @@ import AdBanner from "@/components/AdBanner";
 import ProSubscriptionModal from "@/components/ProSubscriptionModal";
 import StreakModal from "@/components/StreakModal";
 import BoosterModal from "@/components/BoosterModal";
+import DailyQuestsModal from "@/components/DailyQuestsModal";
 import { Swords, Crown, Zap, Flame, Coins, Shirt } from "lucide-react";
 import { UserProfile } from "@/lib/types";
 
@@ -38,6 +39,7 @@ export default function HomePage() {
   const [proModalOpen, setProModalOpen] = useState(false);
   const [streakModalOpen, setStreakModalOpen] = useState(false);
   const [boosterModalOpen, setBoosterModalOpen] = useState(false);
+  const [questsModalOpen, setQuestsModalOpen] = useState(false);
 
   useEffect(() => {
     const cur = getCurrentUser();
@@ -176,9 +178,9 @@ export default function HomePage() {
         )}
 
         
-        {/* GAMIFICATION & TACTICAL HUB */}
+        {/* DUOLINGO TACTICAL HUB (STREAK, SHOP, QUESTS, DUELS) */}
         <section className="mb-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {/* STREAK CARD (ONLY FOR LOGGED IN CADETS, GUESTS SEE ACCOUNT PROMPT) */}
+          {/* 1. STREAK CARD (ONLY FOR LOGGED IN USERS) */}
           {user ? (
             <button
               type="button"
@@ -213,54 +215,57 @@ export default function HomePage() {
             </button>
           )}
 
-          {/* CONAN CLOSET CARD */}
+          {/* 2. DUOLINGO POWERUPS SHOP CARD */}
           <Link
-            href="/closet"
-            className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-200 hover:border-amber-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
-          >
-            <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
-              🐶
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 block">
-              Armario Conan
-            </span>
-            <span className="text-base sm:text-lg font-black text-[#6B4423]">
-              Atuendos 🕶️
-            </span>
-          </Link>
-
-          {/* DUELS WITH FRIENDS */}
-          <Link
-            href="/challenge"
+            href="/shop"
             className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 hover:border-blue-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
           >
-            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
-              <Swords className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
+              🏪
             </div>
             <span className="text-[10px] font-black uppercase tracking-wider text-blue-900 block">
-              Desafíos
+              Tienda Duolingo
             </span>
             <span className="text-base sm:text-lg font-black text-[#6B4423]">
-              Duelos ⚔️
+              Potenciadores ⚡
             </span>
           </Link>
 
-          {/* 2X XP BOOSTER */}
+          {/* 3. DAILY QUESTS CARD */}
           <button
             type="button"
-            onClick={() => setBoosterModalOpen(true)}
+            onClick={() => {
+              if (!user) setAuthModalOpen(true);
+              else setQuestsModalOpen(true);
+            }}
+            className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 hover:border-purple-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
+              🎯
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-purple-900 block">
+              Misiones Diarias
+            </span>
+            <span className="text-base sm:text-lg font-black text-[#6B4423]">
+              Ganar 2x XP ⚡
+            </span>
+          </button>
+
+          {/* 4. FRIEND CHALLENGE / DUELS CARD */}
+          <Link
+            href="/challenge"
             className="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 hover:border-emerald-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
           >
             <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
-              <Zap className="w-5 h-5 text-yellow-300" />
+              <Swords className="w-5 h-5 text-white" />
             </div>
             <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900 block">
-              Potenciador
+              Desafíos
             </span>
             <span className="text-base sm:text-lg font-black text-[#6B4423]">
-              2x XP ⚡
+              Duelo ⚔️
             </span>
-          </button>
+          </Link>
         </section>
 
         <AdBanner className="mb-8" />
@@ -513,6 +518,12 @@ export default function HomePage() {
       <BoosterModal
         isOpen={boosterModalOpen}
         onClose={() => setBoosterModalOpen(false)}
+      />
+
+      {/* Daily Quests Modal */}
+      <DailyQuestsModal
+        isOpen={questsModalOpen}
+        onClose={() => setQuestsModalOpen(false)}
       />
 
       {/* Footer with Dedication to Conan */}
