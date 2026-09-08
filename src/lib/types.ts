@@ -11,6 +11,7 @@ export interface Question {
   correctAnswer: number;
   image?: string | null;
   audioUrl?: string | null;
+  textToSpeak?: string;
   explanation: string;
 }
 
@@ -27,6 +28,7 @@ export interface QuestionReview {
   explanation: string;
   image?: string | null;
   audioUrl?: string | null;
+  textToSpeak?: string;
 }
 
 export interface SessionResult {

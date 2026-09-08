@@ -175,7 +175,7 @@ export default function HomePage() {
             <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-[#E5D5C5] shadow-conan-card flex flex-col justify-between relative overflow-hidden group hover:border-[#A67B5B] transition-all">
               <div className="absolute top-0 right-0 bg-[#FAF6F0] text-[#6B4423] border-b border-l border-[#E5D5C5] px-4 py-1.5 rounded-bl-2xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
                 <ListOrdered className="w-3.5 h-3.5 text-[#F59E0B]" />
-                Cuadernillos 1 al 15
+                Cuadernillos 1 al 100
               </div>
 
               <div>

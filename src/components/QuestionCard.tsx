@@ -105,7 +105,7 @@ export default function QuestionCard({
           <div className="mb-5">
             <AudioPlayer
               audioUrl={question.audioUrl}
-              textToSpeak={question.question}
+              textToSpeak={question.textToSpeak || question.question}
             />
           </div>
         )}
