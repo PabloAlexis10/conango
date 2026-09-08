@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import ConanMascot from "@/components/ConanMascot";
+import AdBanner from "@/components/AdBanner";
 import AudioPlayer from "@/components/AudioPlayer";
 import { QuestionReview } from "@/lib/types";
 import {

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { getCurrentUser, subscribeAuth, getGuestUsageCount, hasReachedGuestLimit, GUEST_LIMIT } from "@/lib/supabase";
 import AuthModal from "@/components/AuthModal";
+import AdBanner from "@/components/AdBanner";
 import { UserProfile } from "@/lib/types";
 
 export default function HomePage() {

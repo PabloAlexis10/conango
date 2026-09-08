@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
+import Script from "next/script";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -52,6 +53,14 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-[#6B4423] antialiased">
         <ServiceWorkerRegister />
         <InstallPwaBanner />
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
         {children}
       </body>
     </html>
