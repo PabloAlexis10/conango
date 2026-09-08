@@ -175,7 +175,7 @@ export function getFormulaQuestions(formulaNum: number): Question[] {
       formulaName: `Fórmula ${safeFormula}`,
       type: "listening",
       context: data.c,
-      contextEs: "Contexto en audio en inglés estadounidense.",
+      contextEs: "Contexto de la situación en audio.",
       question: data.q,
       questionEs: "¿Cuál es la respuesta correcta según el audio?",
       textToSpeak: audioScript,

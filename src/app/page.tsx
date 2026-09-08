@@ -69,7 +69,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-base sm:text-lg text-[#A67B5B] font-medium max-w-xl leading-relaxed mb-6">
-              Plataforma de preparación para <strong className="text-[#6B4423]">A.L.C.P.T.</strong> (Adiestramiento Lingüístico con Conan, Perro Táctico). Inglés Estadounidense 🇺🇸. Rinde el examen completo de 100 preguntas, escoge tu fórmula o practica vocabulario interactivo con voz y cartas.
+              Plataforma de preparación para <strong className="text-[#6B4423]">A.L.C.P.T.</strong> (Adiestramiento Lingüístico con Conan, Perro Táctico) &bull; Inglés 🇺🇸. Rinde el examen completo de 100 preguntas, escoge tu fórmula o practica vocabulario interactivo con voz y cartas.
             </p>
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-xs font-bold text-[#6B4423]">
@@ -144,7 +144,7 @@ export default function HomePage() {
                 <p className="text-xs sm:text-sm text-[#A67B5B] leading-relaxed mb-6 font-medium">
                   El sistema selecciona automáticamente una fórmula al azar del banco oficial.
                   Consta de <strong className="text-[#6B4423]">100 preguntas</strong> divididas en{" "}
-                  <strong className="text-[#6B4423]">60 de Listening</strong> (audio en inglés estadounidense 🇺🇸) y{" "}
+                  <strong className="text-[#6B4423]">60 de Listening</strong> (audio en inglés 🇺🇸) y{" "}
                   <strong className="text-[#6B4423]">40 de Reading</strong> (gramática y vocabulario), con{" "}
                   <strong className="text-[#6B4423]">temporizador de 60 minutos</strong>.
                 </p>
@@ -255,7 +255,7 @@ export default function HomePage() {
                 </h3>
 
                 <p className="text-xs sm:text-sm text-[#A67B5B] font-medium leading-relaxed mb-6">
-                  Habla por el micrófono y la aplicación detectará si pronunciaste correctamente o de forma similar en inglés estadounidense 🇺🇸, con corrección auditiva inmediata.
+                  Habla por el micrófono y la aplicación detectará si pronunciaste correctamente o de forma similar en inglés 🇺🇸, con corrección auditiva inmediata.
                 </p>
               </div>
 
@@ -338,7 +338,7 @@ export default function HomePage() {
                 ¿Qué significa A.L.C.P.T. en ConanGo?
               </h4>
               <p className="text-xs sm:text-sm text-[#A67B5B] leading-relaxed font-medium">
-                En ConanGo, las siglas <strong className="text-[#6B4423]">A.L.C.P.T.</strong> corresponden a: <strong className="text-[#92400E]">&ldquo;Adiestramiento Lingüístico con Conan, Perro Táctico&rdquo;</strong>. Es un entorno de simulación educativa enfocado en inglés estadounidense 🇺🇸 (la contraparte al inglés británico), estructurado en cuadernillos correlativos de 100 reactivos (60 de comprensión auditiva y 40 de gramática y lectura).
+                En ConanGo, las siglas <strong className="text-[#6B4423]">A.L.C.P.T.</strong> corresponden a: <strong className="text-[#92400E]">&ldquo;Adiestramiento Lingüístico con Conan, Perro Táctico&rdquo;</strong>. Es un entorno de simulación educativa enfocado en inglés 🇺🇸, estructurado en cuadernillos correlativos de 100 reactivos (60 de comprensión auditiva y 40 de gramática y lectura).
               </p>
             </div>
           </div>
@@ -348,10 +348,10 @@ export default function HomePage() {
       {/* Footer with Dedication to Conan */}
       <footer className="border-t border-[#E5D5C5] py-8 px-4 text-center text-xs text-[#A67B5B] bg-[#FAF6F0] space-y-3">
         <p className="font-black text-[#6B4423]">
-          ConanGo &copy; {new Date().getFullYear()} &bull; A.L.C.P.T. (Adiestramiento Lingüístico con Conan, Perro Táctico) &bull; Inglés Estadounidense 🇺🇸
+          ConanGo &copy; {new Date().getFullYear()} &bull; A.L.C.P.T. (Adiestramiento Lingüístico con Conan, Perro Táctico) &bull; Inglés 🇺🇸
         </p>
         <div className="max-w-2xl mx-auto p-3.5 bg-white rounded-2xl border border-[#E5D5C5] shadow-xs text-xs text-[#8C6B4B] leading-relaxed">
-          🐾 <strong>Dedicatoria de Honor:</strong> Dedicado con eterno amor, respeto y honor a nuestro querido camarada el <strong>Perro Conan</strong>, el compañero más fiel, noble y valiente de todas nuestras misiones. ¡Tu lealtad y temple viven en cada estudiante!
+          🐾 <strong>Dedicatoria de Honor:</strong> Dedicado con eterno amor, respeto y honor a nuestro querido camarada el <strong>Perro Conan</strong>, el compañero más fiel, noble y valiente de todas nuestras misiones. ¡Tu lealtad y temple viven en cada uno de nosotros!
         </div>
       </footer>
 

@@ -243,21 +243,20 @@ export default function VocabularyMatchingPage() {
         </div>
 
         {!isFinished ? (
-          /* TWO-COLUMN BOARD */
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          /* TWO-COLUMN BOARD (ALWAYS SIDE-BY-SIDE) */
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-6">
             {/* LEFT COLUMN: SPANISH */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between px-2 pb-1 border-b border-[#E5D5C5]">
-                <span className="text-xs font-black uppercase tracking-wider text-[#A67B5B] flex items-center gap-1.5">
-                  <span>🇪🇸</span>
-                  <span>Columna en Español</span>
+            <div className="space-y-2.5 sm:space-y-3">
+              <div className="flex items-center justify-between px-1.5 pb-1 border-b border-[#E5D5C5]">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#A67B5B] flex items-center gap-1">
+                  <span>Español</span>
                 </span>
-                <span className="text-[11px] font-bold text-[#A67B5B]">
-                  {leftCards.length} activas
+                <span className="text-[10px] sm:text-xs font-bold text-[#A67B5B]">
+                  {leftCards.length}
                 </span>
               </div>
 
-              <div className="space-y-2.5 min-h-[320px]">
+              <div className="space-y-2 sm:space-y-2.5 min-h-[300px]">
                 <AnimatePresence>
                   {leftCards.map((card) => {
                     const isSelected = selectedLeft?.uid === card.uid;
@@ -279,17 +278,17 @@ export default function VocabularyMatchingPage() {
                       <motion.button
                         key={card.uid}
                         layout
-                        initial={{ opacity: 0, x: -20, scale: 0.95 }}
+                        initial={{ opacity: 0, x: -15, scale: 0.95 }}
                         animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8, x: -30 }}
-                        transition={{ duration: 0.25 }}
+                        exit={{ opacity: 0, scale: 0.8, x: -20 }}
+                        transition={{ duration: 0.22 }}
                         type="button"
                         onClick={() => handleLeftClick(card)}
-                        className={`w-full p-4 rounded-2xl border-2 font-bold text-sm sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
+                        className={`w-full p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border-2 font-bold text-xs sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
                       >
-                        <span className="font-extrabold">{card.text}</span>
-                        {isSelected && <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] animate-ping" />}
-                        {isMatched && <Check className="w-5 h-5 text-emerald-600" />}
+                        <span className="font-black leading-tight">{card.text}</span>
+                        {isSelected && <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping" />}
+                        {isMatched && <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />}
                       </motion.button>
                     );
                   })}
@@ -298,18 +297,18 @@ export default function VocabularyMatchingPage() {
             </div>
 
             {/* RIGHT COLUMN: ENGLISH */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between px-2 pb-1 border-b border-[#E5D5C5]">
-                <span className="text-xs font-black uppercase tracking-wider text-indigo-700 flex items-center gap-1.5">
+            <div className="space-y-2.5 sm:space-y-3">
+              <div className="flex items-center justify-between px-1.5 pb-1 border-b border-[#E5D5C5]">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-indigo-700 flex items-center gap-1">
+                  <span>Inglés</span>
                   <span>🇺🇸</span>
-                  <span>Columna en Inglés</span>
                 </span>
-                <span className="text-[11px] font-bold text-[#A67B5B]">
-                  {rightCards.length} activas
+                <span className="text-[10px] sm:text-xs font-bold text-[#A67B5B]">
+                  {rightCards.length}
                 </span>
               </div>
 
-              <div className="space-y-2.5 min-h-[320px]">
+              <div className="space-y-2 sm:space-y-2.5 min-h-[300px]">
                 <AnimatePresence>
                   {rightCards.map((card) => {
                     const isSelected = selectedRight?.uid === card.uid;
@@ -331,29 +330,18 @@ export default function VocabularyMatchingPage() {
                       <motion.button
                         key={card.uid}
                         layout
-                        initial={{ opacity: 0, x: 20, scale: 0.95 }}
+                        initial={{ opacity: 0, x: 15, scale: 0.95 }}
                         animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8, x: 30 }}
-                        transition={{ duration: 0.25 }}
+                        exit={{ opacity: 0, scale: 0.8, x: 20 }}
+                        transition={{ duration: 0.22 }}
                         type="button"
                         onClick={() => handleRightClick(card)}
-                        className={`w-full p-4 rounded-2xl border-2 font-bold text-sm sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
+                        className={`w-full p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border-2 font-bold text-xs sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
                       >
-                        <span className="font-extrabold">{card.text}</span>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              speakEnglishWord(card.text);
-                            }}
-                            className="p-1 text-gray-400 hover:text-indigo-600 rounded-lg"
-                            title="Escuchar pronunciación"
-                          >
-                            <Volume2 className="w-4 h-4" />
-                          </button>
-                          {isSelected && <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-ping" />}
-                          {isMatched && <Check className="w-5 h-5 text-emerald-600" />}
+                        <span className="font-black leading-tight">{card.text}</span>
+                        <div className="flex items-center gap-1.5">
+                          {isSelected && <span className="w-2 h-2 rounded-full bg-indigo-600 animate-ping" />}
+                          {isMatched && <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />}
                         </div>
                       </motion.button>
                     );

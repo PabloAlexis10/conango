@@ -257,8 +257,7 @@ function ResultsContent() {
                         <div className="bg-[#FAF6F0] rounded-xl border border-[#E5D5C5] p-3 text-xs">
                           <div className="bg-white p-2.5 rounded-lg border border-[#E5D5C5]/60">
                             <span className="font-bold text-[#6B4423] block mb-0.5 flex items-center gap-1">
-                              <span>🇺🇸</span>
-                              <span>Audio Transcript (American English):</span>
+                              <span>Audio Transcript (Inglés 🇺🇸):</span>
                             </span>
                             <p className="text-[#4A3319] font-medium leading-relaxed">
                               &ldquo;{rev.context || (rev.textToSpeak ? rev.textToSpeak.replace(rev.question, "").trim() : "") || rev.question}&rdquo;

@@ -448,7 +448,7 @@ export default function VocabularyPronunciationPage() {
             </h2>
 
             <p className="text-sm text-[#A67B5B] font-medium mb-6">
-              Has practicado la pronunciación y entonación de todo el vocabulario técnico en inglés estadounidense.
+              Has practicado la pronunciación y entonación de todo el vocabulario técnico en inglés 🇺🇸.
             </p>
 
             <div className="p-4 bg-[#FAF6F0] rounded-2xl border border-[#E5D5C5] mb-6">

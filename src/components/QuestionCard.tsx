@@ -112,7 +112,7 @@ export default function QuestionCard({
           </div>
         )}
 
-        {/* Subtítulo del Contexto del Audio en Inglés Estadounidense (Listening) */}
+        {/* Subtítulo del Contexto del Audio en Inglés (Listening) */}
         {isListening && (
           <div className="mb-6 bg-[#FAF6F0] rounded-2xl border-2 border-[#E5D5C5] p-4 shadow-sm">
             <div className="flex items-center justify-between mb-2.5">
@@ -121,8 +121,8 @@ export default function QuestionCard({
                 Audio Transcript
               </span>
               <span className="text-[11px] font-bold text-[#6B4423] bg-white px-2.5 py-0.5 rounded-full border border-[#E5D5C5] shadow-xs flex items-center gap-1">
+                <span>Inglés</span>
                 <span>🇺🇸</span>
-                <span>American English</span>
               </span>
             </div>
 

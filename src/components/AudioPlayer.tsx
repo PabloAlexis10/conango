@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Volume2, Play, Pause, RotateCcw } from "lucide-react";
+import { Volume2, Play, Pause, RotateCcw, Radio } from "lucide-react";
 
 interface AudioPlayerProps {
   audioUrl?: string | null;
@@ -12,35 +12,76 @@ interface AudioPlayerProps {
   className?: string;
 }
 
-// Find best natural American English voice available in browser
-function getBestNaturalUSVoice(): SpeechSynthesisVoice | null {
+// Find native American English male voice in browser
+function getRoboticUSMaleVoice(): SpeechSynthesisVoice | null {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return null;
   const voices = window.speechSynthesis.getVoices();
   if (!voices || voices.length === 0) return null;
 
-  // Search hierarchy for highest-quality natural en-US voices
   const usVoices = voices.filter(
     (v) => v.lang === "en-US" || v.lang === "en_US" || v.lang.startsWith("en-US")
   );
 
-  // 1. Look for modern neural/natural voices
-  const naturalVoice = usVoices.find(
-    (v) =>
-      v.name.includes("Natural") ||
-      v.name.includes("Google US English") ||
-      v.name.includes("Jenny") ||
-      v.name.includes("Guy") ||
-      v.name.includes("Aria") ||
-      v.name.includes("Samantha")
-  );
-  if (naturalVoice) return naturalVoice;
+  // 1. Search for known native US male voices (David is the standard Windows robotic male voice)
+  const maleKeywords = ["david", "guy", "christopher", "mark", "george", "james", "eric", "male", "google us english"];
+  const usMale = usVoices.find((v) => {
+    const nameLower = v.name.toLowerCase();
+    return maleKeywords.some((k) => nameLower.includes(k));
+  });
+  if (usMale) return usMale;
 
-  // 2. Any en-US voice
+  // 2. Any voice containing "David"
+  const david = voices.find((v) => v.name.toLowerCase().includes("david"));
+  if (david) return david;
+
+  // 3. Fallback to any en-US voice
   if (usVoices.length > 0) return usVoices[0];
 
-  // 3. Fallback to any English voice
-  const anyEnglish = voices.find((v) => v.lang.startsWith("en"));
-  return anyEnglish || null;
+  return voices.find((v) => v.lang.startsWith("en")) || null;
+}
+
+// Synthesize short tactical radio mic-click / squelch sound
+function playRadioChirp(type: "start" | "end") {
+  try {
+    if (typeof window === "undefined") return;
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    if (type === "start") {
+      // Short dual-tone radio transmission click
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(1760, now + 0.04);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+    } else {
+      // Roger squelch burst
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(1400, now);
+      osc.frequency.exponentialRampToValueAtTime(700, now + 0.05);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.1, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.07);
+    }
+  } catch {}
 }
 
 export default function AudioPlayer({
@@ -57,7 +98,6 @@ export default function AudioPlayer({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Stop everything on change
   useEffect(() => {
     handleStop();
     if (!audioUrl || audioUrl.trim() === "") {
@@ -100,14 +140,12 @@ export default function AudioPlayer({
     window.speechSynthesis.cancel();
     if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
 
-    const bestVoice = getBestNaturalUSVoice();
+    const maleVoice = getRoboticUSMaleVoice();
 
-    // Determine context and question parts
     let situationText = (context || "").trim();
     let qText = (questionText || "").trim();
 
     if (!situationText && textToSpeak) {
-      // If questionText exists, strip it from textToSpeak to get context
       if (qText && textToSpeak.includes(qText)) {
         situationText = textToSpeak.replace(qText, "").trim();
       } else {
@@ -121,18 +159,28 @@ export default function AudioPlayer({
 
     setIsPlaying(true);
 
-    // If there is only one part (no question or no context), speak single utterance
+    // Initial radio transmission chirp
+    playRadioChirp("start");
+
+    // Helper to configure robotic US male voice
+    const configureRoboticUtterance = (text: string): SpeechSynthesisUtterance => {
+      const utt = new SpeechSynthesisUtterance(text);
+      utt.lang = "en-US";
+      // Slightly lower, flat pitch for robotic cadence
+      utt.pitch = 0.82;
+      utt.rate = 0.94;
+      if (maleVoice) utt.voice = maleVoice;
+      return utt;
+    };
+
     if (!situationText || !qText) {
       const fullText = situationText || qText;
-      const utterance = new SpeechSynthesisUtterance(fullText);
-      utterance.lang = "en-US";
-      utterance.rate = 0.93; // Relaxed, human cadence
-      utterance.pitch = 1.0;
-      if (bestVoice) utterance.voice = bestVoice;
+      const utterance = configureRoboticUtterance(fullText);
 
       setPlaybackStage("context");
       utterance.onstart = () => setIsPlaying(true);
       utterance.onend = () => {
+        playRadioChirp("end");
         setIsPlaying(false);
         setPlaybackStage("idle");
       };
@@ -144,29 +192,22 @@ export default function AudioPlayer({
       return;
     }
 
-    // Two-stage playback: Stage 1 = Context -> Pause (1.4s) -> Stage 2 = Question
-    const contextUtterance = new SpeechSynthesisUtterance(situationText);
-    contextUtterance.lang = "en-US";
-    contextUtterance.rate = 0.93;
-    contextUtterance.pitch = 1.0;
-    if (bestVoice) contextUtterance.voice = bestVoice;
-
+    // Step 1: Speak context
+    const contextUtterance = configureRoboticUtterance(situationText);
     setPlaybackStage("context");
 
     contextUtterance.onend = () => {
-      // Entering pause phase
+      playRadioChirp("end");
       setPlaybackStage("pause");
 
       pauseTimerRef.current = setTimeout(() => {
-        // Stage 2: Question
+        // Step 2: Speak question after pause
+        playRadioChirp("start");
         setPlaybackStage("question");
-        const questionUtterance = new SpeechSynthesisUtterance(`Question: ${qText}`);
-        questionUtterance.lang = "en-US";
-        questionUtterance.rate = 0.92;
-        questionUtterance.pitch = 1.02; // Slight inflection for question
-        if (bestVoice) questionUtterance.voice = bestVoice;
+        const questionUtterance = configureRoboticUtterance(`Question: ${qText}`);
 
         questionUtterance.onend = () => {
+          playRadioChirp("end");
           setIsPlaying(false);
           setPlaybackStage("idle");
         };
@@ -176,7 +217,7 @@ export default function AudioPlayer({
         };
 
         window.speechSynthesis.speak(questionUtterance);
-      }, 1400); // 1.4-second natural pause
+      }, 1400); // 1.4-second pause
     };
 
     contextUtterance.onerror = () => {
@@ -208,14 +249,14 @@ export default function AudioPlayer({
   };
 
   const getStatusText = () => {
-    if (!isPlaying) return "Pista de audio (Inglés Estadounidense 🇺🇸)";
+    if (!isPlaying) return "Pista de audio (Inglés 🇺🇸)";
     switch (playbackStage) {
       case "context":
-        return "🎧 Escuchando situación...";
+        return "🎧 Transmisión de situación...";
       case "pause":
         return "⏸️ Pausa de reflexión (1.4s)...";
       case "question":
-        return "❓ Escuchando pregunta...";
+        return "❓ Pregunta...";
       default:
         return "Reproduciendo audio...";
     }
@@ -261,7 +302,7 @@ export default function AudioPlayer({
             </span>
           </div>
           <p className="text-xs text-[#A67B5B]">
-            {useSpeechFallback ? "Voz humanizada en inglés estadounidense (US)" : "Audio original grabado"}
+            {useSpeechFallback ? "Voz masculina nativa robotizada (Inglés 🇺🇸)" : "Audio grabado"}
           </p>
         </div>
       </div>
