@@ -2,7 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { Question, SessionSize } from "@/lib/types";
-import { getFormulaQuestions } from "@/lib/questionBank";
+import { getFormulaQuestions, cleanAudioPrompt } from "@/lib/questionBank";
+
+// Helper: Fisher-Yates unbiased shuffle
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function cleanQuestionText(text: string): string {
+  if (!text) return "";
+  return text
+    .replace(/\bQuestion\s*\d*:\s*/gi, "")
+    .replace(/\bItem\s*\d*:\s*/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -18,7 +37,9 @@ export async function GET(request: NextRequest) {
   try {
     // Determine chosen formula (1 to 100)
     let selectedFormulaNumber: number = 1;
-    if (formulaParam === "random") {
+    const isRandomFormula = formulaParam === "random";
+
+    if (isRandomFormula) {
       selectedFormulaNumber = Math.floor(Math.random() * 100) + 1;
     } else if (formulaParam && !isNaN(parseInt(formulaParam, 10))) {
       selectedFormulaNumber = Math.min(100, Math.max(1, parseInt(formulaParam, 10)));
@@ -58,7 +79,8 @@ export async function GET(request: NextRequest) {
             ...cq,
             formula: selectedFormulaNumber,
             formulaName: `Fórmula ${selectedFormulaNumber}`,
-            textToSpeak: cq.textToSpeak || cq.question,
+            textToSpeak: cleanAudioPrompt(cq.textToSpeak || cq.question),
+            question: cleanQuestionText(cq.question),
           };
         }
       });
@@ -73,6 +95,8 @@ export async function GET(request: NextRequest) {
             ...cq,
             formula: selectedFormulaNumber,
             formulaName: `Fórmula ${selectedFormulaNumber}`,
+            textToSpeak: cleanQuestionText(cq.question),
+            question: cleanQuestionText(cq.question),
           };
         }
       });
@@ -84,13 +108,15 @@ export async function GET(request: NextRequest) {
     let finalQuestions: Question[] = [];
 
     if (size === 100) {
-      // EXAMEN OFICIAL: 1 a 60 Listening en orden estricto, 61 a 100 Reading en orden estricto
+      // EXAMEN OFICIAL: 1 a 60 Listening en orden estricto, 61 a 100 Reading en orden estricto (0 duplicados)
       const list60 = listeningItems.slice(0, 60).map((q, idx) => ({
         ...q,
         id: idx + 1,
         formula: selectedFormulaNumber,
         formulaName: `Fórmula ${selectedFormulaNumber}`,
         type: "listening" as const,
+        textToSpeak: cleanAudioPrompt(q.textToSpeak || q.question),
+        question: cleanQuestionText(q.question),
       }));
 
       const read40 = readingItems.slice(0, 40).map((q, idx) => ({
@@ -99,37 +125,54 @@ export async function GET(request: NextRequest) {
         formula: selectedFormulaNumber,
         formulaName: `Fórmula ${selectedFormulaNumber}`,
         type: "reading" as const,
+        textToSpeak: cleanQuestionText(q.question),
+        question: cleanQuestionText(q.question),
       }));
 
       finalQuestions = [...list60, ...read40];
     } else {
-      // QUIZZES (10, 30, 50): Mitad listening, mitad reading sin repeticiones
+      // QUIZZES (10, 30, 50): 50% Listening y 50% Reading ALEATORIAS del banco de la fórmula
+      // Así el usuario no ve siempre las mismas preguntas al repetir el quiz.
       const halfCount = Math.floor(size / 2);
-      const listSlice = listeningItems.slice(0, halfCount);
-      const readSlice = readingItems.slice(0, size - halfCount);
+      const readCount = size - halfCount;
 
+      // Selección aleatoria sin repetición del pool de 60 listening
+      const shuffledListening = shuffleArray(listeningItems);
+      const listSlice = shuffledListening.slice(0, halfCount);
+
+      // Selección aleatoria sin repetición del pool de 40 reading
+      const shuffledReading = shuffleArray(readingItems);
+      const readSlice = shuffledReading.slice(0, readCount);
+
+      // Intercalar listening y reading (ej: 1L, 1R, 1L, 1R...) con IDs correlativos 1..size
       let lIdx = 0;
       let rIdx = 0;
       let globalId = 1;
 
       while (lIdx < listSlice.length || rIdx < readSlice.length) {
         if (lIdx < listSlice.length) {
+          const item = listSlice[lIdx];
           finalQuestions.push({
-            ...listSlice[lIdx],
+            ...item,
             id: globalId++,
             formula: selectedFormulaNumber,
             formulaName: `Fórmula ${selectedFormulaNumber}`,
             type: "listening" as const,
+            textToSpeak: cleanAudioPrompt(item.textToSpeak || item.question),
+            question: cleanQuestionText(item.question),
           });
           lIdx++;
         }
         if (rIdx < readSlice.length) {
+          const item = readSlice[rIdx];
           finalQuestions.push({
-            ...readSlice[rIdx],
+            ...item,
             id: globalId++,
             formula: selectedFormulaNumber,
             formulaName: `Fórmula ${selectedFormulaNumber}`,
             type: "reading" as const,
+            textToSpeak: cleanQuestionText(item.question),
+            question: cleanQuestionText(item.question),
           });
           rIdx++;
         }
