@@ -110,36 +110,24 @@ export default function QuestionCard({
           </div>
         )}
 
-        {/* Subtítulo y Traducción del Contexto del Audio (Listening) */}
+        {/* Subtítulo del Contexto del Audio en Inglés Norteamericano (Listening) */}
         {isListening && (
           <div className="mb-6 bg-[#FAF6F0] rounded-2xl border-2 border-[#E5D5C5] p-4 shadow-sm">
             <div className="flex items-center justify-between mb-2.5">
               <span className="text-xs font-black uppercase tracking-wider text-[#92400E] flex items-center gap-1.5">
                 <Headphones className="w-4 h-4 text-[#F59E0B]" />
-                Contexto del Audio (Situación)
+                Audio Transcript
               </span>
-              <span className="text-[11px] font-bold text-[#A67B5B] bg-white px-2.5 py-0.5 rounded-full border border-[#E5D5C5] shadow-xs">
-                Subtítulo & Traducción
+              <span className="text-[11px] font-bold text-[#6B4423] bg-white px-2.5 py-0.5 rounded-full border border-[#E5D5C5] shadow-xs flex items-center gap-1">
+                <span>🇺🇸</span>
+                <span>American English</span>
               </span>
             </div>
 
             {/* Subtítulo en Inglés */}
-            <div className="mb-2 bg-white/95 p-3.5 rounded-xl border border-[#E5D5C5]">
-              <span className="text-[11px] font-black text-[#6B4423] uppercase tracking-wide block mb-1">
-                🇬🇧 Subtítulo (Audio en inglés):
-              </span>
+            <div className="bg-white/95 p-3.5 rounded-xl border border-[#E5D5C5]">
               <p className="text-sm sm:text-base text-[#4A3319] font-bold leading-relaxed">
                 &ldquo;{question.context || (question.textToSpeak ? question.textToSpeak.replace(question.question, "").trim() : "") || question.question}&rdquo;
-              </p>
-            </div>
-
-            {/* Traducción al Español */}
-            <div className="bg-blue-50/95 p-3.5 rounded-xl border border-blue-200">
-              <span className="text-[11px] font-black text-blue-900 uppercase tracking-wide block mb-1">
-                🇪🇸 Traducción al español:
-              </span>
-              <p className="text-sm sm:text-base text-blue-950 font-semibold leading-relaxed">
-                &ldquo;{question.contextEs || "La situación descrita en el audio en inglés."}&rdquo;
               </p>
             </div>
           </div>
@@ -159,16 +147,11 @@ export default function QuestionCard({
         {/* Question Prompt */}
         <div className="mb-6">
           <span className="text-xs font-black uppercase tracking-wider text-[#A67B5B] block mb-1">
-            Pregunta:
+            Question:
           </span>
           <h3 className="text-lg sm:text-xl font-extrabold text-[#6B4423] leading-snug">
             {question.question}
           </h3>
-          {question.questionEs && (
-            <p className="text-xs sm:text-sm text-[#8C6B4B] font-semibold mt-1">
-              🇪🇸 {question.questionEs}
-            </p>
-          )}
         </div>
 
         {/* Options List */}

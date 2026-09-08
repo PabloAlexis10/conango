@@ -41,6 +41,44 @@ class SoundManager {
     }
   }
 
+  playLevelUp() {
+    try {
+      const audio = new Audio("/sounds/levelup.mp3");
+      audio.volume = 0.7;
+      audio.play().catch(() => {
+        this.synthLevelUp();
+      });
+    } catch {
+      this.synthLevelUp();
+    }
+  }
+
+  synthLevelUp() {
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    // Triumphant fanfare chord progression: C5, E5, G5, C6, E6
+    const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+
+      gain.gain.setValueAtTime(0.001, now + idx * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.3, now + idx * 0.1 + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.1 + 0.6);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + idx * 0.1);
+      osc.stop(now + idx * 0.1 + 0.65);
+    });
+  }
+
   // Web Audio Synth for instant Duolingo-like feedback
   synthCorrect() {
     const ctx = this.getAudioContext();

@@ -102,6 +102,59 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Check if user dropped custom formula files into data/formulas_personalizadas/ (PRIORIDAD MÁXIMA)
+    const customDir = path.join(process.cwd(), "data", "formulas_personalizadas");
+    if (fs.existsSync(customDir)) {
+      const files = fs.readdirSync(customDir).filter((f) => f.endsWith(".json") && f !== "formula_ejemplo.json");
+      for (const file of files) {
+        try {
+          const filePath = path.join(customDir, file);
+          const raw = fs.readFileSync(filePath, "utf-8");
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            parsed.forEach((customQ: any) => {
+              const matchesFormula =
+                customQ.formula === selectedFormulaNumber ||
+                file.toLowerCase().includes(`formula_${selectedFormulaNumber}.json`) ||
+                file.toLowerCase().includes(`formula${selectedFormulaNumber}.json`);
+
+              if (matchesFormula && customQ.id && customQ.question && customQ.options) {
+                const idx = formulaQuestions.findIndex((q) => q.id === customQ.id);
+                const cleanQ = cleanQuestionText(customQ.question);
+                const cleanSpk = cleanAudioPrompt(customQ.textToSpeak || customQ.question);
+                const ctx = customQ.context || cleanAudioPrompt(cleanSpk.replace(cleanQ, "").trim()) || cleanSpk;
+
+                const enrichedQ: Question = {
+                  id: customQ.id,
+                  formula: selectedFormulaNumber,
+                  formulaName: customQ.formulaName || `Fórmula ${selectedFormulaNumber}`,
+                  type: customQ.type || (customQ.id <= 60 ? "listening" : "reading"),
+                  context: ctx,
+                  contextEs: customQ.contextEs || "Contexto en audio en inglés.",
+                  question: cleanQ,
+                  questionEs: customQ.questionEs || "¿Cuál es la respuesta correcta?",
+                  textToSpeak: cleanSpk,
+                  options: customQ.options,
+                  correctAnswer: customQ.correctAnswer ?? 0,
+                  image: customQ.image || null,
+                  audioUrl: customQ.audioUrl || null,
+                  explanation: customQ.explanation || "Respuesta oficial según el banco de reactivos.",
+                };
+
+                if (idx !== -1) {
+                  formulaQuestions[idx] = enrichedQ;
+                } else {
+                  formulaQuestions.push(enrichedQ);
+                }
+              }
+            });
+          }
+        } catch (e) {
+          console.error("Error reading custom formula file:", file, e);
+        }
+      }
+    }
+
     const listeningItems = formulaQuestions.filter((q) => q.type === "listening");
     const readingItems = formulaQuestions.filter((q) => q.type === "reading");
 

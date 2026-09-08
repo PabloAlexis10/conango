@@ -68,7 +68,7 @@ export default function Header({
                 Conan<span className="text-[#F59E0B]">Go</span>
               </span>
               <span className="text-[10px] uppercase font-extrabold text-[#A67B5B] tracking-widest -mt-1 hidden sm:block">
-                ALCPT Oficial
+                A.L.C.P.T. Táctico
               </span>
             </div>
           </Link>
@@ -115,7 +115,7 @@ export default function Header({
 
                 {/* Dropdown Menu */}
                 {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-[#E5D5C5] rounded-2xl shadow-xl p-2 z-50">
+                  <div className="absolute right-0 mt-2 w-52 bg-white border-2 border-[#E5D5C5] rounded-2xl shadow-xl p-2 z-50">
                     <div className="px-3 py-2 border-b border-[#E5D5C5]/60 mb-1">
                       <p className="text-xs font-black text-[#6B4423] truncate">
                         {user.name || "Cadete"}
@@ -134,6 +134,26 @@ export default function Header({
                       <User className="w-3.5 h-3.5 text-[#A67B5B]" />
                       <span>Ver mi perfil</span>
                     </Link>
+
+                    <Link
+                      href="/vocabulary/definitions"
+                      onClick={() => setMenuOpen(false)}
+                      className="w-full text-left px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl flex items-center gap-2 transition-colors"
+                    >
+                      <BookOpen className="w-3.5 h-3.5 text-[#F59E0B]" />
+                      <span>Vocabulario (Definiciones)</span>
+                    </Link>
+
+                    <Link
+                      href="/vocabulary/matching"
+                      onClick={() => setMenuOpen(false)}
+                      className="w-full text-left px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl flex items-center gap-2 transition-colors"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                      <span>Vocabulario (Emparejar)</span>
+                    </Link>
+
+                    <div className="border-t border-[#E5D5C5]/60 my-1" />
 
                     <button
                       type="button"

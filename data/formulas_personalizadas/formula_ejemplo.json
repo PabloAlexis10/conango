@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "formula": 1,
+    "formulaName": "Fórmula 1 Personalizada",
+    "type": "listening",
+    "context": "The flight instructor told the lieutenant to inspect the fuel gauge before takeoff.",
+    "question": "What did the instructor tell the officer to inspect?",
+    "options": [
+      "The engine oil",
+      "The fuel gauge",
+      "The landing gear",
+      "The altimeter"
+    ],
+    "correctAnswer": 1,
+    "textToSpeak": "The flight instructor told the lieutenant to inspect the fuel gauge before takeoff. What did the instructor tell the officer to inspect?",
+    "explanation": "The instructor explicitly said to inspect the fuel gauge."
+  },
+  {
+    "id": 61,
+    "formula": 1,
+    "formulaName": "Fórmula 1 Personalizada",
+    "type": "reading",
+    "question": "Private Davis ___ to the supply depot yesterday to pick up the radio batteries.",
+    "options": [
+      "go",
+      "goes",
+      "went",
+      "gone"
+    ],
+    "correctAnswer": 2,
+    "explanation": "Simple past tense is required for 'yesterday' ('went')."
+  }
+]

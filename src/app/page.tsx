@@ -15,7 +15,9 @@ import {
   Info,
   Share2,
   Smartphone,
-  Download
+  Download,
+  BookOpen,
+  Layers
 } from "lucide-react";
 import { getCurrentUser, subscribeAuth } from "@/lib/supabase";
 import { UserProfile } from "@/lib/types";
@@ -27,15 +29,17 @@ export default function HomePage() {
 
   useEffect(() => {
     setUser(getCurrentUser());
-    const unsub = subscribeAuth((u) => setUser(u));
-    return () => unsub();
+    const unsubscribe = subscribeAuth((updatedUser) => {
+      setUser(updatedUser);
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(window.location.origin);
       setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2000);
+      setTimeout(() => setCopiedLink(false), 2500);
     }
   };
 
@@ -56,7 +60,7 @@ export default function HomePage() {
           <div className="flex-1 text-center md:text-left z-10">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FEF3C7] border border-[#FDE68A] text-[#92400E] text-xs font-black uppercase tracking-wider mb-4 shadow-sm">
               <Sparkles className="w-4 h-4 text-[#F59E0B]" />
-              Simulador Oficial ALCPT por Fórmulas
+              A.L.C.P.T. • Adiestramiento Lingüístico con Conan, Perro Táctico 🇺🇸
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-[#6B4423] tracking-tight leading-tight mb-4">
@@ -65,8 +69,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-base sm:text-lg text-[#A67B5B] font-medium max-w-xl leading-relaxed mb-6">
-              Plataforma de entrenamiento para el <strong className="text-[#6B4423]">ALCPT</strong>.
-              Elige entre un examen final con fórmula aleatoria o selecciona el cuadernillo específico que deseas estudiar.
+              Plataforma de preparación para <strong className="text-[#6B4423]">A.L.C.P.T.</strong> (Adiestramiento Lingüístico con Conan, Perro Táctico). Inglés Militar Norteamericano 🇺🇸. Rinde el examen completo de 100 preguntas, escoge tu fórmula o practica vocabulario interactivo.
             </p>
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-xs font-bold text-[#6B4423]">
@@ -104,13 +107,13 @@ export default function HomePage() {
                 Conan
               </span>
               <span className="text-[11px] font-bold text-[#A67B5B]">
-                Mascota Oficial ALCPT
+                Compañero Táctico Supremo 🐾
               </span>
             </div>
           </div>
         </section>
 
-        {/* CORE SECTION: LAS 2 MODALIDADES SOLICITADAS */}
+        {/* CORE SECTION: EVALUACIONES OFICIALES */}
         <section className="mb-10">
           <div className="text-center mb-6">
             <h2 className="text-2xl sm:text-3xl font-black text-[#6B4423] tracking-tight">
@@ -141,7 +144,7 @@ export default function HomePage() {
                 <p className="text-xs sm:text-sm text-[#A67B5B] leading-relaxed mb-6 font-medium">
                   El sistema selecciona automáticamente una fórmula al azar del banco oficial.
                   Consta de <strong className="text-[#6B4423]">100 preguntas</strong> divididas en{" "}
-                  <strong className="text-[#6B4423]">60 de Listening</strong> (audio militar) y{" "}
+                  <strong className="text-[#6B4423]">60 de Listening</strong> (audio norteamericano 🇺🇸) y{" "}
                   <strong className="text-[#6B4423]">40 de Reading</strong> (gramática y vocabulario), con{" "}
                   <strong className="text-[#6B4423]">temporizador de 60 minutos</strong>.
                 </p>
@@ -153,7 +156,7 @@ export default function HomePage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
-                    <span>Diagnóstico de porcentaje oficial ALCPT</span>
+                    <span>Diagnóstico de porcentaje oficial</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-red-500" />
@@ -188,22 +191,22 @@ export default function HomePage() {
                 </h3>
 
                 <p className="text-xs sm:text-sm text-[#A67B5B] leading-relaxed mb-6 font-medium">
-                  Elige explícitamente el cuadernillo que deseas practicar (ej: <strong className="text-[#6B4423]">Fórmula 1</strong>, <strong className="text-[#6B4423]">Fórmula 2</strong>, <strong className="text-[#6B4423]">Fórmula 5</strong>, etc.).
-                  Podrás realizar el examen completo de 100 preguntas o quizzes rápidos de práctica de 10, 30 o 50 preguntas.
+                  Elige explícitamente el cuadernillo que deseas practicar (ej: <strong className="text-[#6B4423]">Fórmula 1</strong>, <strong className="text-[#6B4423]">Fórmula 2</strong>, etc.).
+                  Podrás realizar el examen completo de 100 preguntas o quizzes de práctica de 10, 20, 30 o 50 preguntas.
                 </p>
 
                 <div className="space-y-2 mb-6 text-xs font-bold text-[#6B4423]">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[#6B4423]" />
-                    <span>Selección manual de cuadernillos</span>
+                    <span>100 Fórmulas oficiales disponibles</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
-                    <span>Opción de Examen (100) o Quiz (10, 30, 50)</span>
+                    <span>Opción de Examen (100) o Quizzes (10, 20, 30, 50)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-blue-500" />
-                    <span>Entrenamiento focalizado por objetivos</span>
+                    <span>Preguntas aleatorias en cada intento de quiz</span>
                   </div>
                 </div>
               </div>
@@ -216,6 +219,82 @@ export default function HomePage() {
                 <span>Explorar y Elegir Fórmula</span>
                 <ChevronRight className="w-5 h-5 text-[#A67B5B]" />
               </button>
+            </div>
+          </div>
+        </section>
+
+        {/* NEW SECTION: ENTRENAMIENTO DE VOCABULARIO INTERACTIVO */}
+        <section className="mb-10">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-800 text-xs font-black uppercase tracking-wider mb-2 border border-blue-200">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              Nuevas Sesiones de Vocabulario Táctico
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#6B4423] tracking-tight">
+              Refuerzo de Vocabulario en Inglés
+            </h2>
+            <p className="text-xs sm:text-sm text-[#A67B5B] font-semibold mt-1">
+              Practica palabras y modismos clave con tarjetas interactivas y juegos de emparejamiento.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* VOCAB GAME 1: DEFINITIONS */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border-2 border-[#E5D5C5] shadow-conan-card flex flex-col justify-between hover:border-[#F59E0B] transition-all">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-amber-100 text-[#F59E0B] flex items-center justify-center shadow-xs mb-4">
+                  <BookOpen className="w-6 h-6" />
+                </div>
+
+                <div className="inline-block px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-black uppercase tracking-wide mb-2">
+                  🇺🇸 Inglés ↔ Inglés
+                </div>
+
+                <h3 className="text-xl font-black text-[#6B4423] mb-2">
+                  Definiciones de Vocabulario
+                </h3>
+
+                <p className="text-xs sm:text-sm text-[#A67B5B] font-medium leading-relaxed mb-6">
+                  Aparece una tarjeta con un término en inglés (ej: <em>Mandatory, Hazard, Halt</em>) y debes seleccionar su significado exacto en inglés. ¡Si aciertas, avanzas con la siguiente!
+                </p>
+              </div>
+
+              <Link
+                href="/vocabulary/definitions"
+                className="w-full py-3.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-2xl shadow-conan-btn flex items-center justify-center gap-2 text-sm transition-transform active:scale-98"
+              >
+                <span>Practicar Definiciones</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* VOCAB GAME 2: MATCHING CARDS */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border-2 border-[#E5D5C5] shadow-conan-card flex flex-col justify-between hover:border-[#F59E0B] transition-all">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center shadow-xs mb-4">
+                  <Layers className="w-6 h-6" />
+                </div>
+
+                <div className="inline-block px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200 text-[11px] font-black uppercase tracking-wide mb-2">
+                  🇪🇸 Español ↔ 🇺🇸 Inglés
+                </div>
+
+                <h3 className="text-xl font-black text-[#6B4423] mb-2">
+                  Emparejamiento de Cartas
+                </h3>
+
+                <p className="text-xs sm:text-sm text-[#A67B5B] font-medium leading-relaxed mb-6">
+                  Juego de parejas: selecciona una carta en español y encuentra su equivalente en inglés (ejemplo: <em>Rojo ↔ Red</em>, <em>Peligro ↔ Hazard</em>) para despejar el tablero.
+                </p>
+              </div>
+
+              <Link
+                href="/vocabulary/matching"
+                className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-conan-btn flex items-center justify-center gap-2 text-sm transition-transform active:scale-98"
+              >
+                <span>Jugar Cartas de Emparejar</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </section>
@@ -248,7 +327,7 @@ export default function HomePage() {
           </button>
         </section>
 
-        {/* EDUCATIONAL / DOCTRINE BANNER: ¿QUÉ ES UNA FÓRMULA EN EL ALCPT? */}
+        {/* EDUCATIONAL / DOCTRINE BANNER: SIGNIFICADO DE A.L.C.P.T. */}
         <section className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-8">
           <div className="flex items-start gap-4">
             <div className="p-3 bg-amber-100 rounded-2xl text-[#F59E0B] flex-shrink-0">
@@ -256,19 +335,24 @@ export default function HomePage() {
             </div>
             <div>
               <h4 className="text-base sm:text-lg font-black text-[#6B4423] mb-1">
-                ¿Qué son las &ldquo;Fórmulas&rdquo; (Forms) del ALCPT?
+                ¿Qué significa A.L.C.P.T. en ConanGo?
               </h4>
               <p className="text-xs sm:text-sm text-[#A67B5B] leading-relaxed font-medium">
-                En el marco oficial del <strong>DLIELC (Defense Language Institute)</strong>, cada examen oficial se denomina <strong>Form</strong> (traducido como &ldquo;Fórmula&rdquo; o &ldquo;Forma&rdquo;). Cada una contiene exactamente <strong>100 reactivos</strong> (60 de comprensión auditiva y 40 de gramática y lectura). En ConanGo los reactivos y audios se estructuran por cuadernillo para ofrecerte una simulación exacta a la prueba militar oficial.
+                En ConanGo, las siglas <strong className="text-[#6B4423]">A.L.C.P.T.</strong> corresponden a: <strong className="text-[#92400E]">&ldquo;Adiestramiento Lingüístico con Conan, Perro Táctico&rdquo;</strong>. Es un entorno de simulación educativa enfocado en inglés militar norteamericano 🇺🇸, estructurado en cuadernillos correlativos de 100 reactivos (60 de comprensión auditiva y 40 de gramática y lectura).
               </p>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[#E5D5C5] py-6 text-center text-xs text-[#A67B5B] font-semibold bg-[#FAF6F0]">
-        ConanGo &copy; {new Date().getFullYear()} &bull; Plataforma ALCPT &bull; Diseñado con Duolingo Mechanics
+      {/* Footer with Dedication to Conan */}
+      <footer className="border-t border-[#E5D5C5] py-8 px-4 text-center text-xs text-[#A67B5B] bg-[#FAF6F0] space-y-3">
+        <p className="font-black text-[#6B4423]">
+          ConanGo &copy; {new Date().getFullYear()} &bull; A.L.C.P.T. (Adiestramiento Lingüístico con Conan, Perro Táctico) &bull; Inglés Norteamericano 🇺🇸
+        </p>
+        <div className="max-w-2xl mx-auto p-3.5 bg-white rounded-2xl border border-[#E5D5C5] shadow-xs text-xs text-[#8C6B4B] leading-relaxed">
+          🐾 <strong>Dedicatoria de Honor:</strong> Dedicado con eterno amor, respeto y honor a nuestro querido camarada el <strong>Perro Conan</strong>, el compañero más fiel, noble y valiente de todas nuestras misiones. ¡Tu lealtad y temple viven en cada estudiante!
+        </div>
       </footer>
 
       {/* Formula Selector Modal */}
