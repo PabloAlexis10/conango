@@ -681,21 +681,20 @@ export function setProStatus(isPro: boolean): void {
       id: "guest_pro",
       email: "cadete.pro@conango.com",
       name: "Cadete Supremo",
-      medals: 9999,
+      medals: 9999, // Vidas infinitas
       isPro: true,
       streakDays: 1,
       xp: 500,
-      coins: 1000,
-      gems: 9999,
-      streakFreeze: 5,
+      coins: 50,
+      gems: 50, // NO da gemas infinitas, solo las vidas
+      streakFreeze: 0,
       created_at: new Date().toISOString(),
     };
   } else {
     user.isPro = isPro;
     if (isPro) {
-      user.medals = 9999;
-      user.gems = 9999;
-      user.streakFreeze = (user.streakFreeze || 0) + 5;
+      user.medals = 9999; // Vidas infinitas
+      // NO se modifican las gemas: las gemas no son infinitas
     }
   }
 
@@ -708,8 +707,7 @@ export function setProStatus(isPro: boolean): void {
     if (idx !== -1) {
       accounts[idx].isPro = user.isPro;
       accounts[idx].medals = user.medals;
-      accounts[idx].gems = user.gems;
-      accounts[idx].streakFreeze = user.streakFreeze;
+      // Preserve normal gems and freeze
       localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
     }
   }

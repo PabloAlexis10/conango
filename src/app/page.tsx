@@ -26,6 +26,7 @@ import ProSubscriptionModal from "@/components/ProSubscriptionModal";
 import StreakModal from "@/components/StreakModal";
 import BoosterModal from "@/components/BoosterModal";
 import DailyQuestsModal from "@/components/DailyQuestsModal";
+import ConanFreakFacts from "@/components/ConanFreakFacts";
 import { Swords, Crown, Zap, Flame, Coins, Shirt } from "lucide-react";
 import { UserProfile } from "@/lib/types";
 
@@ -267,6 +268,9 @@ export default function HomePage() {
             </span>
           </Link>
         </section>
+
+        {/* VENTANA DE DATOS FREAK & TIPS (AUTO 4 SEGUNDOS BILINGÜE) */}
+        <ConanFreakFacts />
 
         <AdBanner className="mb-8" />
 
