@@ -178,22 +178,40 @@ export default function HomePage() {
         
         {/* GAMIFICATION & TACTICAL HUB */}
         <section className="mb-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {/* STREAK CARD */}
-          <button
-            type="button"
-            onClick={() => setStreakModalOpen(true)}
-            className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
-          >
-            <div className="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
-              🔥
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-orange-800 block">
-              Racha Diaria
-            </span>
-            <span className="text-base sm:text-lg font-black text-[#6B4423]">
-              {user?.streakDays || 1} {user?.streakDays === 1 ? "Día" : "Días"}
-            </span>
-          </button>
+          {/* STREAK CARD (ONLY FOR LOGGED IN CADETS, GUESTS SEE ACCOUNT PROMPT) */}
+          {user ? (
+            <button
+              type="button"
+              onClick={() => setStreakModalOpen(true)}
+              className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+            >
+              <div className="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
+                🔥
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-wider text-orange-800 block">
+                Racha Diaria
+              </span>
+              <span className="text-base sm:text-lg font-black text-[#6B4423]">
+                {user.streakDays || 1} {user.streakDays === 1 ? "Día" : "Días"}
+              </span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setAuthModalOpen(true)}
+              className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-200 hover:border-amber-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+            >
+              <div className="w-10 h-10 rounded-2xl bg-[#F59E0B] text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
+                🐾
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 block">
+                Modo Invitado
+              </span>
+              <span className="text-xs sm:text-sm font-black text-[#6B4423] leading-tight block">
+                Crear Cuenta
+              </span>
+            </button>
+          )}
 
           {/* CONAN CLOSET CARD */}
           <Link

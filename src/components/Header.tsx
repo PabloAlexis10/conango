@@ -110,16 +110,18 @@ export default function Header({
 
           {/* Right Status Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Daily Streak Button */}
-            <button
-              type="button"
-              onClick={() => setStreakModalOpen(true)}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-50 border border-orange-200 hover:bg-orange-100 text-orange-700 text-xs font-black transition-colors shadow-xs"
-              title="Racha Diaria de Estudio"
-            >
-              <span className="text-sm">🔥</span>
-              <span>{streak}</span>
-            </button>
+            {/* Daily Streak Button (ONLY VISIBLE IF USER IS LOGGED IN) */}
+            {user && (
+              <button
+                type="button"
+                onClick={() => setStreakModalOpen(true)}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-50 border border-orange-200 hover:bg-orange-100 text-orange-700 text-xs font-black transition-colors shadow-xs"
+                title="Racha Diaria de Estudio"
+              >
+                <span className="text-sm">🔥</span>
+                <span>{streak}</span>
+              </button>
+            )}
 
             {/* 2x XP Booster Button */}
             <button

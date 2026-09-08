@@ -9,7 +9,7 @@ import { getCurrentUser, subscribeAuth } from "@/lib/supabase";
 interface ConanMascotProps {
   mood?: "happy" | "sad" | "thinking" | "celebrate" | "graduate";
   size?: "sm" | "md" | "lg" | "xl" | "hero";
-  accessory?: string | null; // e.g. "sunglasses", "crown", "beret", "grad_hat", "headphones", "scarf", "pilot_goggles"
+  accessory?: string | null;
   className?: string;
   animate?: boolean;
 }
@@ -69,12 +69,12 @@ export default function ConanMascot({
       animate={
         animate
           ? isCelebrate
-            ? { y: [0, -10, 0, -6, 0], scale: [1, 1.04, 1] }
+            ? { y: [0, -8, 0, -5, 0], scale: [1, 1.03, 1] }
             : isSad
-            ? { y: [0, 3, 0], rotate: [-2, 1, -2] }
+            ? { y: [0, 3, 0], rotate: [-1, 1, -1] }
             : isThinking
-            ? { rotate: [-3, 3, -3] }
-            : { y: [0, -4, 0] }
+            ? { rotate: [-2, 2, -2] }
+            : { y: [0, -3, 0] }
           : undefined
       }
       transition={{
@@ -84,79 +84,73 @@ export default function ConanMascot({
         ease: "easeInOut",
       }}
     >
-      <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-[#E5D5C5] shadow-conan-card bg-gradient-to-b from-[#FAF6F0] to-white flex items-center justify-center">
-        {!imageError ? (
-          <Image
-            src="/conan-mascot.png"
-            alt="Conan el Husky Siberiano"
-            fill
-            sizes="(max-width: 768px) 100vw, 300px"
-            className={`object-cover object-top transition-all duration-300 ${
-              isSad ? "grayscale-[35%] brightness-90" : "brightness-100"
-            }`}
-            onError={() => setImageError(true)}
-            priority
-          />
-        ) : (
-          /* Fallback SVG if image is loading or fails */
-          <svg viewBox="0 0 240 240" fill="none" className="w-full h-full p-1">
-            <circle cx="120" cy="120" r="100" fill="#FAF6F0" />
-            <path d="M65 110 L45 35 Q85 45 95 90 Z" fill="#B38054" stroke="#6B4423" strokeWidth="4" />
-            <path d="M175 110 L195 35 Q155 45 145 90 Z" fill="#B38054" stroke="#6B4423" strokeWidth="4" />
-            <path d="M55 130 C50 85 70 65 120 65 C170 65 190 85 185 130 C180 170 160 185 120 185 C80 185 60 170 55 130 Z" fill="#C49A6C" stroke="#6B4423" strokeWidth="4" />
-            <path d="M120 75 Q100 100 80 115 C70 125 75 160 95 170 C105 175 135 175 145 170 C165 160 170 125 160 115 Q140 100 120 75 Z" fill="#FFFFFF" />
-            <ellipse cx="98" cy="122" rx="10" ry="12" fill="#3B2314" />
-            <ellipse cx="142" cy="122" rx="10" ry="12" fill="#3B2314" />
-            <path d="M106 142 Q120 136 134 142 Q120 156 106 142 Z" fill="#3B2314" />
-          </svg>
-        )}
+      {/* Outer wrapper allowing hats/crowns to protrude naturally */}
+      <div className="relative w-full h-full">
+        {/* Circular portrait frame with realistic husky */}
+        <div className="w-full h-full rounded-full overflow-hidden border-4 border-[#E5D5C5] shadow-conan-card bg-gradient-to-b from-[#FAF6F0] to-[#E5D5C5]/40 flex items-center justify-center">
+          {!imageError ? (
+            <Image
+              src="/conan-mascot.png"
+              alt="Conan el Husky Militar"
+              fill
+              sizes="(max-width: 768px) 100vw, 350px"
+              className={`object-cover object-center transition-all duration-300 ${
+                isSad ? "grayscale-[30%] brightness-90" : "brightness-100"
+              }`}
+              onError={() => setImageError(true)}
+              priority
+            />
+          ) : (
+            <div className="text-4xl">🐺</div>
+          )}
+        </div>
 
-        {/* ACCESSORY OVERLAYS */}
+        {/* ACCESSORY OVERLAYS (Positioned precisely over realistic facial features) */}
         {equippedAccessory === "sunglasses" && (
-          <span className={`absolute top-[32%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+          <span className={`absolute top-[34%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-lg select-none pointer-events-none z-20`}>
             🕶️
           </span>
         )}
         {equippedAccessory === "crown" && (
-          <span className={`absolute -top-1 left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none animate-bounce`}>
+          <span className={`absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-lg select-none pointer-events-none animate-bounce z-20`}>
             👑
           </span>
         )}
         {equippedAccessory === "beret" && (
-          <span className={`absolute -top-0.5 left-[34%] -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none rotate-[-12deg]`}>
+          <span className={`absolute -top-1 sm:-top-2 left-[30%] -translate-x-1/2 ${emSize} filter drop-shadow-lg select-none pointer-events-none rotate-[-15deg] z-20`}>
             🎖️
           </span>
         )}
         {equippedAccessory === "grad_hat" && (
-          <span className={`absolute -top-1 left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+          <span className={`absolute -top-2.5 sm:-top-3.5 left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-lg select-none pointer-events-none z-20`}>
             🎓
           </span>
         )}
         {equippedAccessory === "headphones" && (
-          <span className={`absolute top-[24%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none scale-110`}>
+          <span className={`absolute top-[18%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-lg select-none pointer-events-none scale-125 z-20`}>
             🎧
           </span>
         )}
         {equippedAccessory === "scarf" && (
-          <span className={`absolute bottom-[4%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+          <span className={`absolute bottom-[4%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-lg select-none pointer-events-none z-20`}>
             🧣
           </span>
         )}
         {equippedAccessory === "pilot_goggles" && (
-          <span className={`absolute top-[16%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+          <span className={`absolute top-[20%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-lg select-none pointer-events-none z-20`}>
             🥽
           </span>
         )}
 
         {/* Dynamic Badges / Overlays */}
         {isCelebrate && (
-          <div className="absolute top-1 right-1 bg-amber-400 text-amber-950 p-1 rounded-full shadow-md animate-bounce">
+          <div className="absolute top-0 right-0 bg-amber-400 text-amber-950 p-1.5 rounded-full shadow-md animate-bounce z-20">
             <Sparkles className="w-3.5 h-3.5" />
           </div>
         )}
 
         {isGraduate && (
-          <div className="absolute bottom-1 right-1 bg-[#F59E0B] text-white p-1 rounded-full shadow-md border-2 border-white">
+          <div className="absolute bottom-0 right-0 bg-[#F59E0B] text-white p-1.5 rounded-full shadow-md border-2 border-white z-20">
             <Award className="w-4 h-4" />
           </div>
         )}
