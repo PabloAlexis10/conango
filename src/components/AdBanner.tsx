@@ -30,7 +30,7 @@ export default function AdBanner({
   sponsorLink = "https://wa.me/?text=Hola%2C+quiero+información+sobre+los+cursos+y+preparación+ALCPT",
 }: AdBannerProps) {
   const user = getCurrentUser();
-  const adClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-6421980387532189";
+  const adClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-4340035809584049";
 
   useEffect(() => {
     if (user?.isPro) return;
