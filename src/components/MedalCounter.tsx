@@ -47,29 +47,40 @@ export default function MedalCounter({
       </div>
 
       <div className="flex items-baseline gap-1 font-bold">
-        <AnimatePresence mode="popLayout">
-          <motion.span
-            key={medals}
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            className={`text-lg font-black ${
-              medals <= 1
-                ? "text-red-600 animate-pulse"
-                : medals <= 2
-                ? "text-orange-600"
-                : "text-[#6B4423]"
-            }`}
-          >
-            {medals}
-          </motion.span>
-        </AnimatePresence>
-        {maxMedals && (
-          <span className="text-xs text-[#A67B5B] font-semibold">/{maxMedals}</span>
+        {medals >= 999 ? (
+          <span className="text-xl font-black bg-gradient-to-r from-amber-500 to-yellow-400 bg-clip-text text-transparent flex items-center gap-1">
+            ∞
+            <span className="text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 px-1.5 py-0.2 rounded border border-amber-300">
+              PRO
+            </span>
+          </span>
+        ) : (
+          <>
+            <AnimatePresence mode="popLayout">
+              <motion.span
+                key={medals}
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 10, opacity: 0 }}
+                className={`text-lg font-black ${
+                  medals <= 1
+                    ? "text-red-600 animate-pulse"
+                    : medals <= 2
+                    ? "text-orange-600"
+                    : "text-[#6B4423]"
+                }`}
+              >
+                {medals}
+              </motion.span>
+            </AnimatePresence>
+            {maxMedals && (
+              <span className="text-xs text-[#A67B5B] font-semibold">/{maxMedals}</span>
+            )}
+          </>
         )}
       </div>
 
-      {showText && (
+      {showText && medals < 999 && (
         <span className="text-xs font-semibold uppercase tracking-wider text-[#A67B5B] ml-0.5 hidden sm:inline">
           {medals === 1 ? "vida" : "vidas"}
         </span>

@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Sparkles, Award } from "lucide-react";
+import { getCurrentUser, subscribeAuth } from "@/lib/supabase";
 
 interface ConanMascotProps {
   mood?: "happy" | "sad" | "thinking" | "celebrate" | "graduate";
   size?: "sm" | "md" | "lg" | "xl" | "hero";
+  accessory?: string | null; // e.g. "sunglasses", "crown", "beret", "grad_hat", "headphones", "scarf", "pilot_goggles"
   className?: string;
   animate?: boolean;
 }
@@ -20,18 +22,46 @@ const sizeMap = {
   hero: "w-56 h-56 md:w-64 md:h-64",
 };
 
+const emojiSizeMap = {
+  sm: "text-xs",
+  md: "text-base",
+  lg: "text-2xl",
+  xl: "text-3xl",
+  hero: "text-5xl",
+};
+
 export default function ConanMascot({
   mood = "happy",
   size = "md",
+  accessory,
   className = "",
   animate = true,
 }: ConanMascotProps) {
   const [imageError, setImageError] = useState(false);
+  const [equippedAccessory, setEquippedAccessory] = useState<string | null>(accessory ?? null);
+
+  useEffect(() => {
+    if (accessory !== undefined) {
+      setEquippedAccessory(accessory);
+      return;
+    }
+    const cur = getCurrentUser();
+    setEquippedAccessory(cur?.activeAccessory || null);
+
+    const unsubscribe = subscribeAuth((u) => {
+      if (accessory === undefined) {
+        setEquippedAccessory(u?.activeAccessory || null);
+      }
+    });
+    return () => unsubscribe();
+  }, [accessory]);
 
   const isSad = mood === "sad";
   const isThinking = mood === "thinking";
   const isCelebrate = mood === "celebrate";
   const isGraduate = mood === "graduate";
+
+  const emSize = emojiSizeMap[size] || "text-base";
 
   return (
     <motion.div
@@ -79,6 +109,43 @@ export default function ConanMascot({
             <ellipse cx="142" cy="122" rx="10" ry="12" fill="#3B2314" />
             <path d="M106 142 Q120 136 134 142 Q120 156 106 142 Z" fill="#3B2314" />
           </svg>
+        )}
+
+        {/* ACCESSORY OVERLAYS */}
+        {equippedAccessory === "sunglasses" && (
+          <span className={`absolute top-[32%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+            🕶️
+          </span>
+        )}
+        {equippedAccessory === "crown" && (
+          <span className={`absolute -top-1 left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none animate-bounce`}>
+            👑
+          </span>
+        )}
+        {equippedAccessory === "beret" && (
+          <span className={`absolute -top-0.5 left-[34%] -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none rotate-[-12deg]`}>
+            🎖️
+          </span>
+        )}
+        {equippedAccessory === "grad_hat" && (
+          <span className={`absolute -top-1 left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+            🎓
+          </span>
+        )}
+        {equippedAccessory === "headphones" && (
+          <span className={`absolute top-[24%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none scale-110`}>
+            🎧
+          </span>
+        )}
+        {equippedAccessory === "scarf" && (
+          <span className={`absolute bottom-[4%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+            🧣
+          </span>
+        )}
+        {equippedAccessory === "pilot_goggles" && (
+          <span className={`absolute top-[16%] left-1/2 -translate-x-1/2 ${emSize} filter drop-shadow-md select-none pointer-events-none`}>
+            🥽
+          </span>
         )}
 
         {/* Dynamic Badges / Overlays */}

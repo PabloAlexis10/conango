@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { ExamResult, SessionResult, UserProfile } from "./types";
+import { ExamResult, SessionResult, UserProfile, FriendChallenge } from "./types";
+import { getRankByXp } from "./accessories";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -507,4 +508,310 @@ export async function getExamHistory(): Promise<ExamResult[]> {
     return JSON.parse(localStorage.getItem("conango_exams") || "[]");
   }
   return [];
+}
+
+// ----------------------------------------------------
+// GAMIFICATION: STREAK, XP, PRO & ACCESSORIES
+// ----------------------------------------------------
+
+const STORAGE_KEY_CHALLENGES = "conango_friend_challenges";
+
+function getTodayStr(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function getYesterdayStr(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export function updateUserStreak(): { streak: number; increased: boolean } {
+  let user = getCurrentUser();
+  const today = getTodayStr();
+  const yesterday = getYesterdayStr();
+
+  // If no user is logged in, create a temporary guest profile for streak tracking
+  if (!user) {
+    user = {
+      id: "guest",
+      email: "invitado@conango.com",
+      name: "Cadete Invitado",
+      medals: 5,
+      streakDays: 0,
+      xp: 0,
+      coins: 20,
+      level: 1,
+      rankName: "Recluta Táctico",
+      unlockedAccessories: ["sunglasses"],
+      activeAccessory: "sunglasses",
+      created_at: new Date().toISOString(),
+    };
+  }
+
+  const currentStreak = user.streakDays || 0;
+  const lastDate = user.lastStreakDate;
+
+  let newStreak = currentStreak;
+  let increased = false;
+
+  if (lastDate === today) {
+    // Already studied today, streak is safe
+    return { streak: currentStreak, increased: false };
+  } else if (lastDate === yesterday) {
+    // Studied yesterday, consecutive streak!
+    newStreak = currentStreak + 1;
+    increased = true;
+  } else {
+    // Broke streak or starting fresh
+    newStreak = 1;
+    increased = true;
+  }
+
+  user.streakDays = newStreak;
+  user.lastStreakDate = today;
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user?.id);
+    if (idx !== -1) {
+      accounts[idx].streakDays = user.streakDays;
+      accounts[idx].lastStreakDate = user.lastStreakDate;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+  return { streak: newStreak, increased };
+}
+
+export function isDoubleXpActive(): boolean {
+  const user = getCurrentUser();
+  if (!user || !user.doubleXpExpiresAt) return false;
+  return new Date(user.doubleXpExpiresAt).getTime() > Date.now();
+}
+
+export function getDoubleXpTimeRemaining(): number {
+  const user = getCurrentUser();
+  if (!user || !user.doubleXpExpiresAt) return 0;
+  const diff = new Date(user.doubleXpExpiresAt).getTime() - Date.now();
+  return Math.max(0, Math.floor(diff / 1000));
+}
+
+export function activateDoubleXp(minutes: number = 15): void {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  const expiresAt = new Date(Date.now() + minutes * 60 * 1000).toISOString();
+  user.doubleXpExpiresAt = expiresAt;
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx].doubleXpExpiresAt = expiresAt;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+}
+
+export function addExperience(baseAmount: number): { addedXp: number; newXp: number; levelUp: boolean; newRank: string } {
+  let user = getCurrentUser();
+  if (!user) return { addedXp: baseAmount, newXp: baseAmount, levelUp: false, newRank: "Recluta Táctico" };
+
+  const multiplier = isDoubleXpActive() || user.isPro ? 2 : 1;
+  const addedXp = baseAmount * multiplier;
+  const currentXp = user.xp || 0;
+  const newXp = currentXp + addedXp;
+
+  // Add coins proportional to XP
+  const addedCoins = Math.max(1, Math.floor(addedXp / 5));
+  user.coins = (user.coins || 0) + addedCoins;
+  user.xp = newXp;
+
+  const oldRank = getRankByXp(currentXp).currentRank;
+  const rankInfo = getRankByXp(newXp);
+  const levelUp = rankInfo.currentRank.level > oldRank.level;
+
+  user.level = rankInfo.currentRank.level;
+  user.rankName = rankInfo.currentRank.name;
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx].xp = user.xp;
+      accounts[idx].coins = user.coins;
+      accounts[idx].level = user.level;
+      accounts[idx].rankName = user.rankName;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+  return { addedXp, newXp, levelUp, newRank: rankInfo.currentRank.name };
+}
+
+export function setProStatus(isPro: boolean): void {
+  let user = getCurrentUser();
+  if (!user) {
+    user = {
+      id: "guest_pro",
+      email: "cadete.pro@conango.com",
+      name: "Cadete Supremo",
+      medals: 9999,
+      isPro: true,
+      streakDays: 1,
+      xp: 500,
+      coins: 1000,
+      level: 3,
+      rankName: "Cabo de Escuadra",
+      unlockedAccessories: ["sunglasses", "beret", "crown"],
+      activeAccessory: "crown",
+      created_at: new Date().toISOString(),
+    };
+  } else {
+    user.isPro = isPro;
+    if (isPro) {
+      user.medals = 9999;
+      // Auto-unlock crown for Pro
+      const unlocked = new Set(user.unlockedAccessories || ["sunglasses"]);
+      unlocked.add("crown");
+      user.unlockedAccessories = Array.from(unlocked);
+      user.activeAccessory = "crown";
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user?.id);
+    if (idx !== -1) {
+      accounts[idx].isPro = user.isPro;
+      accounts[idx].medals = user.medals;
+      accounts[idx].unlockedAccessories = user.unlockedAccessories;
+      accounts[idx].activeAccessory = user.activeAccessory;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+}
+
+export function restoreMedalsAfterAd(): void {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  user.medals = 5;
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx].medals = 5;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+}
+
+export function equipAccessory(accessoryId: string | null): boolean {
+  const user = getCurrentUser();
+  if (!user) return false;
+
+  user.activeAccessory = accessoryId;
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx].activeAccessory = accessoryId;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+  return true;
+}
+
+export function buyAccessory(accessoryId: string, price: number): { success: boolean; error?: string } {
+  const user = getCurrentUser();
+  if (!user) return { success: false, error: "Debes iniciar sesión para comprar accesorios." };
+
+  const currentCoins = user.coins || 0;
+  if (currentCoins < price) {
+    return { success: false, error: `Necesitas ${price} monedas (tienes ${currentCoins}).` };
+  }
+
+  const unlocked = new Set(user.unlockedAccessories || ["sunglasses"]);
+  if (unlocked.has(accessoryId)) {
+    return { success: true };
+  }
+
+  user.coins = currentCoins - price;
+  unlocked.add(accessoryId);
+  user.unlockedAccessories = Array.from(unlocked);
+  user.activeAccessory = accessoryId;
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx].coins = user.coins;
+      accounts[idx].unlockedAccessories = user.unlockedAccessories;
+      accounts[idx].activeAccessory = user.activeAccessory;
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+
+  notifyAuthListeners(user);
+  return { success: true };
+}
+
+// ----------------------------------------------------
+// FRIEND CHALLENGES (DUELOS)
+// ----------------------------------------------------
+
+export function saveFriendChallenge(challenge: FriendChallenge): void {
+  if (typeof window === "undefined") return;
+  const list: FriendChallenge[] = JSON.parse(
+    localStorage.getItem(STORAGE_KEY_CHALLENGES) || "[]"
+  );
+  list.unshift(challenge);
+  localStorage.setItem(STORAGE_KEY_CHALLENGES, JSON.stringify(list.slice(0, 30)));
+}
+
+export function getFriendChallenges(): FriendChallenge[] {
+  if (typeof window === "undefined") return [];
+  return JSON.parse(localStorage.getItem(STORAGE_KEY_CHALLENGES) || "[]");
 }

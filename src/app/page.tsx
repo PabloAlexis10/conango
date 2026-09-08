@@ -22,6 +22,10 @@ import {
 import { getCurrentUser, subscribeAuth, getGuestUsageCount, hasReachedGuestLimit, GUEST_LIMIT } from "@/lib/supabase";
 import AuthModal from "@/components/AuthModal";
 import AdBanner from "@/components/AdBanner";
+import ProSubscriptionModal from "@/components/ProSubscriptionModal";
+import StreakModal from "@/components/StreakModal";
+import BoosterModal from "@/components/BoosterModal";
+import { Swords, Crown, Zap, Flame, Coins, Shirt } from "lucide-react";
 import { UserProfile } from "@/lib/types";
 
 export default function HomePage() {
@@ -31,6 +35,9 @@ export default function HomePage() {
   const [guestUsage, setGuestUsage] = useState(0);
   const [guestLimitHit, setGuestLimitHit] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [proModalOpen, setProModalOpen] = useState(false);
+  const [streakModalOpen, setStreakModalOpen] = useState(false);
+  const [boosterModalOpen, setBoosterModalOpen] = useState(false);
 
   useEffect(() => {
     const cur = getCurrentUser();
@@ -167,6 +174,76 @@ export default function HomePage() {
             ) : null}
           </div>
         )}
+
+        
+        {/* GAMIFICATION & TACTICAL HUB */}
+        <section className="mb-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {/* STREAK CARD */}
+          <button
+            type="button"
+            onClick={() => setStreakModalOpen(true)}
+            className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
+              🔥
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-orange-800 block">
+              Racha Diaria
+            </span>
+            <span className="text-base sm:text-lg font-black text-[#6B4423]">
+              {user?.streakDays || 1} {user?.streakDays === 1 ? "Día" : "Días"}
+            </span>
+          </button>
+
+          {/* CONAN CLOSET CARD */}
+          <Link
+            href="/closet"
+            className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-200 hover:border-amber-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
+              🐶
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 block">
+              Armario Conan
+            </span>
+            <span className="text-base sm:text-lg font-black text-[#6B4423]">
+              Atuendos 🕶️
+            </span>
+          </Link>
+
+          {/* DUELS WITH FRIENDS */}
+          <Link
+            href="/challenge"
+            className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 hover:border-blue-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
+              <Swords className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-blue-900 block">
+              Desafíos
+            </span>
+            <span className="text-base sm:text-lg font-black text-[#6B4423]">
+              Duelos ⚔️
+            </span>
+          </Link>
+
+          {/* 2X XP BOOSTER */}
+          <button
+            type="button"
+            onClick={() => setBoosterModalOpen(true)}
+            className="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 hover:border-emerald-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
+              <Zap className="w-5 h-5 text-yellow-300" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900 block">
+              Potenciador
+            </span>
+            <span className="text-base sm:text-lg font-black text-[#6B4423]">
+              2x XP ⚡
+            </span>
+          </button>
+        </section>
 
         {/* CORE SECTION: EVALUACIONES OFICIALES */}
         <section className="mb-10">
@@ -399,6 +476,24 @@ export default function HomePage() {
           </div>
         </section>
       </main>
+
+      {/* PRO Modal */}
+      <ProSubscriptionModal
+        isOpen={proModalOpen}
+        onClose={() => setProModalOpen(false)}
+      />
+
+      {/* Streak Modal */}
+      <StreakModal
+        isOpen={streakModalOpen}
+        onClose={() => setStreakModalOpen(false)}
+      />
+
+      {/* 2x XP Booster Modal */}
+      <BoosterModal
+        isOpen={boosterModalOpen}
+        onClose={() => setBoosterModalOpen(false)}
+      />
 
       {/* Footer with Dedication to Conan */}
       <footer className="border-t border-[#E5D5C5] py-8 px-4 text-center text-xs text-[#A67B5B] bg-[#FAF6F0] space-y-3">

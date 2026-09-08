@@ -65,5 +65,35 @@ export interface UserProfile {
   email: string;
   password?: string;
   medals: number;
+  isPro?: boolean;
+  streakDays?: number;
+  lastStreakDate?: string;
+  xp?: number;
+  level?: number;
+  rankName?: string;
+  doubleXpExpiresAt?: string | null;
+  unlockedAccessories?: string[];
+  activeAccessory?: string | null;
+  coins?: number;
   created_at: string;
+}
+
+export interface ConanAccessory {
+  id: string;
+  name: string;
+  emoji: string;
+  category: "head" | "eyes" | "neck" | "special";
+  description: string;
+  price: number;
+  isProOnly?: boolean;
+}
+
+export interface FriendChallenge {
+  id: string;
+  creatorName: string;
+  formula: number;
+  size: number;
+  creatorScore: number;
+  creatorPercentage: number;
+  createdAt: string;
 }

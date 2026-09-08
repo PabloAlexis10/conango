@@ -11,6 +11,10 @@ import { soundEffects } from "@/lib/soundEffects";
 import { saveSessionResult, saveExamResult, getCurrentUser, updateUserMedals, hasReachedGuestLimit, incrementGuestUsage } from "@/lib/supabase";
 import GuestLimitWall from "@/components/GuestLimitWall";
 import AuthModal from "@/components/AuthModal";
+import RewardedVideoModal from "@/components/RewardedVideoModal";
+import ProSubscriptionModal from "@/components/ProSubscriptionModal";
+import { updateUserStreak, addExperience } from "@/lib/supabase";
+import { Video, Crown } from "lucide-react";
 import { RotateCcw, Home, Loader2, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -44,6 +48,8 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
   const [activeFormula, setActiveFormula] = useState<number | null>(null);
   const [limitReached, setLimitReached] = useState<boolean>(false);
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [rewardModalOpen, setRewardModalOpen] = useState<boolean>(false);
+  const [proModalOpen, setProModalOpen] = useState<boolean>(false);
 
   // Fetch questions
   const loadQuestions = useCallback(async () => {
@@ -170,6 +176,10 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
         updateUserMedals(2);
       }
 
+      // Update daily streak and award XP
+      updateUserStreak();
+      addExperience(finalCorrect * 10);
+
       if (!getCurrentUser()) {
         incrementGuestUsage();
       }
@@ -295,14 +305,34 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
                   Perdiste tus 5 vidas. Debes comenzar de nuevo esta sesión desde la primera pregunta.
                 </p>
 
-                <div className="space-y-3">
+                <div className="space-y-2.5">
+                  {/* Option 1: Watch Rewarded Ad for 5 Lives */}
+                  <button
+                    type="button"
+                    onClick={() => setRewardModalOpen(true)}
+                    className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl shadow-conan-btn flex items-center justify-center gap-2 text-xs uppercase tracking-wider transition-transform active:scale-95"
+                  >
+                    <Video className="w-4 h-4 text-emerald-200" />
+                    <span>Ver Anuncio de 5s para Recuperar 5 Vidas</span>
+                  </button>
+
+                  {/* Option 2: Conan PRO Infinite Lives */}
+                  <button
+                    type="button"
+                    onClick={() => setProModalOpen(true)}
+                    className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:brightness-105 text-white font-black rounded-2xl shadow-xs flex items-center justify-center gap-2 text-xs transition-all"
+                  >
+                    <Crown className="w-3.5 h-3.5 text-yellow-100" />
+                    <span>Obtener Conan PRO (Vidas Infinitas)</span>
+                  </button>
+
                   <button
                     type="button"
                     onClick={loadQuestions}
-                    className="w-full py-3.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-2xl shadow-conan-btn flex items-center justify-center gap-2 text-base transition-transform active:translate-y-1"
+                    className="w-full py-2.5 bg-[#FAF6F0] hover:bg-[#F5EFEB] text-[#6B4423] font-bold rounded-2xl border border-[#E5D5C5] flex items-center justify-center gap-2 text-xs transition-colors"
                   >
-                    <RotateCcw className="w-5 h-5" />
-                    <span>Reintentar sesión</span>
+                    <RotateCcw className="w-4 h-4" />
+                    <span>Reintentar sesión desde el inicio</span>
                   </button>
 
                   <button
@@ -319,6 +349,24 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
           )}
         </AnimatePresence>
       </main>
+
+      <RewardedVideoModal
+        isOpen={rewardModalOpen}
+        onClose={() => setRewardModalOpen(false)}
+        onRewarded={() => {
+          setMedals(5);
+          setIsGameOver(false);
+        }}
+      />
+
+      <ProSubscriptionModal
+        isOpen={proModalOpen}
+        onClose={() => setProModalOpen(false)}
+        onSuccess={() => {
+          setMedals(9999);
+          setIsGameOver(false);
+        }}
+      />
     </div>
   );
 }

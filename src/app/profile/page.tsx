@@ -30,14 +30,21 @@ import {
   Shield,
   KeyRound,
   Lock,
+  Crown,
+  Zap,
+  Swords,
+  Coins,
 } from "lucide-react";
 import Link from "next/link";
+import { getRankByXp } from "@/lib/accessories";
+import ProSubscriptionModal from "@/components/ProSubscriptionModal";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [examHistory, setExamHistory] = useState<ExamResult[]>([]);
   const [sessionHistory, setSessionHistory] = useState<SessionResult[]>([]);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [proModalOpen, setProModalOpen] = useState(false);
   const [guestUsage, setGuestUsage] = useState<number>(0);
 
   // Change password states
@@ -120,10 +127,17 @@ export default function ProfilePage() {
           <div className="flex items-center gap-5 text-center sm:text-left">
             <ConanMascot size="lg" mood="celebrate" animate={true} />
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider mb-2">
-                <Flame className="w-3.5 h-3.5 text-[#F59E0B]" />
-                {user ? "Cadete Registrado (Acceso Ilimitado)" : "Modo Invitado (Prueba Limitada)"}
-              </div>
+              {user?.isPro ? (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-full text-xs font-black uppercase tracking-wider mb-2 shadow-xs">
+                  <Crown className="w-3.5 h-3.5 text-yellow-200" />
+                  <span>Cadete Supremo Conan PRO (Vidas ∞)</span>
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider mb-2">
+                  <Flame className="w-3.5 h-3.5 text-[#F59E0B]" />
+                  <span>{user ? "Cadete Registrado" : "Modo Invitado (Prueba Limitada)"}</span>
+                </div>
+              )}
               <h1 className="text-2xl sm:text-3xl font-black text-[#6B4423]">
                 {user?.name || user?.email || "Cadete Invitado"}
               </h1>
@@ -164,6 +178,45 @@ export default function ProfilePage() {
         </div>
 
         {/* Global Statistics Grid */}
+        {/* Rank and Gamification Stats */}
+        <div className="bg-[#FAF6F0] p-5 rounded-3xl border-2 border-[#E5D5C5] mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">{getRankByXp(user?.xp || 0).currentRank.badge}</span>
+              <div>
+                <span className="text-xs font-black text-[#A67B5B] uppercase tracking-wider block">
+                  Rango Militar
+                </span>
+                <h3 className="text-lg font-black text-[#6B4423]">
+                  {getRankByXp(user?.xp || 0).currentRank.name} (Nivel {getRankByXp(user?.xp || 0).currentRank.level})
+                </h3>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-orange-700">
+                <span>🔥</span>
+                <span>{user?.streakDays || 1} Días de Racha</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-amber-900">
+                <Coins className="w-4 h-4 text-amber-500" />
+                <span>{user?.coins || 0} Monedas</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full bg-white h-2.5 rounded-full overflow-hidden border border-[#E5D5C5]">
+            <div
+              className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full transition-all duration-500"
+              style={{ width: `${getRankByXp(user?.xp || 0).progress}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-[10px] text-[#A67B5B] font-bold mt-1">
+            <span>{user?.xp || 0} XP Acumulada</span>
+            <span>Progreso: {getRankByXp(user?.xp || 0).progress}% para siguiente rango</span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-[#F59E0B]">
