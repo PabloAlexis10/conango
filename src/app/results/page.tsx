@@ -8,6 +8,7 @@ import AdBanner from "@/components/AdBanner";
 import AudioPlayer from "@/components/AudioPlayer";
 import TacticalCertificateModal from "@/components/TacticalCertificateModal";
 import ConanResultVideoScene from "@/components/ConanResultVideoScene";
+import InteractiveWordText from "@/components/InteractiveWordText";
 import { getCurrentUser } from "@/lib/supabase";
 import { getUserRankTitle } from "@/lib/accessories";
 import { QuestionReview } from "@/lib/types";
@@ -258,7 +259,7 @@ function ResultsContent() {
                           </div>
 
                           <h4 className="text-base font-bold text-[#6B4423] leading-snug">
-                            {rev.question}
+                            <InteractiveWordText text={rev.question} />
                           </h4>
                           <span className="text-xs text-red-600 font-semibold mt-1 inline-block">
                             Tu respuesta: {rev.options[rev.selectedAnswer] || "No respondida"}
@@ -292,7 +293,7 @@ function ResultsContent() {
                               <span>Audio Transcript (Inglés 🇺🇸):</span>
                             </span>
                             <p className="text-[#4A3319] font-medium leading-relaxed">
-                              &ldquo;{rev.context || (rev.textToSpeak ? rev.textToSpeak.replace(rev.question, "").trim() : "") || rev.question}&rdquo;
+                              &ldquo;<InteractiveWordText text={rev.context || (rev.textToSpeak ? rev.textToSpeak.replace(rev.question, "").trim() : "") || rev.question} />&rdquo;
                             </p>
                           </div>
                         </div>
@@ -332,7 +333,7 @@ function ResultsContent() {
                                   <strong className="font-bold">
                                     {optionLetters[optIdx]})
                                   </strong>{" "}
-                                  {opt}
+                                  <InteractiveWordText text={opt} />
                                 </span>
                                 {isCorrectOpt && (
                                   <span className="text-[10px] uppercase font-black px-2 py-0.5 bg-green-600 text-white rounded-md">
@@ -354,7 +355,7 @@ function ResultsContent() {
                             <Lightbulb className="w-4 h-4 text-[#F59E0B] flex-shrink-0 mt-0.5" />
                             <div>
                               <strong className="font-bold">Explicación ({rev.formulaName || `Fórmula ${rev.formula}`}):</strong>{" "}
-                              {rev.explanation}
+                              <InteractiveWordText text={rev.explanation} />
                             </div>
                           </div>
                         )}

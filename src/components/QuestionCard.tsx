@@ -5,6 +5,7 @@ import { Question } from "@/lib/types";
 import { CheckCircle2, XCircle, ArrowRight, Lightbulb, Sparkles, Volume2, BookOpen, Headphones, Languages } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AudioPlayer from "./AudioPlayer";
+import InteractiveWordText from "./InteractiveWordText";
 import { getCurrentUser } from "@/lib/supabase";
 import { getUserRankTitle } from "@/lib/accessories";
 
@@ -118,6 +119,12 @@ export default function QuestionCard({
           </button>
         </div>
 
+        {/* Interactive Dictionary Hint */}
+        <div className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50/90 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 rounded-xl text-[11px] font-semibold">
+          <Languages className="w-3.5 h-3.5 text-[#F59E0B] shrink-0" />
+          <span>Toca o pasa el cursor sobre cualquier palabra para ver su traducción y tiempos (Pasado, Presente, Futuro).</span>
+        </div>
+
         {/* Audio Player (Only rendered for Listening questions) */}
         {isListening && (
           <div className="mb-4">
@@ -132,22 +139,22 @@ export default function QuestionCard({
 
         {/* Subtítulo del Contexto del Audio en Inglés (Listening) */}
         {isListening && (
-          <div className="mb-6 bg-[#FAF6F0] rounded-2xl border-2 border-[#E5D5C5] p-4 shadow-sm">
+          <div className="mb-6 bg-[#FAF6F0] dark:bg-slate-800/60 rounded-2xl border-2 border-[#E5D5C5] dark:border-slate-700 p-4 shadow-sm">
             <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-black uppercase tracking-wider text-[#92400E] flex items-center gap-1.5">
+              <span className="text-xs font-black uppercase tracking-wider text-[#92400E] dark:text-amber-400 flex items-center gap-1.5">
                 <Headphones className="w-4 h-4 text-[#F59E0B]" />
                 Audio Transcript
               </span>
-              <span className="text-[11px] font-bold text-[#6B4423] bg-white px-2.5 py-0.5 rounded-full border border-[#E5D5C5] shadow-xs flex items-center gap-1">
+              <span className="text-[11px] font-bold text-[#6B4423] dark:text-slate-100 bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-[#E5D5C5] dark:border-slate-700 shadow-xs flex items-center gap-1">
                 <span>Inglés</span>
                 <span>🇺🇸</span>
               </span>
             </div>
 
             {/* Subtítulo en Inglés */}
-            <div className="bg-white/95 p-3.5 rounded-xl border border-[#E5D5C5]">
-              <p className="text-sm sm:text-base text-[#4A3319] font-bold leading-relaxed">
-                &ldquo;{question.context || (question.textToSpeak ? question.textToSpeak.replace(question.question, "").trim() : "") || question.question}&rdquo;
+            <div className="bg-white/95 dark:bg-slate-900/90 p-3.5 rounded-xl border border-[#E5D5C5] dark:border-slate-700">
+              <p className="text-sm sm:text-base text-[#4A3319] dark:text-slate-100 font-bold leading-relaxed">
+                &ldquo;<InteractiveWordText text={question.context || (question.textToSpeak ? question.textToSpeak.replace(question.question, "").trim() : "") || question.question} />&rdquo;
               </p>
             </div>
           </div>
@@ -155,7 +162,7 @@ export default function QuestionCard({
 
         {/* Optional Image */}
         {question.image && (
-          <div className="mb-4 rounded-2xl overflow-hidden border border-[#E5D5C5] max-h-60 flex items-center justify-center bg-[#FAF6F0]">
+          <div className="mb-4 rounded-2xl overflow-hidden border border-[#E5D5C5] dark:border-slate-700 max-h-60 flex items-center justify-center bg-[#FAF6F0] dark:bg-slate-800">
             <img
               src={question.image}
               alt="Contexto de la pregunta"
@@ -166,11 +173,11 @@ export default function QuestionCard({
 
         {/* Question Prompt */}
         <div className="mb-6">
-          <span className="text-xs font-black uppercase tracking-wider text-[#A67B5B] block mb-1">
+          <span className="text-xs font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400 block mb-1">
             Question:
           </span>
-          <h3 className="text-lg sm:text-xl font-extrabold text-[#6B4423] leading-snug">
-            {question.question}
+          <h3 className="text-lg sm:text-xl font-extrabold text-[#6B4423] dark:text-slate-100 leading-snug">
+            <InteractiveWordText text={question.question} />
           </h3>
         </div>
 
@@ -180,19 +187,19 @@ export default function QuestionCard({
             const isThisSelected = selectedOption === idx;
             const isThisCorrect = idx === question.correctAnswer;
 
-            let buttonStyle = "border-[#E5D5C5] bg-white hover:border-[#A67B5B] hover:bg-[#FAF6F0]";
-            let badgeStyle = "bg-[#FAF6F0] text-[#6B4423] border-[#E5D5C5]";
+            let buttonStyle = "border-[#E5D5C5] dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#A67B5B] dark:hover:border-slate-500 hover:bg-[#FAF6F0] dark:hover:bg-slate-700/60";
+            let badgeStyle = "bg-[#FAF6F0] dark:bg-slate-700 text-[#6B4423] dark:text-slate-100 border-[#E5D5C5] dark:border-slate-600";
 
             if (hasAnswered) {
               if (isThisCorrect) {
-                buttonStyle = "border-green-500 bg-green-50 text-green-800 shadow-[0_4px_0_0_#22C55E]";
+                buttonStyle = "border-green-500 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-200 shadow-[0_4px_0_0_#22C55E]";
                 badgeStyle = "bg-green-500 text-white border-green-500";
               } else if (isThisSelected) {
-                buttonStyle = "border-red-500 bg-red-50 text-red-800 shadow-[0_4px_0_0_#EF4444]";
+                buttonStyle = "border-red-500 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-200 shadow-[0_4px_0_0_#EF4444]";
                 badgeStyle = "bg-red-500 text-white border-red-500";
               } else {
-                buttonStyle = "border-[#E5D5C5] opacity-50 bg-gray-50";
-                badgeStyle = "bg-gray-100 text-gray-400 border-gray-200";
+                buttonStyle = "border-[#E5D5C5] dark:border-slate-800 opacity-50 bg-gray-50 dark:bg-slate-900";
+                badgeStyle = "bg-gray-100 dark:bg-slate-800 text-gray-400 border-gray-200 dark:border-slate-700";
               }
             }
 
@@ -211,16 +218,16 @@ export default function QuestionCard({
                   >
                     {optionLetters[idx]}
                   </span>
-                  <span className="text-sm sm:text-base text-[#6B4423] font-semibold leading-snug">
-                    {option}
+                  <span className="text-sm sm:text-base text-[#6B4423] dark:text-slate-100 font-semibold leading-snug">
+                    <InteractiveWordText text={option} />
                   </span>
                 </div>
 
                 {hasAnswered && isThisCorrect && (
-                  <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
+                  <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0" />
                 )}
                 {hasAnswered && isThisSelected && !isThisCorrect && (
-                  <XCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
+                  <XCircle className="w-6 h-6 text-red-600 dark:text-red-400 flex-shrink-0" />
                 )}
               </motion.button>
             );
@@ -278,7 +285,7 @@ export default function QuestionCard({
                   <Lightbulb className="w-4 h-4 text-[#F59E0B] flex-shrink-0 mt-0.5" />
                   <p className="leading-relaxed">
                     <strong className="font-bold">Explicación ({question.formulaName || `Fórmula ${question.formula}`}):</strong>{" "}
-                    {question.explanation}
+                    <InteractiveWordText text={question.explanation} />
                   </p>
                 </div>
               )}
