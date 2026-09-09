@@ -20,10 +20,10 @@ export const PAYMENT_CONFIG: PaymentGatewayConfig = {
     // o definirlos en las variables de entorno de Vercel (NEXT_PUBLIC_MP_MONTHLY_URL y NEXT_PUBLIC_MP_YEARLY_URL)
     monthlyUrl:
       process.env.NEXT_PUBLIC_MP_MONTHLY_URL ||
-      "https://www.mercadopago.cl",
+      "https://link.mercadopago.cl/conango",
     yearlyUrl:
       process.env.NEXT_PUBLIC_MP_YEARLY_URL ||
-      "https://www.mercadopago.cl",
+      "https://link.mercadopago.cl/conango",
     storeName: "ConanGO - Preparación ALCPT Oficial",
   },
   stripe: {

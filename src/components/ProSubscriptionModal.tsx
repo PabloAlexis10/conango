@@ -211,11 +211,27 @@ export default function ProSubscriptionModal({
                 </div>
               </div>
 
-              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300 flex items-start gap-2 text-left">
-                <Lock className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Transacción Privada:</strong> Al pagar con Webpay / Redcompra o Tarjeta, no necesitas transferir ni ver cuentas personales. El cobro entra seguro a la plataforma y se acredita al instante.
-                </span>
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300 flex flex-col gap-2 text-left">
+                <div className="flex items-start gap-2">
+                  <Lock className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Transacción Privada:</strong> Al pagar con Webpay / Redcompra o Tarjeta, no necesitas transferir ni ver cuentas personales. El cobro entra seguro a la plataforma y se acredita al instante.
+                  </span>
+                </div>
+                {selectedGateway === "mercadopago" && (
+                  <div className="pt-2 border-t border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between text-xs">
+                    <span>Monto a ingresar en Mercado Pago: <strong className="text-emerald-900 dark:text-emerald-200 font-black">{planPrice}</strong></span>
+                    <a
+                      href={getCheckoutUrl("mercadopago", selectedPlan)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 font-bold underline hover:text-blue-800 flex items-center gap-1"
+                    >
+                      <span>Abrir Link Directo</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2 pt-2">
