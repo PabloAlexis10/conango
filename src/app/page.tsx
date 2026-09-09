@@ -179,8 +179,8 @@ export default function HomePage() {
         )}
 
         
-        {/* DUOLINGO TACTICAL HUB (STREAK, SHOP, QUESTS, DUELS) */}
-        <section className="mb-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {/* DUOLINGO TACTICAL HUB (STREAK, SHOP, QUESTS, LEADERBOARD, DUELS) */}
+        <section className="mb-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {/* 1. STREAK CARD (ONLY FOR LOGGED IN USERS) */}
           {user ? (
             <button
@@ -252,7 +252,23 @@ export default function HomePage() {
             </span>
           </button>
 
-          {/* 4. FRIEND CHALLENGE / DUELS CARD */}
+          {/* 4. LEADERBOARD CARD (LIGAS SEMANALES) */}
+          <Link
+            href="/leaderboard"
+            className="bg-gradient-to-br from-amber-50 to-yellow-100 border-2 border-amber-300 hover:border-amber-500 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-500 text-white flex items-center justify-center text-xl shadow-xs mb-2 group-hover:scale-110 transition-transform">
+              🏆
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-amber-950 block">
+              Ligas Militares
+            </span>
+            <span className="text-base sm:text-lg font-black text-[#6B4423]">
+              Top Cadetes 🥇
+            </span>
+          </Link>
+
+          {/* 5. FRIEND CHALLENGE / DUELS CARD */}
           <Link
             href="/challenge"
             className="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 hover:border-emerald-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group"

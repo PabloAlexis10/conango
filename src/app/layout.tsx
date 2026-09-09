@@ -54,8 +54,13 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4340035809584049"
           crossOrigin="anonymous"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("conango_theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)){document.documentElement.classList.add("dark");}}catch(e){}})();`,
+          }}
+        />
       </head>
-      <body className="min-h-full flex flex-col bg-white text-[#6B4423] antialiased">
+      <body className="min-h-full flex flex-col bg-white dark:bg-slate-950 text-[#6B4423] dark:text-slate-100 antialiased transition-colors">
         <ServiceWorkerRegister />
         <InstallPwaBanner />
         <Script

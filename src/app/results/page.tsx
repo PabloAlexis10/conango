@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import ConanMascot from "@/components/ConanMascot";
 import AdBanner from "@/components/AdBanner";
 import AudioPlayer from "@/components/AudioPlayer";
+import TacticalCertificateModal from "@/components/TacticalCertificateModal";
+import { getCurrentUser } from "@/lib/supabase";
 import { QuestionReview } from "@/lib/types";
 import {
   Trophy,
@@ -36,6 +38,7 @@ function ResultsContent() {
 
   const [reviews, setReviews] = useState<QuestionReview[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+  const [certModalOpen, setCertModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -165,6 +168,16 @@ function ResultsContent() {
             >
               <RotateCcw className="w-5 h-5" />
               <span>Practicar de nuevo</span>
+            </button>
+
+            {/* Tactical Diploma Button */}
+            <button
+              type="button"
+              onClick={() => setCertModalOpen(true)}
+              className="px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-black rounded-2xl shadow-conan-btn flex items-center gap-2 text-sm sm:text-base transition-transform active:translate-y-1"
+            >
+              <Award className="w-5 h-5 text-yellow-100" />
+              <span>Ver Diploma Oficial ALCPT</span>
             </button>
 
             <button
@@ -351,6 +364,15 @@ function ResultsContent() {
             </div>
           )}
         </section>
+
+        <TacticalCertificateModal
+          isOpen={certModalOpen}
+          onClose={() => setCertModalOpen(false)}
+          cadetName={getCurrentUser()?.name || getCurrentUser()?.email?.split("@")[0] || "Cadete de Honor"}
+          percentage={percentage}
+          correctAnswers={correct}
+          formulaNumber={searchParams.get("formula") || "Mixta"}
+        />
       </main>
     </div>
   );

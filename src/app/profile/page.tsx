@@ -39,6 +39,7 @@ import {
 import Link from "next/link";
 import { getRankByXp } from "@/lib/accessories";
 import ProSubscriptionModal from "@/components/ProSubscriptionModal";
+import TacticalCertificateModal from "@/components/TacticalCertificateModal";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -47,6 +48,7 @@ export default function ProfilePage() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
   const [guestUsage, setGuestUsage] = useState<number>(0);
+  const [selectedCertExam, setSelectedCertExam] = useState<ExamResult | null>(null);
 
   // Change password states
   const [currentPassword, setCurrentPassword] = useState("");
@@ -443,10 +445,21 @@ export default function ProfilePage() {
                       </span>
                     </div>
 
-                    <div className="text-right">
-                      <span className="text-lg font-black text-[#F59E0B]">
-                        {exam.percentage}%
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <span className="text-lg font-black text-[#F59E0B]">
+                          {exam.percentage}%
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCertExam(exam)}
+                        className="p-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl text-xs font-bold transition-transform active:scale-95 flex items-center gap-1 shadow-2xs"
+                        title="Ver Diploma Oficial de este examen"
+                      >
+                        <Award className="w-4 h-4 text-amber-700" />
+                        <span className="hidden sm:inline text-[11px]">Diploma</span>
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -517,6 +530,22 @@ export default function ProfilePage() {
         onClose={() => setAuthModalOpen(false)}
         onSuccess={() => loadData()}
       />
+
+      {selectedCertExam && (
+        <TacticalCertificateModal
+          isOpen={!!selectedCertExam}
+          onClose={() => setSelectedCertExam(null)}
+          cadetName={user?.name || user?.email?.split("@")[0] || "Cadete de Honor"}
+          percentage={selectedCertExam.percentage}
+          correctAnswers={selectedCertExam.correct}
+          formulaNumber={selectedCertExam.type || "Oficial"}
+          dateStr={new Date(selectedCertExam.created_at).toLocaleDateString("es-CL", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        />
+      )}
     </div>
   );
 }

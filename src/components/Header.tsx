@@ -10,8 +10,10 @@ import StreakModal from "./StreakModal";
 import BoosterModal from "./BoosterModal";
 import DailyQuestsModal from "./DailyQuestsModal";
 import ProSubscriptionModal from "./ProSubscriptionModal";
-import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords } from "lucide-react";
+import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords, Trophy, Moon, Sun, Bell } from "lucide-react";
 import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive } from "@/lib/supabase";
+import { getAppTheme, toggleAppTheme, subscribeTheme, AppTheme } from "@/lib/theme";
+import { requestNotificationPermission, getNotificationPermission, checkAndSendStreakReminder } from "@/lib/notifications";
 import { UserProfile } from "@/lib/types";
 
 interface HeaderProps {
@@ -41,6 +43,29 @@ export default function Header({
   const [proModalOpen, setProModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasDoubleXp, setHasDoubleXp] = useState(false);
+  const [theme, setTheme] = useState<AppTheme>("light");
+  const [notifEnabled, setNotifEnabled] = useState(false);
+
+  useEffect(() => {
+    setTheme(getAppTheme());
+    const unsubTheme = subscribeTheme((t) => setTheme(t));
+    setNotifEnabled(getNotificationPermission() === "granted");
+    return () => unsubTheme();
+  }, []);
+
+  const handleToggleTheme = () => {
+    const next = toggleAppTheme();
+    setTheme(next);
+  };
+
+  const handleNotificationClick = async () => {
+    if (notifEnabled) {
+      checkAndSendStreakReminder();
+    } else {
+      const granted = await requestNotificationPermission();
+      setNotifEnabled(granted);
+    }
+  };
 
   useEffect(() => {
     const cur = getCurrentUser();
@@ -177,7 +202,17 @@ export default function Header({
               <span className="hidden md:inline">Tienda</span>
             </Link>
 
-            {/* 6. Friend Challenge Link */}
+            {/* 6. Leaderboard / Ligas */}
+            <Link
+              href="/leaderboard"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-amber-900 dark:text-amber-200 text-xs font-black transition-colors shadow-xs"
+              title="Ligas y Clasificación Semanal"
+            >
+              <Trophy className="w-3.5 h-3.5 text-[#F59E0B]" />
+              <span className="hidden lg:inline">Ligas</span>
+            </Link>
+
+            {/* 7. Friend Challenge Link */}
             <Link
               href="/challenge"
               className="hidden xl:flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FAF6F0] border border-[#E5D5C5] hover:bg-[#F5EFEB] text-[#6B4423] text-xs font-black transition-colors shadow-xs"
@@ -186,6 +221,30 @@ export default function Header({
               <Swords className="w-3 h-3 text-[#F59E0B]" />
               <span>Duelo</span>
             </Link>
+
+            {/* 8. Notification Bell (Streak Reminders) */}
+            <button
+              type="button"
+              onClick={handleNotificationClick}
+              className={`p-1.5 rounded-full border transition-colors shadow-xs ${
+                notifEnabled
+                  ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
+                  : "bg-[#FAF6F0] dark:bg-slate-800 border-[#E5D5C5] dark:border-slate-700 text-[#A67B5B] hover:text-[#6B4423]"
+              }`}
+              title={notifEnabled ? "Recordatorios de guardia y racha activados" : "Activar recordatorios de racha"}
+            >
+              <Bell className="w-3.5 h-3.5" />
+            </button>
+
+            {/* 9. Theme Toggle (Night Ops / Day) */}
+            <button
+              type="button"
+              onClick={handleToggleTheme}
+              className="p-1.5 rounded-full bg-[#FAF6F0] dark:bg-slate-800 border border-[#E5D5C5] dark:border-slate-700 text-[#6B4423] dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-slate-700 transition-colors shadow-xs"
+              title={theme === "dark" ? "Modo Diurno" : "Modo Nocturno (Night Ops)"}
+            >
+              {theme === "dark" ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5" />}
+            </button>
 
             {/* Lives Counter for 10/30/50 */}
             {isLivesMode && <MedalCounter medals={effectiveMedals} maxMedals={5} />}
