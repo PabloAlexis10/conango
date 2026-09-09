@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
                 id: `conan-pro-${plan}`,
                 title: title,
                 description: "Suscripción oficial a Conan PRO para preparación ALCPT militar.",
+                picture_url: `${origin}/conan-mascot.png`,
                 quantity: 1,
                 unit_price: price,
                 currency_id: "CLP",
