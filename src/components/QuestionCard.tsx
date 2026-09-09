@@ -16,6 +16,7 @@ interface QuestionCardProps {
   onAnswer: (selectedIndex: number, isCorrect: boolean) => void;
   onNext: () => void;
   disabled?: boolean;
+  isExamMode?: boolean;
 }
 
 const optionLetters = ["A", "B", "C", "D"];
@@ -27,6 +28,7 @@ export default function QuestionCard({
   onAnswer,
   onNext,
   disabled = false,
+  isExamMode = false,
 }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
@@ -120,10 +122,17 @@ export default function QuestionCard({
         </div>
 
         {/* Interactive Dictionary Hint */}
-        <div className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50/90 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 rounded-xl text-[11px] font-semibold">
-          <Languages className="w-3.5 h-3.5 text-[#F59E0B] shrink-0" />
-          <span>Toca o pasa el cursor sobre cualquier palabra para ver su traducción y tiempos (Pasado, Presente, Futuro).</span>
-        </div>
+        {isExamMode ? (
+          <div className="mb-4 inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200 border border-red-200 dark:border-red-800 rounded-xl text-[11px] font-bold">
+            <Languages className="w-3.5 h-3.5 text-red-600 shrink-0" />
+            <span>Examen Oficial ALCPT (100 Reactivos) &bull; Audio y preguntas 100% en inglés según normativa USAF (Sin traducción al español).</span>
+          </div>
+        ) : (
+          <div className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50/90 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 rounded-xl text-[11px] font-semibold">
+            <Languages className="w-3.5 h-3.5 text-[#F59E0B] shrink-0" />
+            <span>Toca o pasa el cursor sobre cualquier palabra para ver su traducción y tiempos (Pasado, Presente, Futuro).</span>
+          </div>
+        )}
 
         {/* Audio Player (Only rendered for Listening questions) */}
         {isListening && (
@@ -154,7 +163,7 @@ export default function QuestionCard({
             {/* Subtítulo en Inglés */}
             <div className="bg-white/95 dark:bg-slate-900/90 p-3.5 rounded-xl border border-[#E5D5C5] dark:border-slate-700">
               <p className="text-sm sm:text-base text-[#4A3319] dark:text-slate-100 font-bold leading-relaxed">
-                &ldquo;<InteractiveWordText text={question.context || (question.textToSpeak ? question.textToSpeak.replace(question.question, "").trim() : "") || question.question} />&rdquo;
+                &ldquo;<InteractiveWordText isExamMode={isExamMode} text={question.context || (question.textToSpeak ? question.textToSpeak.replace(question.question, "").trim() : "") || question.question} />&rdquo;
               </p>
             </div>
           </div>
@@ -177,7 +186,7 @@ export default function QuestionCard({
             Question:
           </span>
           <h3 className="text-lg sm:text-xl font-extrabold text-[#6B4423] dark:text-slate-100 leading-snug">
-            <InteractiveWordText text={question.question} />
+            <InteractiveWordText isExamMode={isExamMode} text={question.question} />
           </h3>
         </div>
 
@@ -219,7 +228,7 @@ export default function QuestionCard({
                     {optionLetters[idx]}
                   </span>
                   <span className="text-sm sm:text-base text-[#6B4423] dark:text-slate-100 font-semibold leading-snug">
-                    <InteractiveWordText text={option} />
+                    <InteractiveWordText isExamMode={isExamMode} text={option} />
                   </span>
                 </div>
 
@@ -285,7 +294,7 @@ export default function QuestionCard({
                   <Lightbulb className="w-4 h-4 text-[#F59E0B] flex-shrink-0 mt-0.5" />
                   <p className="leading-relaxed">
                     <strong className="font-bold">Explicación ({question.formulaName || `Fórmula ${question.formula}`}):</strong>{" "}
-                    <InteractiveWordText text={question.explanation} />
+                    <InteractiveWordText isExamMode={isExamMode} text={question.explanation} />
                   </p>
                 </div>
               )}

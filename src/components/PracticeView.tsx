@@ -279,6 +279,7 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
               onAnswer={handleAnswer}
               onNext={handleNext}
               disabled={isGameOver || isSaving}
+              isExamMode={isExamMode}
             />
 
             {/* Google Ads Banner during practice/exam */}

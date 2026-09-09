@@ -180,15 +180,21 @@ function ResultsContent() {
               <span>Practicar de nuevo</span>
             </button>
 
-            {/* Tactical Diploma Button */}
-            <button
-              type="button"
-              onClick={() => setCertModalOpen(true)}
-              className="px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-black rounded-2xl shadow-conan-btn flex items-center gap-2 text-sm sm:text-base transition-transform active:translate-y-1"
-            >
-              <Award className="w-5 h-5 text-yellow-100" />
-              <span>Ver Diploma Oficial ALCPT</span>
-            </button>
+            {/* Tactical Diploma Button (Exclusivo para Examen Completo de 100 reactivos) */}
+            {size === 100 || total >= 100 ? (
+              <button
+                type="button"
+                onClick={() => setCertModalOpen(true)}
+                className="px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-black rounded-2xl shadow-conan-btn flex items-center gap-2 text-sm sm:text-base transition-transform active:translate-y-1"
+              >
+                <Award className="w-5 h-5 text-yellow-100" />
+                <span>Ver Diploma Oficial ALCPT (100 Reactivos)</span>
+              </button>
+            ) : (
+              <div className="w-full text-center text-xs text-[#A67B5B] dark:text-slate-400 font-semibold bg-[#FAF6F0] dark:bg-slate-900 border border-[#E5D5C5] dark:border-slate-800 p-3 rounded-2xl">
+                <span>🎖️ El <strong>Diploma Oficial ALCPT</strong> se otorga exclusivamente al completar la evaluación oficial completa de <strong>100 reactivos</strong>. (Has completado una lección de práctica de {total} preguntas).</span>
+              </div>
+            )}
 
             <button
               type="button"
@@ -259,7 +265,7 @@ function ResultsContent() {
                           </div>
 
                           <h4 className="text-base font-bold text-[#6B4423] leading-snug">
-                            <InteractiveWordText text={rev.question} />
+                            <InteractiveWordText isExamMode={size === 100 || total >= 100} text={rev.question} />
                           </h4>
                           <span className="text-xs text-red-600 font-semibold mt-1 inline-block">
                             Tu respuesta: {rev.options[rev.selectedAnswer] || "No respondida"}
@@ -293,7 +299,7 @@ function ResultsContent() {
                               <span>Audio Transcript (Inglés 🇺🇸):</span>
                             </span>
                             <p className="text-[#4A3319] font-medium leading-relaxed">
-                              &ldquo;<InteractiveWordText text={rev.context || (rev.textToSpeak ? rev.textToSpeak.replace(rev.question, "").trim() : "") || rev.question} />&rdquo;
+                              &ldquo;<InteractiveWordText isExamMode={size === 100 || total >= 100} text={rev.context || (rev.textToSpeak ? rev.textToSpeak.replace(rev.question, "").trim() : "") || rev.question} />&rdquo;
                             </p>
                           </div>
                         </div>
@@ -333,7 +339,7 @@ function ResultsContent() {
                                   <strong className="font-bold">
                                     {optionLetters[optIdx]})
                                   </strong>{" "}
-                                  <InteractiveWordText text={opt} />
+                                  <InteractiveWordText isExamMode={size === 100 || total >= 100} text={opt} />
                                 </span>
                                 {isCorrectOpt && (
                                   <span className="text-[10px] uppercase font-black px-2 py-0.5 bg-green-600 text-white rounded-md">
@@ -355,7 +361,7 @@ function ResultsContent() {
                             <Lightbulb className="w-4 h-4 text-[#F59E0B] flex-shrink-0 mt-0.5" />
                             <div>
                               <strong className="font-bold">Explicación ({rev.formulaName || `Fórmula ${rev.formula}`}):</strong>{" "}
-                              <InteractiveWordText text={rev.explanation} />
+                              <InteractiveWordText isExamMode={size === 100 || total >= 100} text={rev.explanation} />
                             </div>
                           </div>
                         )}

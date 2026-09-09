@@ -16,6 +16,8 @@ import {
   changePassword,
   getGuestUsageCount,
   GUEST_LIMIT,
+  updateUserProfile,
+  getUserMascotName,
 } from "@/lib/supabase";
 import {
   Trophy,
@@ -59,12 +61,28 @@ export default function ProfilePage() {
   const [pwdSuccess, setPwdSuccess] = useState("");
   const [pwdLoading, setPwdLoading] = useState(false);
 
+  // Customization of user callsign and tactical mascot
+  const [profileName, setProfileName] = useState("");
+  const [profileMascot, setProfileMascot] = useState("");
+  const [profileSaved, setProfileSaved] = useState(false);
+
   const loadData = () => {
     const cur = getCurrentUser();
     setUser(cur);
+    if (cur) {
+      setProfileName(cur.name || "");
+      setProfileMascot(cur.mascotName || "Conan");
+    }
     setGuestUsage(getGuestUsageCount());
     getExamHistory().then((data) => setExamHistory(data));
     getSessionHistory().then((data) => setSessionHistory(data));
+  };
+
+  const handleProfileSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateUserProfile(profileName.trim(), profileMascot.trim() || "Conan");
+    setProfileSaved(true);
+    setTimeout(() => setProfileSaved(false), 3000);
   };
 
   useEffect(() => {
@@ -148,7 +166,8 @@ export default function ProfilePage() {
               <p className="text-xs text-[#A67B5B] font-semibold mt-1">
                 {user ? (
                   <>
-                    Correo: <span className="font-mono text-[#6B4423]">{user.email}</span> &bull; Medallas:{" "}
+                    Correo: <span className="font-mono text-[#6B4423]">{user.email}</span> &bull; Compañero:{" "}
+                    <strong className="text-amber-700 font-bold">{getUserMascotName(user)} 🐾</strong> &bull; Medallas:{" "}
                     <strong className="text-[#F59E0B] font-black">{user.medals}</strong>
                   </>
                 ) : (
@@ -233,7 +252,16 @@ export default function ProfilePage() {
           </div>
           <div className="flex justify-between text-[10px] text-[#A67B5B] font-bold mt-1">
             <span>{user?.xp || 0} XP Acumulada</span>
-            <span>Progreso: {getRankByXp(user?.xp || 0).progress}% para siguiente rango</span>
+            <span>Progreso: {getRankByXp(user?.xp || 0).progress}%</span>
+          </div>
+          <div className="mt-2 pt-2 border-t border-[#E5D5C5]/60 flex items-center justify-between text-xs font-bold text-amber-900">
+            {getRankByXp(user?.xp || 0).nextRank ? (
+              <span>
+                🎯 Te faltan <strong className="text-[#F59E0B] font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</strong> para ascender a <strong>{getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.usGrade})</strong>
+              </span>
+            ) : (
+              <span className="text-emerald-700">🎖️ ¡Has alcanzado el Grado Supremo de General de la USAF!</span>
+            )}
           </div>
         </div>
 
@@ -287,6 +315,81 @@ export default function ProfilePage() {
           sponsorDescription="Valida tus resultados con informes oficiales de competencia militar y nivel de inglés OACI / ALCPT."
           sponsorCta="Ver Certificaciones"
         />
+
+        {/* Pilot & Tactical Mascot Personalization */}
+        {user && (
+          <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 mb-8 shadow-sm">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#E5D5C5]">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl">🪖</span>
+                <div>
+                  <h3 className="font-black text-lg text-[#6B4423]">
+                    Personaliza tu Base: Piloto y Mascota Táctica
+                  </h3>
+                  <p className="text-xs text-[#A67B5B] font-semibold">
+                    Esta es tu aplicación de adiestramiento y tu compañero canino. Modifica tu nombre de usuario y el de tu mascota a tu gusto.
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs font-black px-2.5 py-1 bg-amber-100 text-amber-900 rounded-full hidden sm:inline-block">
+                {getRankByXp(user.xp || 0).currentRank.abbr}
+              </span>
+            </div>
+
+            <form onSubmit={handleProfileSubmit} className="space-y-4 max-w-xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                    Tu Nombre o Indicativo (Callsign)
+                  </label>
+                  <input
+                    type="text"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    placeholder="Ej. Capitán Alex, Maverick..."
+                    required
+                    className="w-full px-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423] font-bold"
+                  />
+                  <p className="text-[10px] text-[#A67B5B] mt-1">
+                    Aparecerá en tus diplomas oficiales y clasificaciones.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                    Nombre de tu Mascota Táctica 🐾
+                  </label>
+                  <input
+                    type="text"
+                    value={profileMascot}
+                    onChange={(e) => setProfileMascot(e.target.value)}
+                    placeholder="Ej. Conan, Hunter, Zeus..."
+                    required
+                    className="w-full px-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423] font-bold"
+                  />
+                  <p className="text-[10px] text-[#A67B5B] mt-1">
+                    Tu fiel compañero canino en cada sesión y celebración.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 pt-1">
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-conan-btn transition-transform active:scale-95"
+                >
+                  Guardar Cambios
+                </button>
+                {profileSaved && (
+                  <span className="text-xs font-bold text-green-700 animate-fade-in flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4" />
+                    ¡Datos de tu base actualizados con éxito!
+                  </span>
+                )}
+              </div>
+            </form>
+          </div>
+        )}
 
         {/* Account Security & Password Section */}
         <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 mb-10 shadow-sm">

@@ -62,6 +62,7 @@ export interface ExamResult {
 export interface UserProfile {
   id: string;
   name?: string;
+  mascotName?: string;
   email: string;
   password?: string;
   medals: number;

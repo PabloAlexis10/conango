@@ -32,7 +32,14 @@ import {
   hasReachedGuestLimit,
   GUEST_LIMIT,
   setProStatus,
+  getUserMascotName,
 } from "@/lib/supabase";
+import {
+  getRankByXp,
+  getUserRankBadge,
+  getUserRankGrade,
+  getUserRankTitle,
+} from "@/lib/accessories";
 import {
   checkReturnPaymentStatus,
   clearPaymentQueryParams,
@@ -157,11 +164,100 @@ export default function HomePage() {
             <ConanMascot size="hero" mood="happy" animate={true} />
             <div className="mt-3 text-center">
               <span className="text-xs font-black uppercase tracking-widest text-[#6B4423] dark:text-white block">
-                Conan
+                {user ? getUserMascotName(user) : "Conan"}
               </span>
               <span className="text-[11px] font-bold text-[#A67B5B] dark:text-slate-400">
-                Compañero Táctico Supremo 🐾
+                Compañero Táctico 🐾
               </span>
+            </div>
+          </div>
+        </section>
+
+        {/* 🎖️ WIDGET PERMANENTE: RANGO USAF ACTUAL Y PROGRESIÓN DE ASCENSO */}
+        <section className="mb-8 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/40 dark:via-slate-900/40 dark:to-slate-900 border-2 border-amber-300/80 dark:border-amber-700/60 rounded-3xl p-5 sm:p-6 shadow-conan-card relative overflow-hidden">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+            {/* Rank info */}
+            <div className="flex items-start sm:items-center gap-4">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center text-2xl sm:text-3xl shadow-md flex-shrink-0 border-2 border-white dark:border-slate-800">
+                {getUserRankBadge(user?.xp || 0)}
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-md bg-amber-200 dark:bg-amber-900/60 text-amber-950 dark:text-amber-200 text-[10px] font-black uppercase tracking-wider">
+                    {getRankByXp(user?.xp || 0).currentRank.abbr} • {getRankByXp(user?.xp || 0).currentRank.usGrade}
+                  </span>
+                  {user && (
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Piloto: <strong className="text-[#6B4423] dark:text-white">{user.name || user.email}</strong>
+                    </span>
+                  )}
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    🐾 Mascota: <strong className="text-amber-700 dark:text-amber-300">{getUserMascotName(user)}</strong>
+                  </span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-black text-[#6B4423] dark:text-white mt-1">
+                  {getUserRankTitle(user?.xp || 0)}
+                </h3>
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium">
+                  {getRankByXp(user?.xp || 0).currentRank.desc}
+                </p>
+              </div>
+            </div>
+
+            {/* Link to profile/edit */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {user ? (
+                <Link
+                  href="/profile"
+                  className="px-4 py-2 bg-white dark:bg-slate-800 hover:bg-[#FAF6F0] dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 text-[#6B4423] dark:text-slate-200 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+                >
+                  <span>Base & Personalizar</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setAuthModalOpen(true)}
+                  className="px-4 py-2 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-xl text-xs font-black transition-all shadow-xs"
+                >
+                  Registrar mi Piloto & Mascota
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Progress Bar & Missing XP */}
+          <div className="mt-4 pt-4 border-t border-amber-200/60 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs font-bold mb-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[#6B4423] dark:text-white">
+                  Progreso de Ascenso:
+                </span>
+                <span className="text-amber-600 dark:text-amber-400 font-black">
+                  {getRankByXp(user?.xp || 0).progress}%
+                </span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                  ({user?.xp || 0} XP acumulados)
+                </span>
+              </div>
+              <div className="text-xs font-black text-amber-800 dark:text-amber-300">
+                {getRankByXp(user?.xp || 0).nextRank ? (
+                  <span>
+                    Faltan <span className="underline decoration-amber-500 font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</span> para ascender a {getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.usGrade})
+                  </span>
+                ) : (
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    🎖️ ¡Has alcanzado el Grado Supremo de General de la USAF!
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-3 p-0.5 overflow-hidden shadow-inner">
+              <div
+                className="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 h-full rounded-full transition-all duration-500"
+                style={{ width: `${Math.max(4, getRankByXp(user?.xp || 0).progress)}%` }}
+              />
             </div>
           </div>
         </section>

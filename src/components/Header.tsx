@@ -11,11 +11,11 @@ import BoosterModal from "./BoosterModal";
 import DailyQuestsModal from "./DailyQuestsModal";
 import ProSubscriptionModal from "./ProSubscriptionModal";
 import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords, Trophy, Moon, Sun, Bell } from "lucide-react";
-import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive } from "@/lib/supabase";
+import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive, getUserMascotName } from "@/lib/supabase";
 import { getAppTheme, toggleAppTheme, subscribeTheme, AppTheme } from "@/lib/theme";
 import { requestNotificationPermission, getNotificationPermission, checkAndSendStreakReminder } from "@/lib/notifications";
 import { UserProfile } from "@/lib/types";
-import { getUserRankTitle } from "@/lib/accessories";
+import { getUserRankTitle, getRankByXp, getUserRankGrade, getUserRankBadge } from "@/lib/accessories";
 
 interface HeaderProps {
   sessionTitle?: string;
@@ -136,14 +136,14 @@ export default function Header({
             </div>
           ) : null}
 
-          {/* Right Status Controls (DUOLINGO STYLE) */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* 1. Daily Streak Button (ONLY VISIBLE IF USER IS LOGGED IN) */}
+          {/* Right Status Controls (Simplified & Streamlined for clean UX) */}
+          <div className="flex items-center gap-2">
+            {/* 1. Daily Streak Button */}
             {user && (
               <button
                 type="button"
                 onClick={() => setStreakModalOpen(true)}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-50 border border-orange-200 hover:bg-orange-100 text-orange-700 text-xs font-black transition-colors shadow-xs"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-orange-700 dark:text-orange-300 text-xs font-black transition-colors shadow-xs"
                 title="Racha Diaria de Estudio"
               >
                 <span className="text-sm">🔥</span>
@@ -151,166 +151,120 @@ export default function Header({
               </button>
             )}
 
-            {/* 2. Gems Counter & Shop Link (ONLY VISIBLE IF LOGGED IN) */}
+            {/* 2. USAF Rank Badge (Fast access to current grade) */}
             {user && (
               <Link
-                href="/shop"
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-900 text-xs font-black transition-colors shadow-xs"
-                title="Gemas y Tienda de Potenciadores"
+                href="/profile"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-colors shadow-xs"
+                title={`Grado USAF: ${getRankByXp(user.xp || 0).currentRank.usGrade}`}
               >
-                <span className="text-xs">💎</span>
-                <span>{user.gems ?? user.coins ?? 100}</span>
+                <span>{getUserRankBadge(user.xp || 0)}</span>
+                <span className="text-[11px] uppercase tracking-wide font-extrabold">{getRankByXp(user.xp || 0).currentRank.abbr}</span>
               </Link>
             )}
 
-            {/* 3. Daily Quests Button (ONLY VISIBLE IF LOGGED IN) */}
-            {user && (
-              <button
-                type="button"
-                onClick={() => setQuestsModalOpen(true)}
-                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200 hover:bg-purple-100 text-purple-900 text-xs font-black transition-colors shadow-xs"
-                title="Misiones Diarias"
-              >
-                <span>🎯</span>
-                <span className="hidden md:inline">Misiones</span>
-              </button>
-            )}
+            {/* 3. Lives Counter for 10/30/50 */}
+            {isLivesMode && <MedalCounter medals={effectiveMedals} maxMedals={5} />}
 
-            {/* 4. 2x XP Booster Button (ONLY VISIBLE IF LOGGED IN OR SUBSCRIBED) */}
-            {user && (
-              <button
-                type="button"
-                onClick={() => setBoosterModalOpen(true)}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black transition-all shadow-xs ${
-                  hasDoubleXp || user.isPro
-                    ? "bg-amber-100 border border-amber-400 text-amber-900 animate-pulse ring-1 ring-amber-300"
-                    : "bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100"
-                }`}
-                title="Potenciador Doble Experiencia"
-              >
-                <Zap className="w-3 h-3 text-amber-500" />
-                <span className="hidden sm:inline">{user.isPro ? "2x PRO" : hasDoubleXp ? "2x ACTIVO" : "2x XP"}</span>
-              </button>
-            )}
+            {/* 4. Countdown Timer for 100 Exam */}
+            {isExamMode && <Timer initialSeconds={3600} onExpire={onTimerExpire} />}
 
-            {/* 5. Shop Link */}
-            <Link
-              href="/shop"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FAF6F0] border border-[#E5D5C5] hover:bg-[#F5EFEB] text-[#6B4423] text-xs font-black transition-colors shadow-xs"
-              title="Tienda de Potenciadores"
-            >
-              <span>🏪</span>
-              <span className="hidden md:inline">Tienda</span>
-            </Link>
-
-            {/* 6. Leaderboard / Ligas */}
-            <Link
-              href="/leaderboard"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 text-amber-900 dark:text-amber-200 text-xs font-black transition-colors shadow-xs"
-              title="Ligas y Clasificación Semanal"
-            >
-              <Trophy className="w-3.5 h-3.5 text-[#F59E0B]" />
-              <span className="hidden lg:inline">Ligas</span>
-            </Link>
-
-            {/* 7. Friend Challenge Link */}
-            <Link
-              href="/challenge"
-              className="hidden xl:flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FAF6F0] border border-[#E5D5C5] hover:bg-[#F5EFEB] text-[#6B4423] text-xs font-black transition-colors shadow-xs"
-              title="Duelos y Desafíos con Amigos"
-            >
-              <Swords className="w-3 h-3 text-[#F59E0B]" />
-              <span>Duelo</span>
-            </Link>
-
-            {/* 8. Notification Bell (Streak Reminders) */}
-            <button
-              type="button"
-              onClick={handleNotificationClick}
-              className={`p-1.5 rounded-full border transition-colors shadow-xs ${
-                notifEnabled
-                  ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
-                  : "bg-[#FAF6F0] dark:bg-slate-800 border-[#E5D5C5] dark:border-slate-700 text-[#A67B5B] hover:text-[#6B4423]"
-              }`}
-              title={notifEnabled ? "Recordatorios de guardia y racha activados" : "Activar recordatorios de racha"}
-            >
-              <Bell className="w-3.5 h-3.5" />
-            </button>
-
-            {/* 9. Theme Toggle (Night Ops / Day) */}
+            {/* 5. Theme Toggle (Night Ops / Day) */}
             <button
               type="button"
               onClick={handleToggleTheme}
               className="p-1.5 rounded-full bg-[#FAF6F0] dark:bg-slate-800 border border-[#E5D5C5] dark:border-slate-700 text-[#6B4423] dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-slate-700 transition-colors shadow-xs"
               title={theme === "dark" ? "Modo Diurno" : "Modo Nocturno (Night Ops)"}
             >
-              {theme === "dark" ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5" />}
+              {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            {/* Lives Counter for 10/30/50 */}
-            {isLivesMode && <MedalCounter medals={effectiveMedals} maxMedals={5} />}
-
-            {/* Countdown Timer for 100 Exam */}
-            {isExamMode && <Timer initialSeconds={3600} onExpire={onTimerExpire} />}
-
-            {/* Pro Button if not pro */}
-            {!user?.isPro && (
-              <button
-                type="button"
-                onClick={() => setProModalOpen(true)}
-                className="hidden xl:flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:brightness-105 text-white text-xs font-black shadow-xs transition-all"
-              >
-                <Crown className="w-3 h-3 text-yellow-100" />
-                <span>PRO</span>
-              </button>
-            )}
-
-            {/* User Account / Auth Section */}
+            {/* 6. User Account / Auth Section */}
             {user ? (
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 bg-[#FAF6F0] hover:bg-[#F5EFEB] border border-[#E5D5C5] rounded-full text-[#6B4423] font-bold text-xs transition-colors shadow-sm"
+                  className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 bg-[#FAF6F0] dark:bg-slate-800 hover:bg-[#F5EFEB] dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 rounded-full text-[#6B4423] dark:text-amber-100 font-bold text-xs transition-colors shadow-sm"
                 >
-                  <div className="w-6 h-6 rounded-full bg-amber-200 text-amber-900 flex items-center justify-center font-black text-xs">
+                  <div className="w-6 h-6 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 flex items-center justify-center font-black text-xs">
                     {user.name ? user.name.charAt(0).toUpperCase() : "C"}
                   </div>
                   <span className="max-w-[80px] truncate hidden sm:inline">
-                    {user.name || user.email}
+                    {user.name || "Piloto"}
                   </span>
                 </button>
 
                 {/* Dropdown Menu */}
                 {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-white border-2 border-[#E5D5C5] rounded-2xl shadow-xl p-2 z-50">
-                    <div className="px-3 py-2 border-b border-[#E5D5C5]/60 mb-1">
-                      <p className="text-xs font-black text-[#6B4423] truncate">
-                        {user.name || getUserRankTitle(user?.xp || 0)}
+                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 border-2 border-[#E5D5C5] dark:border-slate-700 rounded-2xl shadow-xl p-2 z-50">
+                    {/* User & Rank Summary Card */}
+                    <div className="p-3 bg-[#FAF6F0]/80 dark:bg-slate-800/80 rounded-xl border border-[#E5D5C5]/60 dark:border-slate-700/60 mb-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-black text-[#6B4423] dark:text-amber-300 truncate">
+                          {user.name || "Piloto ConanGo"}
+                        </p>
+                        <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 font-extrabold rounded-md">
+                          {getRankByXp(user.xp || 0).currentRank.abbr}
+                        </span>
+                      </div>
+                      <p className="text-[11px] font-bold text-slate-600 dark:text-slate-300 mt-0.5">
+                        {getUserRankBadge(user.xp || 0)} {getRankByXp(user.xp || 0).currentRank.usGrade}
                       </p>
-                      <p className="text-[10px] text-[#A67B5B] truncate">{user.email}</p>
-                      <div className="mt-1 flex items-center justify-between text-[11px] font-bold text-[#F59E0B]">
+                      <p className="text-[10px] text-[#A67B5B] dark:text-slate-400 truncate mt-0.5">
+                        🐾 Compañero: <span className="font-bold text-[#6B4423] dark:text-amber-200">{getUserMascotName(user)}</span>
+                      </p>
+
+                      {/* Rank Progression */}
+                      <div className="mt-2 pt-2 border-t border-[#E5D5C5]/50 dark:border-slate-700/50">
+                        <div className="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
+                          <span>Progreso de Ascenso</span>
+                          <span>{getRankByXp(user.xp || 0).progress}%</span>
+                        </div>
+                        <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full rounded-full transition-all"
+                            style={{ width: `${getRankByXp(user.xp || 0).progress}%` }}
+                          />
+                        </div>
+                        <p className="text-[9px] text-amber-700 dark:text-amber-400 font-semibold mt-1">
+                          {getRankByXp(user.xp || 0).nextRank
+                            ? `Faltan ${Math.max(0, (getRankByXp(user.xp || 0).nextRank?.minXp || 0) - (user.xp || 0))} XP para ascender a ${getRankByXp(user.xp || 0).nextRank?.name}`
+                            : "¡Grado Máximo Supremo de la USAF alcanzado!"}
+                        </p>
+                      </div>
+
+                      <div className="mt-2 flex items-center justify-between text-[11px] font-bold text-[#F59E0B]">
                         <span>🏅 {user.isPro ? "Vidas ∞" : `${user.medals} Medallas`}</span>
-                        <span>🪙 {user.coins || 0}</span>
+                        <span>💎 {user.gems ?? user.coins ?? 100}</span>
                       </div>
                     </div>
 
                     <Link
                       href="/profile"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
                       <User className="w-4 h-4 text-[#A67B5B]" />
-                      <span>Mi Perfil y Progreso</span>
+                      <span>Mi Perfil y Base Táctica</span>
                     </Link>
 
                     <Link
                       href="/shop"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
                       <span>🏪</span>
-                      <span>Tienda de Potenciadores</span>
+                      <span>Tienda de Pociones Mágicas</span>
+                    </Link>
+
+                    <Link
+                      href="/leaderboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
+                    >
+                      <Trophy className="w-4 h-4 text-[#F59E0B]" />
+                      <span>Ligas y Clasificación</span>
                     </Link>
 
                     <button
@@ -319,20 +273,41 @@ export default function Header({
                         setMenuOpen(false);
                         setQuestsModalOpen(true);
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl transition-colors text-left"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors text-left"
                     >
                       <span>🎯</span>
                       <span>Misiones Diarias</span>
                     </button>
 
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        setBoosterModalOpen(true);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors text-left"
+                    >
+                      <Zap className="w-4 h-4 text-amber-500" />
+                      <span>Potenciador Doble XP ({hasDoubleXp ? "Activo" : "Disponible"})</span>
+                    </button>
+
                     <Link
                       href="/challenge"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] hover:bg-[#FAF6F0] rounded-xl transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
                       <Swords className="w-4 h-4 text-[#F59E0B]" />
-                      <span>Duelos con Amigos</span>
+                      <span>Duelos Tácticos con Amigos</span>
                     </Link>
+
+                    <button
+                      type="button"
+                      onClick={handleNotificationClick}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors text-left"
+                    >
+                      <Bell className="w-4 h-4 text-emerald-600" />
+                      <span>Recordatorios de Guardia ({notifEnabled ? "Activados" : "Desactivados"})</span>
+                    </button>
 
                     {!user.isPro && (
                       <button
@@ -341,7 +316,7 @@ export default function Header({
                           setMenuOpen(false);
                           setProModalOpen(true);
                         }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-black text-amber-700 hover:bg-amber-50 rounded-xl transition-colors text-left"
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-black text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-xl transition-colors text-left"
                       >
                         <Crown className="w-4 h-4 text-amber-500" />
                         <span>Obtener Conan PRO</span>
@@ -351,7 +326,7 @@ export default function Header({
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors text-left"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors text-left"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Cerrar Sesión</span>

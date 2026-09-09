@@ -902,3 +902,48 @@ export function getFriendChallenges(): FriendChallenge[] {
   if (typeof window === "undefined") return [];
   return JSON.parse(localStorage.getItem(STORAGE_KEY_CHALLENGES) || "[]");
 }
+
+export function saveCurrentUserProfile(user: UserProfile): void {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+    const accounts: UserProfile[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
+    );
+    const idx = accounts.findIndex((a) => a.id === user.id);
+    if (idx !== -1) {
+      accounts[idx] = { ...accounts[idx], ...user };
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+  }
+  notifyAuthListeners(user);
+}
+
+export function updateUserProfile(name: string, mascotName?: string): void {
+  let user = getCurrentUser();
+  if (!user) {
+    if (typeof window !== "undefined" && mascotName) {
+      localStorage.setItem("conango_custom_mascot_name", mascotName.trim());
+    }
+    return;
+  }
+  user.name = name.trim();
+  if (mascotName !== undefined) {
+    user.mascotName = mascotName.trim();
+    if (typeof window !== "undefined") {
+      localStorage.setItem("conango_custom_mascot_name", mascotName.trim());
+    }
+  }
+  saveCurrentUserProfile(user);
+}
+
+export function getUserMascotName(user?: UserProfile | null): string {
+  if (user?.mascotName && user.mascotName.trim().length > 0) {
+    return user.mascotName.trim();
+  }
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("conango_custom_mascot_name");
+    if (saved && saved.trim().length > 0) return saved.trim();
+  }
+  return "Conan";
+}
+
