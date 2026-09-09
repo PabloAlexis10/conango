@@ -213,13 +213,25 @@ export default function QuestionCard({
             }
 
             return (
-              <motion.button
+              <motion.div
                 key={idx}
-                type="button"
-                whileTap={!hasAnswered ? { scale: 0.98 } : undefined}
-                disabled={hasAnswered || disabled}
-                onClick={() => handleSelect(idx)}
-                className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border-2 font-medium flex items-center justify-between transition-all select-none option-btn ${buttonStyle}`}
+                role="button"
+                tabIndex={hasAnswered || disabled ? -1 : 0}
+                whileTap={!hasAnswered && !disabled ? { scale: 0.98 } : undefined}
+                onClick={() => {
+                  if (hasAnswered || disabled) return;
+                  handleSelect(idx);
+                }}
+                onKeyDown={(e) => {
+                  if (hasAnswered || disabled) return;
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleSelect(idx);
+                  }
+                }}
+                className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border-2 font-medium flex items-center justify-between transition-all select-none option-btn ${
+                  hasAnswered || disabled ? "cursor-default" : "cursor-pointer"
+                } ${buttonStyle}`}
               >
                 <div className="flex items-center gap-3.5 flex-1 pr-2">
                   <span
@@ -238,7 +250,7 @@ export default function QuestionCard({
                 {hasAnswered && isThisSelected && !isThisCorrect && (
                   <XCircle className="w-6 h-6 text-red-600 dark:text-red-400 flex-shrink-0" />
                 )}
-              </motion.button>
+              </motion.div>
             );
           })}
         </div>
