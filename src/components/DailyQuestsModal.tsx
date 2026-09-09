@@ -24,6 +24,12 @@ export default function DailyQuestsModal({ isOpen, onClose }: DailyQuestsModalPr
       setUser(getCurrentUser());
       setQuests(getDailyQuests());
       setRewardMsg(null);
+
+      const unsub = subscribeAuth((u) => {
+        setUser(u);
+        setQuests(getDailyQuests());
+      });
+      return () => unsub();
     }
   }, [isOpen]);
 

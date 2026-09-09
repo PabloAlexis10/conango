@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
-import { getWordGrammarInfo, WordGrammarInfo } from "@/lib/wordDictionary";
+import { getWordGrammarInfo, fetchWordTranslationAsync, WordGrammarInfo } from "@/lib/wordDictionary";
 import { speakHumanText } from "@/lib/audioVoice";
 import { Volume2, X, Sparkles, Clock, ArrowRight, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -65,6 +65,14 @@ export default function InteractiveWordText({
     const info = getWordGrammarInfo(token);
     setActiveWordIndex(idx);
     setActiveInfo(info);
+
+    if (info.translation === info.cleanWord) {
+      fetchWordTranslationAsync(token).then((res) => {
+        if (res) {
+          setActiveInfo((prev) => (prev && prev.cleanWord === info.cleanWord ? { ...prev, translation: res } : prev));
+        }
+      });
+    }
   };
 
   const handleClickWord = (e: React.MouseEvent | React.TouchEvent, token: string, idx: number) => {
@@ -76,6 +84,14 @@ export default function InteractiveWordText({
       const info = getWordGrammarInfo(token);
       setActiveWordIndex(idx);
       setActiveInfo(info);
+
+      if (info.translation === info.cleanWord) {
+        fetchWordTranslationAsync(token).then((res) => {
+          if (res) {
+            setActiveInfo((prev) => (prev && prev.cleanWord === info.cleanWord ? { ...prev, translation: res } : prev));
+          }
+        });
+      }
     }
   };
 

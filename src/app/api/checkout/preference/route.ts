@@ -5,23 +5,54 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { plan, userId, userEmail } = body;
+    const {
+      plan,
+      type = "pro",
+      itemId,
+      potionId,
+      packId,
+      gemsCount,
+      title: customTitle,
+      priceClp: customPrice,
+      userId,
+      userEmail,
+    } = body;
 
-    const isYearly = plan === "yearly";
-    const title = isYearly
-      ? "Conan PRO - Plan Anual (Vidas Infinitas & Sin Ads)"
-      : "Conan PRO - Plan Mensual (Vidas Infinitas & Sin Ads)";
-    const price = isYearly ? 39900 : 4990;
+    let title = "ConanGo - Adquisición Táctica";
+    let description = "Compra oficial en ConanGo para preparación militar ALCPT.";
+    let price = 990;
+    let successUrlParam = "";
+
+    const origin =
+      req.headers.get("origin") ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://conango.vercel.app";
+
+    if (type === "diamonds") {
+      title = customTitle || `Pack de ${gemsCount || 150} Diamantes Tácticos`;
+      description = `Adquisición de ${gemsCount || 150} diamantes para adquirir pociones y potenciadores en ConanGo.`;
+      price = customPrice || 990;
+      successUrlParam = `${origin}/shop?payment=success&type=diamonds&gems=${gemsCount || 150}&packId=${packId || itemId || "diamonds"}`;
+    } else if (type === "potion") {
+      title = customTitle || "Poción Mágica Táctica";
+      description = "Poción mágica oficial de ConanGo para entrenamiento ALCPT.";
+      price = customPrice || 990;
+      successUrlParam = `${origin}/shop?payment=success&type=potion&itemId=${potionId || itemId || "potion"}`;
+    } else {
+      // Suscripción Conan PRO
+      const isYearly = plan === "yearly";
+      title = isYearly
+        ? "Conan PRO - Plan Anual (Vidas Infinitas & Sin Ads)"
+        : "Conan PRO - Plan Mensual (Vidas Infinitas & Sin Ads)";
+      price = isYearly ? 39900 : 4990;
+      description = "Suscripción oficial a Conan PRO para preparación ALCPT militar.";
+      successUrlParam = `${origin}/?payment=success&gateway=mercadopago&plan=${plan || "monthly"}`;
+    }
 
     const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
 
     // Si el usuario configuró su Access Token de Mercado Pago, generamos el Checkout Pro oficial
     if (accessToken) {
-      const origin =
-        req.headers.get("origin") ||
-        process.env.NEXT_PUBLIC_APP_URL ||
-        "https://conango.vercel.app";
-
       const mpResponse = await fetch(
         "https://api.mercadopago.com/checkout/preferences",
         {
@@ -33,9 +64,9 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             items: [
               {
-                id: `conan-pro-${plan}`,
+                id: itemId || potionId || packId || `conan-pro-${plan || "sub"}`,
                 title: title,
-                description: "Suscripción oficial a Conan PRO para preparación ALCPT militar.",
+                description: description,
                 picture_url: `${origin}/conan-mascot.png`,
                 quantity: 1,
                 unit_price: price,
@@ -46,9 +77,9 @@ export async function POST(req: NextRequest) {
               email: userEmail || "usuario@conango.com",
             },
             back_urls: {
-              success: `${origin}/?payment=success&gateway=mercadopago&plan=${plan}`,
-              pending: `${origin}/?payment=pending&gateway=mercadopago&plan=${plan}`,
-              failure: `${origin}/?payment=failure&gateway=mercadopago&plan=${plan}`,
+              success: successUrlParam,
+              pending: `${origin}/shop?payment=pending`,
+              failure: `${origin}/shop?payment=failure`,
             },
             auto_return: "approved",
             statement_descriptor: "CONANGO",

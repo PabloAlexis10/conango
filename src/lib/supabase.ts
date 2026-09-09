@@ -640,6 +640,17 @@ export function addExperience(baseAmount: number): { addedXp: number; newXp: num
   user.level = rankInfo.currentRank.level;
   user.rankName = rankInfo.currentRank.name;
 
+  // Actualizar automáticamente el progreso diario de XP para las Misiones Diarias
+  const today = getTodayStr();
+  if (user.dailyQuestsDate !== today) {
+    user.dailyQuestsDate = today;
+    user.dailyXpEarned = 0;
+    user.dailyLessonsCompleted = 0;
+    user.dailyBestScore = 0;
+    user.claimedQuests = [];
+  }
+  user.dailyXpEarned = (user.dailyXpEarned || 0) + addedXp;
+
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
     const accounts: UserProfile[] = JSON.parse(
@@ -854,8 +865,26 @@ export function claimQuestReward(questId: string): { success: boolean; rewardTex
 }
 
 export function recordLessonProgress(xpGain: number, percentage: number): void {
-  const user = getCurrentUser();
-  if (!user) return;
+  let user = getCurrentUser();
+  if (!user) {
+    user = {
+      id: "guest",
+      name: "Invitado",
+      email: "invitado@conango.com",
+      avatar: "🐶",
+      xp: 0,
+      coins: 100,
+      gems: 100,
+      streak: 1,
+      lastActiveDate: getTodayStr(),
+      isPro: false,
+      hearts: 5,
+      maxHearts: 5,
+      streakFreeze: 0,
+      medals: 0,
+      created_at: new Date().toISOString(),
+    };
+  }
 
   const today = getTodayStr();
   if (user.dailyQuestsDate !== today) {
@@ -866,23 +895,15 @@ export function recordLessonProgress(xpGain: number, percentage: number): void {
     user.claimedQuests = [];
   }
 
-  user.dailyXpEarned = (user.dailyXpEarned || 0) + xpGain;
+  if (xpGain > 0) {
+    user.dailyXpEarned = (user.dailyXpEarned || 0) + xpGain;
+  }
   user.dailyLessonsCompleted = (user.dailyLessonsCompleted || 0) + 1;
-  user.dailyBestScore = Math.max(user.dailyBestScore || 0, percentage);
-
-  if (typeof window !== "undefined") {
-    localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
-    const accounts: UserProfile[] = JSON.parse(
-      localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
-    );
-    const idx = accounts.findIndex((a) => a.id === user.id);
-    if (idx !== -1) {
-      accounts[idx] = { ...accounts[idx], ...user };
-      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
-    }
+  if (percentage > 0) {
+    user.dailyBestScore = Math.max(user.dailyBestScore || 0, percentage);
   }
 
-  notifyAuthListeners(user);
+  saveCurrentUserProfile(user);
 }
 
 // ----------------------------------------------------

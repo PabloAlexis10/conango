@@ -8,7 +8,7 @@ import QuestionCard from "@/components/QuestionCard";
 import ConanMascot from "@/components/ConanMascot";
 import { Question, QuestionReview, SessionSize, SessionType } from "@/lib/types";
 import { soundEffects } from "@/lib/soundEffects";
-import { saveSessionResult, saveExamResult, getCurrentUser, updateUserMedals, hasReachedGuestLimit, incrementGuestUsage } from "@/lib/supabase";
+import { saveSessionResult, saveExamResult, getCurrentUser, updateUserMedals, hasReachedGuestLimit, incrementGuestUsage, recordLessonProgress } from "@/lib/supabase";
 import GuestLimitWall from "@/components/GuestLimitWall";
 import AuthModal from "@/components/AuthModal";
 import RewardedVideoModal from "@/components/RewardedVideoModal";
@@ -181,6 +181,7 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
       // Update daily streak and award XP
       updateUserStreak();
       addExperience(finalCorrect * 10);
+      recordLessonProgress(finalCorrect * 10, percentage);
 
       if (!getCurrentUser()) {
         incrementGuestUsage();

@@ -9,7 +9,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import TacticalCertificateModal from "@/components/TacticalCertificateModal";
 import ConanResultVideoScene from "@/components/ConanResultVideoScene";
 import InteractiveWordText from "@/components/InteractiveWordText";
-import { getCurrentUser } from "@/lib/supabase";
+import { getCurrentUser, recordLessonProgress } from "@/lib/supabase";
 import { getUserRankTitle } from "@/lib/accessories";
 import { QuestionReview } from "@/lib/types";
 import {
@@ -54,6 +54,8 @@ function ResultsContent() {
         console.error("Error reading saved reviews:", err);
       }
     }
+
+    recordLessonProgress(correct * 10, percentage);
 
     if (percentage >= 70) {
       confetti({

@@ -1,4 +1,4 @@
-import { ShopPowerUp } from "./types";
+import { ShopPowerUp, DiamondPack } from "./types";
 
 // POCIONES MÁGICAS DE LA TIENDA (ESTILO HARRY POTTER)
 export const MAGIC_POTIONS: ShopPowerUp[] = [
@@ -9,6 +9,7 @@ export const MAGIC_POTIONS: ShopPowerUp[] = [
     category: "booster",
     description: "Multiplica por 2 toda la experiencia (XP) obtenida en evaluaciones y lecciones durante 15 minutos. ¡Exclusiva para personal registrado!",
     priceGems: 100,
+    priceClp: 990,
   },
   {
     id: "streak_freeze",
@@ -17,6 +18,7 @@ export const MAGIC_POTIONS: ShopPowerUp[] = [
     category: "streak",
     description: "Protector de racha mágica. Si un día no puedes entrenar, tu racha de fuego 🔥 queda congelada y 100% protegida.",
     priceGems: 200,
+    priceClp: 1490,
   },
   {
     id: "refill_hearts",
@@ -25,6 +27,7 @@ export const MAGIC_POTIONS: ShopPowerUp[] = [
     category: "hearts",
     description: "Restaura inmediatamente tus 5 vidas al 100% para continuar practicando sin interrupciones.",
     priceGems: 150,
+    priceClp: 990,
   },
   {
     id: "conan_pro_pass",
@@ -33,6 +36,38 @@ export const MAGIC_POTIONS: ShopPowerUp[] = [
     category: "pro",
     description: "Membresía Conan PRO: Vidas infinitas (∞), cero anuncios en toda la plataforma y potenciador 2x XP permanente.",
     priceGems: 0,
+    priceClp: 4990,
+  },
+];
+
+// PAQUETES DE DIAMANTES / GEMAS TÁCTICAS PARA COMPRAR CON DINERO REAL
+export const DIAMOND_PACKS: DiamondPack[] = [
+  {
+    id: "pack_150_gems",
+    name: "Bolsa Táctica de Diamantes",
+    emoji: "💎",
+    gemsCount: 150,
+    priceClp: 990,
+    description: "Ideal para adquirir pociones de Doble XP y recargas de vidas de emergencia.",
+  },
+  {
+    id: "pack_600_gems",
+    name: "Cofre de Oficial de Diamantes",
+    emoji: "💎✨",
+    gemsCount: 600,
+    bonusText: "+25% Extra",
+    priceClp: 2990,
+    popular: true,
+    description: "Excelente balance para equiparte con pociones mágicas y proteger tu racha.",
+  },
+  {
+    id: "pack_2000_gems",
+    name: "Bóveda General de la USAF",
+    emoji: "💎👑",
+    gemsCount: 2000,
+    bonusText: "+50% Extra",
+    priceClp: 7990,
+    description: "El arsenal de diamantes definitivo para todo tu entrenamiento militar.",
   },
 ];
 

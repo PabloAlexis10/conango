@@ -63,12 +63,17 @@ export interface UserProfile {
   id: string;
   name?: string;
   mascotName?: string;
+  avatar?: string;
   email: string;
   password?: string;
   medals: number;
   isPro?: boolean;
+  hearts?: number;
+  maxHearts?: number;
   streakDays?: number;
+  streak?: number;
   lastStreakDate?: string;
+  lastActiveDate?: string;
   streakFreeze?: number; // Congelador de racha estilo Duolingo
   xp?: number;
   level?: number;
@@ -90,7 +95,19 @@ export interface ShopPowerUp {
   emoji: string;
   description: string;
   priceGems: number;
+  priceClp?: number;
   category: "booster" | "streak" | "hearts" | "pro";
+}
+
+export interface DiamondPack {
+  id: string;
+  name: string;
+  emoji: string;
+  gemsCount: number;
+  bonusText?: string;
+  priceClp: number;
+  description: string;
+  popular?: boolean;
 }
 
 export interface DailyQuest {

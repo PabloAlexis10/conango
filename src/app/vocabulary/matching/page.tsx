@@ -6,7 +6,7 @@ import { matchingPairs, MatchingPair } from "@/lib/vocabularyData";
 import ConanMascot from "@/components/ConanMascot";
 import Header from "@/components/Header";
 import { soundEffects } from "@/lib/soundEffects";
-import { getCurrentUser, hasReachedGuestLimit, incrementGuestUsage, updateUserStreak, addExperience } from "@/lib/supabase";
+import { getCurrentUser, hasReachedGuestLimit, incrementGuestUsage, updateUserStreak, addExperience, recordLessonProgress } from "@/lib/supabase";
 import GuestLimitWall from "@/components/GuestLimitWall";
 import AuthModal from "@/components/AuthModal";
 import { ArrowLeft, RotateCcw, Sparkles, Check, Volume2, Trophy, Zap } from "lucide-react";
@@ -153,6 +153,7 @@ export default function VocabularyMatchingPage() {
                 soundEffects.playLevelUp();
                 updateUserStreak();
                 addExperience(50);
+                recordLessonProgress(50, 100);
                 if (!getCurrentUser()) {
                   incrementGuestUsage();
                 }
