@@ -18,11 +18,12 @@ import {
   Sparkles,
   Info,
   BadgeCheck,
+  AlertCircle,
 } from "lucide-react";
 import ConanMascot from "./ConanMascot";
 import { setProStatus } from "@/lib/supabase";
 import { soundEffects } from "@/lib/soundEffects";
-import { getCheckoutUrl } from "@/lib/payments";
+import { getCheckoutUrl, verifyPaymentWithServer } from "@/lib/payments";
 import confetti from "canvas-confetti";
 
 interface ProSubscriptionModalProps {
@@ -46,6 +47,9 @@ export default function ProSubscriptionModal({
   const [couponCode, setCouponCode] = useState("");
   const [couponMsg, setCouponMsg] = useState("");
 
+  const [operationNumber, setOperationNumber] = useState<string>("");
+  const [verifyError, setVerifyError] = useState<string>("");
+
   if (!isOpen) return null;
 
   const planPrice = selectedPlan === "yearly" ? "$39.900 CLP" : "$4.990 CLP";
@@ -56,6 +60,7 @@ export default function ProSubscriptionModal({
     setSelectedGateway(gateway);
     const newOrderId = "CNP-" + Math.floor(100000 + Math.random() * 900000);
     setOrderId(newOrderId);
+    setVerifyError("");
     setPaymentState("waiting_confirmation");
 
     soundEffects.playClick();
@@ -68,14 +73,16 @@ export default function ProSubscriptionModal({
     }
   };
 
-  // Verificar y confirmar el pago real
-  const handleVerifyRealPayment = () => {
+  // Verificar y confirmar el pago real contra los servidores de Mercado Pago
+  const handleVerifyRealPayment = async () => {
+    setVerifyError("");
     setPaymentState("verifying");
     soundEffects.playClick();
 
-    // Simula la consulta y conciliación con el webhook/API de la pasarela bancaria
-    setTimeout(() => {
-      // Confirmación exitosa del pago
+    const idToVerify = operationNumber.trim() || orderId;
+    const result = await verifyPaymentWithServer(idToVerify);
+
+    if (result.verified) {
       setPaymentState("confirmed");
       setProStatus(true); // Activa vidas infinitas (medals: 9999), pero NO gemas infinitas
       soundEffects.playLevelUp();
@@ -95,8 +102,16 @@ export default function ProSubscriptionModal({
         if (onSuccess) onSuccess();
         onClose();
         setPaymentState("idle");
+        setOperationNumber("");
       }, 2600);
-    }, 2200);
+    } else {
+      setPaymentState("waiting_confirmation");
+      setVerifyError(
+        result.error ||
+          "El pago no figura acreditado en Mercado Pago. Si ya pagaste en Webpay, espera unos segundos a que se procese o verifica el N° de operación."
+      );
+      soundEffects.playIncorrect();
+    }
   };
 
   // Validación de cupón
@@ -233,6 +248,30 @@ export default function ProSubscriptionModal({
                   </div>
                 )}
               </div>
+
+              {/* Input opcional de N° de Operación para verificación bancaria */}
+              <div className="text-left space-y-1.5 pt-1">
+                <label className="block text-[11px] font-black uppercase text-[#6B4423] dark:text-slate-300">
+                  N° de Operación / Comprobante de Mercado Pago (Opcional):
+                </label>
+                <input
+                  type="text"
+                  value={operationNumber}
+                  onChange={(e) => setOperationNumber(e.target.value)}
+                  placeholder="Ej: 8492019482 (de tu email o cartola)"
+                  className="w-full p-2.5 rounded-xl border-2 border-[#E5D5C5] dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono font-bold text-[#6B4423] dark:text-white placeholder:text-slate-400"
+                />
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                  Si pagaste con Webpay o CuentaRUT, este número figura en el comprobante de pago emitido por Mercado Pago.
+                </p>
+              </div>
+
+              {verifyError && (
+                <div className="p-3 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl text-xs font-bold text-red-700 dark:text-red-300 flex items-start gap-2 text-left">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
+                  <span>{verifyError}</span>
+                </div>
+              )}
 
               <div className="flex flex-col sm:flex-row gap-2 pt-2">
                 <button

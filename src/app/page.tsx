@@ -20,7 +20,7 @@ import {
   Layers
 } from "lucide-react";
 import { getCurrentUser, subscribeAuth, getGuestUsageCount, hasReachedGuestLimit, GUEST_LIMIT, setProStatus } from "@/lib/supabase";
-import { checkReturnPaymentStatus, clearPaymentQueryParams } from "@/lib/payments";
+import { checkReturnPaymentStatus, clearPaymentQueryParams, verifyPaymentWithServer } from "@/lib/payments";
 import confetti from "canvas-confetti";
 import AuthModal from "@/components/AuthModal";
 import AdBanner from "@/components/AdBanner";
@@ -53,18 +53,23 @@ export default function HomePage() {
     // Detección automática al retornar de pagar con Webpay / Mercado Pago
     const paymentCheck = checkReturnPaymentStatus();
     if (paymentCheck.isApproved) {
-      setProStatus(true);
-      try {
-        confetti({
-          particleCount: 120,
-          spread: 85,
-          origin: { y: 0.6 },
-          colors: ["#F59E0B", "#10B981", "#3B82F6"],
-        });
-      } catch {
-        // ignore confetti errors
-      }
-      clearPaymentQueryParams();
+      const pid = paymentCheck.paymentId || "ONLINE-" + Date.now();
+      verifyPaymentWithServer(pid).then((res) => {
+        if (res.verified) {
+          setProStatus(true);
+          try {
+            confetti({
+              particleCount: 120,
+              spread: 85,
+              origin: { y: 0.6 },
+              colors: ["#F59E0B", "#10B981", "#3B82F6"],
+            });
+          } catch {
+            // ignore confetti errors
+          }
+          clearPaymentQueryParams();
+        }
+      });
     }
 
     const unsubscribe = subscribeAuth((updatedUser) => {

@@ -54,6 +54,56 @@ export function getCheckoutUrl(
 }
 
 /**
+ * Crea una preferencia en el servidor para Checkout Pro con redirección automática y monto cerrado.
+ */
+export async function createCheckoutPreference(
+  plan: "monthly" | "yearly",
+  userId?: string,
+  userEmail?: string
+): Promise<{ success: boolean; initPoint: string; error?: string }> {
+  try {
+    const res = await fetch("/api/checkout/preference", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan, userId, userEmail }),
+    });
+    const data = await res.json();
+    if (data.success && data.initPoint) {
+      return { success: true, initPoint: data.initPoint };
+    }
+    return {
+      success: false,
+      initPoint: getCheckoutUrl("mercadopago", plan),
+      error: data.error,
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      initPoint: getCheckoutUrl("mercadopago", plan),
+      error: err.message,
+    };
+  }
+}
+
+/**
+ * Consulta de forma segura a los servidores de Mercado Pago si un pago fue realmente acreditado.
+ */
+export async function verifyPaymentWithServer(
+  paymentId: string
+): Promise<{ verified: boolean; error?: string; amount?: number; status?: string }> {
+  try {
+    const res = await fetch(
+      `/api/checkout/verify?payment_id=${encodeURIComponent(paymentId)}`,
+      { cache: "no-store" }
+    );
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    return { verified: false, error: err.message || "Error al conectar con servidor" };
+  }
+}
+
+/**
  * Verifica si los parámetros de la URL actual indican un pago aprobado por Mercado Pago (Webpay) o Stripe.
  * Mercado Pago envía parámetros como:
  * ?collection_status=approved&status=approved&payment_id=XXXXX
