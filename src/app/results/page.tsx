@@ -9,6 +9,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import TacticalCertificateModal from "@/components/TacticalCertificateModal";
 import ConanResultVideoScene from "@/components/ConanResultVideoScene";
 import { getCurrentUser } from "@/lib/supabase";
+import { getUserRankTitle } from "@/lib/accessories";
 import { QuestionReview } from "@/lib/types";
 import {
   Trophy,
@@ -376,7 +377,7 @@ function ResultsContent() {
         <TacticalCertificateModal
           isOpen={certModalOpen}
           onClose={() => setCertModalOpen(false)}
-          cadetName={getCurrentUser()?.name || getCurrentUser()?.email?.split("@")[0] || "Cadete de Honor"}
+          cadetName={getCurrentUser()?.name || getCurrentUser()?.email?.split("@")[0] || getUserRankTitle(getCurrentUser()?.xp || 0)}
           percentage={percentage}
           correctAnswers={correct}
           formulaNumber={searchParams.get("formula") || "Mixta"}

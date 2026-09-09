@@ -15,6 +15,7 @@ import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive } from "
 import { getAppTheme, toggleAppTheme, subscribeTheme, AppTheme } from "@/lib/theme";
 import { requestNotificationPermission, getNotificationPermission, checkAndSendStreakReminder } from "@/lib/notifications";
 import { UserProfile } from "@/lib/types";
+import { getUserRankTitle } from "@/lib/accessories";
 
 interface HeaderProps {
   sessionTitle?: string;
@@ -285,7 +286,7 @@ export default function Header({
                   <div className="absolute right-0 mt-2 w-52 bg-white border-2 border-[#E5D5C5] rounded-2xl shadow-xl p-2 z-50">
                     <div className="px-3 py-2 border-b border-[#E5D5C5]/60 mb-1">
                       <p className="text-xs font-black text-[#6B4423] truncate">
-                        {user.name || "Cadete"}
+                        {user.name || getUserRankTitle(user?.xp || 0)}
                       </p>
                       <p className="text-[10px] text-[#A67B5B] truncate">{user.email}</p>
                       <div className="mt-1 flex items-center justify-between text-[11px] font-bold text-[#F59E0B]">

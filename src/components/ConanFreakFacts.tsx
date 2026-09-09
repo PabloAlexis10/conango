@@ -364,21 +364,21 @@ export default function ConanFreakFacts() {
             <div className="flex items-start gap-2.5">
               <span className="text-base flex-shrink-0 mt-0.5">🇺🇸</span>
               <div>
-                <h4 className="text-sm sm:text-base font-black text-[#6B4423] leading-snug">
+                <h4 className="text-sm sm:text-base font-black text-[#6B4423] dark:text-amber-400 leading-snug">
                   {currentFact.titleEn}
                 </h4>
-                <p className="text-xs sm:text-sm text-slate-800 font-semibold mt-1 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-900 dark:text-slate-50 font-semibold mt-1 leading-relaxed">
                   &ldquo;{currentFact.textEn}&rdquo;
                 </p>
               </div>
             </div>
 
             {/* Spanish Translation Section */}
-            <div className="flex items-start gap-2.5 pt-2 border-t border-amber-100/80">
+            <div className="flex items-start gap-2.5 pt-2 border-t border-amber-100/80 dark:border-slate-800">
               <span className="text-base flex-shrink-0 mt-0.5">🇨🇱</span>
               <div>
-                <p className="text-xs sm:text-sm text-[#A67B5B] font-medium leading-relaxed">
-                  <strong className="text-[#6B4423]">{currentFact.titleEs}:</strong>{" "}
+                <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-300 font-medium leading-relaxed">
+                  <strong className="text-[#6B4423] dark:text-amber-300">{currentFact.titleEs}:</strong>{" "}
                   {currentFact.textEs}
                 </p>
               </div>
@@ -386,8 +386,8 @@ export default function ConanFreakFacts() {
 
             {/* Tactical Recommendation / Tip */}
             {currentFact.recommendation && (
-              <div className="mt-2 flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-xl border border-amber-200/70 text-[11px] font-bold text-amber-900">
-                <Lightbulb className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
+              <div className="mt-2 flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/50 rounded-xl border border-amber-200/70 dark:border-amber-800 text-[11px] font-bold text-amber-900 dark:text-amber-200">
+                <Lightbulb className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                 <span>{currentFact.recommendation}</span>
               </div>
             )}
@@ -415,7 +415,7 @@ export default function ConanFreakFacts() {
                 className={`h-1.5 rounded-full transition-all ${
                   idx === currentIndex
                     ? "w-4 bg-[#F59E0B]"
-                    : "w-1.5 bg-[#E5D5C5] hover:bg-[#A67B5B]"
+                    : "w-1.5 bg-[#E5D5C5] dark:bg-slate-700 hover:bg-[#A67B5B] dark:hover:bg-slate-500"
                 }`}
                 title={`Ver dato ${idx + 1}`}
               />

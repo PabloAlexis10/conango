@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import ConanMascot from "@/components/ConanMascot";
 import { getCurrentUser, saveFriendChallenge, getFriendChallenges } from "@/lib/supabase";
 import { UserProfile, FriendChallenge } from "@/lib/types";
+import { getUserRankTitle } from "@/lib/accessories";
 import { ArrowLeft, Swords, Share2, Copy, CheckCircle2, Trophy, Sparkles, ChevronRight } from "lucide-react";
 import { soundEffects } from "@/lib/soundEffects";
 
@@ -24,7 +25,7 @@ export default function ChallengePage() {
 
   const handleCreateChallenge = () => {
     const id = `duel_${Date.now().toString(36)}`;
-    const creatorName = user?.name || "Cadete Desafiante";
+    const creatorName = user?.name || getUserRankTitle(user?.xp || 0);
     const origin = typeof window !== "undefined" ? window.location.origin : "https://conango.vercel.app";
     const url = `${origin}/practice?formula=${formula}&size=${size}&challenge=${id}`;
 
@@ -54,7 +55,7 @@ export default function ChallengePage() {
 
   return (
     <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans text-[#6B4423]">
-      <Header sessionTitle="Duelo de Cadetes y Desafíos" />
+      <Header sessionTitle="Duelo Táctico y Desafíos" />
 
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col justify-start">
         {/* Top bar */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { getCurrentUser } from "./supabase";
+import { getUserRankTitle } from "./accessories";
 
 export function isNotificationSupported(): boolean {
   return typeof window !== "undefined" && "Notification" in window;
@@ -55,7 +56,8 @@ export function checkAndSendStreakReminder(): void {
   const streakDays = user.streakDays || 1;
 
   try {
-    new Notification("🔥 ¡Cadete! Conan te espera para la guardia", {
+    const rankTitle = getUserRankTitle(user.xp || 0);
+    new Notification(`🔥 ¡${rankTitle}! Conan te espera para la guardia`, {
       body: `No dejes morir tu racha de ${streakDays} días en ConanGO. ¡Rinde una lección de 5 minutos antes de la medianoche!`,
       icon: "/conan-mascot.png",
       badge: "/conan-mascot.png",

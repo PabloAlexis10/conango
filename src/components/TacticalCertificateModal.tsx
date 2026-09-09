@@ -115,12 +115,12 @@ export default function TacticalCertificateModal({
 
     ctx.fillStyle = "#A67B5B";
     ctx.font = "bold 16px sans-serif";
-    ctx.fillText("POR CUANTO SE RECONOCE Y CERTIFICA OFICIALMENTE QUE EL CADETE:", 600, 195);
+    ctx.fillText("POR CUANTO SE RECONOCE Y CERTIFICA OFICIALMENTE A:", 600, 195);
 
     // Cadet Name
     ctx.fillStyle = "#6B4423";
     ctx.font = "900 42px sans-serif";
-    ctx.fillText(cadetName.toUpperCase() || "CADETE DE HONOR", 600, 260);
+    ctx.fillText(cadetName.toUpperCase() || "OFICIAL / AVIADOR DE HONOR", 600, 260);
 
     // Underline
     ctx.strokeStyle = "#F59E0B";
@@ -280,13 +280,13 @@ export default function TacticalCertificateModal({
             </h1>
 
             <p className="text-xs sm:text-sm text-[#A67B5B] font-semibold max-w-lg mx-auto">
-              Por cuanto se certifica que el cadete ha completado satisfactoriamente la evaluación oficial de 100 reactivos:
+              Por cuanto se reconoce y certifica oficialmente que ha completado satisfactoriamente la evaluación oficial de 100 reactivos:
             </p>
 
             {/* Cadet Name */}
             <div className="py-2">
               <h2 className="text-3xl sm:text-4xl font-black text-[#6B4423] uppercase tracking-wide font-serif">
-                {cadetName || "Cadete de Honor"}
+                {cadetName || "Aviador de Honor"}
               </h2>
               <div className="w-64 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto mt-2" />
             </div>

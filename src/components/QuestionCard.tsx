@@ -5,7 +5,8 @@ import { Question } from "@/lib/types";
 import { CheckCircle2, XCircle, ArrowRight, Lightbulb, Sparkles, Volume2, BookOpen, Headphones, Languages } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AudioPlayer from "./AudioPlayer";
-import ConanMascot from "./ConanMascot";
+import { getCurrentUser } from "@/lib/supabase";
+import { getUserRankTitle } from "@/lib/accessories";
 
 interface QuestionCardProps {
   question: Question;
@@ -28,6 +29,8 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
+  const currentUser = getCurrentUser();
+  const playerRank = getUserRankTitle(currentUser?.xp || 0);
 
   useEffect(() => {
     setSelectedOption(null);
@@ -93,11 +96,26 @@ export default function QuestionCard({
             </span>
           </div>
 
-          <ConanMascot
-            size="sm"
-            mood={!hasAnswered ? "thinking" : isCorrect ? "celebrate" : "sad"}
-            animate={true}
-          />
+          <button
+            type="button"
+            title="Conan Táctico (Haz clic para escuchar)"
+            onClick={() => {
+              if (typeof window !== "undefined" && "speechSynthesis" in window) {
+                const utter = new SpeechSynthesisUtterance(
+                  !hasAnswered
+                    ? `¡Concentración, ${playerRank}! Lee con atención antes de marcar.`
+                    : isCorrect
+                    ? `¡Excelente impacto táctico, ${playerRank}!`
+                    : `¡Mantén la guardia alta, ${playerRank}! Repasemos la regla.`
+                );
+                utter.lang = "es-ES";
+                window.speechSynthesis.speak(utter);
+              }
+            }}
+            className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 dark:from-amber-600 dark:to-yellow-500 flex items-center justify-center text-xl shadow-xs border-2 border-white dark:border-slate-700 select-none hover:scale-110 active:scale-90 transition-transform cursor-pointer"
+          >
+            {!hasAnswered ? "🐶⚡" : isCorrect ? "🐶🎯" : "🐶🛡️"}
+          </button>
         </div>
 
         {/* Audio Player (Only rendered for Listening questions) */}
@@ -222,27 +240,31 @@ export default function QuestionCard({
                   : "bg-red-50 border-red-300 text-red-900"
               }`}
             >
-              <div className="flex items-center gap-3 mb-3 bg-white/90 dark:bg-slate-800/90 p-3 rounded-2xl border border-current/20 shadow-xs">
-                <ConanMascot
-                  size="sm"
-                  mood={isCorrect ? "celebrate" : "thinking"}
-                  animate={true}
-                />
+              <div className="flex items-center gap-3 mb-3 bg-white/95 dark:bg-slate-800/95 p-3 rounded-2xl border border-current/20 shadow-xs">
+                <div
+                  className={`w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shadow-sm border-2 flex-shrink-0 transition-transform active:scale-95 select-none ${
+                    isCorrect
+                      ? "bg-gradient-to-tr from-emerald-400 to-green-300 border-emerald-200 dark:border-emerald-600 shadow-emerald-500/30 animate-bounce"
+                      : "bg-gradient-to-tr from-amber-400 to-yellow-300 border-amber-200 dark:border-amber-600 shadow-amber-500/30"
+                  }`}
+                >
+                  {isCorrect ? "🐶🎯" : "🐶🛡️"}
+                </div>
                 <div>
                   <div className="flex items-center gap-1.5 font-black text-sm sm:text-base">
                     {isCorrect ? (
                       <>
-                        <CheckCircle2 className="w-5 h-5 text-green-600" />
-                        <span>¡Excelente impacto, cadete! +10 XP 🎯</span>
+                        <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
+                        <span className="text-green-950 dark:text-green-200">¡Excelente impacto, {playerRank}! +10 XP 🎯</span>
                       </>
                     ) : (
                       <>
-                        <XCircle className="w-5 h-5 text-red-600" />
-                        <span>¡Atención cadete! Repasa la regla 🛡️</span>
+                        <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                        <span className="text-red-950 dark:text-red-200">¡Atención, {playerRank}! Repasa la regla 🛡️</span>
                       </>
                     )}
                   </div>
-                  <p className="text-xs font-semibold opacity-90 mt-0.5">
+                  <p className="text-xs font-semibold opacity-90 mt-0.5 text-slate-800 dark:text-slate-200">
                     {isCorrect
                       ? "Conan celebra tu precisión en el entrenamiento de la USAF."
                       : "No te desanimes. Analiza la explicación para dominar esta fórmula."}

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
               },
             ],
             payer: {
-              email: userEmail || "cadete@conango.com",
+              email: userEmail || "piloto@conango.com",
             },
             back_urls: {
               success: `${origin}/?payment=success&gateway=mercadopago&plan=${plan}`,

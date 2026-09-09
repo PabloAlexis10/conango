@@ -6,6 +6,7 @@ import ConanMascot from "@/components/ConanMascot";
 import AuthModal from "@/components/AuthModal";
 import AdBanner from "@/components/AdBanner";
 import { ExamResult, SessionResult, UserProfile } from "@/lib/types";
+import { getUserRankTitle } from "@/lib/accessories";
 import {
   getCurrentUser,
   getExamHistory,
@@ -133,16 +134,16 @@ export default function ProfilePage() {
               {user?.isPro ? (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-full text-xs font-black uppercase tracking-wider mb-2 shadow-xs">
                   <Crown className="w-3.5 h-3.5 text-yellow-200" />
-                  <span>Cadete Supremo Conan PRO (Vidas ∞)</span>
+                  <span>{getUserRankTitle(user?.xp || 0)} Conan PRO (Vidas ∞)</span>
                 </div>
               ) : (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider mb-2">
                   <Flame className="w-3.5 h-3.5 text-[#F59E0B]" />
-                  <span>{user ? "Cadete Registrado" : "Modo Invitado (Prueba Limitada)"}</span>
+                  <span>{user ? getUserRankTitle(user?.xp || 0) : "Modo Invitado (Prueba Limitada)"}</span>
                 </div>
               )}
               <h1 className="text-2xl sm:text-3xl font-black text-[#6B4423]">
-                {user?.name || user?.email || "Cadete Invitado"}
+                {user?.name || user?.email || getUserRankTitle(user?.xp || 0)}
               </h1>
               <p className="text-xs text-[#A67B5B] font-semibold mt-1">
                 {user ? (
@@ -278,7 +279,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Google Ads Placement in Cadete Profile */}
+        {/* Google Ads Placement in Profile */}
         <AdBanner
           className="mb-8"
           slotId="8765432109"
@@ -538,7 +539,7 @@ export default function ProfilePage() {
         <TacticalCertificateModal
           isOpen={!!selectedCertExam}
           onClose={() => setSelectedCertExam(null)}
-          cadetName={user?.name || user?.email?.split("@")[0] || "Cadete de Honor"}
+          cadetName={user?.name || user?.email?.split("@")[0] || getUserRankTitle(user?.xp || 0)}
           percentage={selectedCertExam.percentage}
           correctAnswers={selectedCertExam.correct}
           formulaNumber={selectedCertExam.type || "Oficial"}

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { getCurrentUser, subscribeAuth } from "@/lib/supabase";
 import { UserProfile } from "@/lib/types";
+import { getUserRankTitle } from "@/lib/accessories";
 import ConanMascot from "@/components/ConanMascot";
 import AdBanner from "@/components/AdBanner";
 
@@ -37,23 +38,23 @@ type LeagueDivision = "bronze" | "silver" | "gold" | "diamond";
 const BOT_NAMES = {
   bronze: [
     { name: "Amn J. Walker", flag: "🇺🇸", badge: "🥉" },
-    { name: "Cadete C. Morales", flag: "🇨🇱", badge: "🪖" },
+    { name: "A1C C. Morales", flag: "🇨🇱", badge: "🪖" },
     { name: "A1C M. Campbell", flag: "🇺🇸", badge: "🎖️" },
-    { name: "Cadete P. Silva", flag: "🇨🇱", badge: "🪖" },
+    { name: "Amn P. Silva", flag: "🇨🇱", badge: "🪖" },
     { name: "Amn D. Clark", flag: "🇺🇸", badge: "🥉" },
-    { name: "Cadete S. Rojas", flag: "🇨🇱", badge: "🪖" },
+    { name: "AB S. Rojas", flag: "🇨🇱", badge: "🪖" },
     { name: "AB L. Wright", flag: "🇺🇸", badge: "🪖" },
-    { name: "Cadete F. Soto", flag: "🇨🇱", badge: "🪖" },
+    { name: "Amn F. Soto", flag: "🇨🇱", badge: "🪖" },
   ],
   silver: [
     { name: "SrA R. Johnson", flag: "🇺🇸", badge: "⭐" },
     { name: "Teniente V. Torres", flag: "🇨🇱", badge: "🔹" },
     { name: "SSgt K. Miller", flag: "🇺🇸", badge: "⭐⭐" },
-    { name: "Cadete E. Castro", flag: "🇨🇱", badge: "🎖️" },
+    { name: "SrA E. Castro", flag: "🇨🇱", badge: "🎖️" },
     { name: "SrA T. Baker", flag: "🇺🇸", badge: "⭐" },
     { name: "Oficial B. Núñez", flag: "🇨🇱", badge: "🔹" },
     { name: "SSgt H. Adams", flag: "🇺🇸", badge: "⭐⭐" },
-    { name: "Cadete G. Muñoz", flag: "🇨🇱", badge: "⭐" },
+    { name: "SrA G. Muñoz", flag: "🇨🇱", badge: "⭐" },
   ],
   gold: [
     { name: "TSgt B. Henderson", flag: "🇺🇸", badge: "⭐⭐⭐" },
@@ -143,7 +144,7 @@ export default function LeaderboardPage() {
       ...divisionBots,
       ...realAccounts,
       {
-        name: user?.name || user?.email?.split("@")[0] || "Cadete Tú",
+        name: user?.name || user?.email?.split("@")[0] || `${getUserRankTitle(userXp)} (Tú)`,
         flag: "🇨🇱",
         xp: userXp,
         badge: user?.isPro ? "👑" : "🎖️",

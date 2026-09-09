@@ -131,7 +131,7 @@ export default function ProSubscriptionModal({
   const handleCouponSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const clean = couponCode.trim().toUpperCase();
-    if (clean === "CONANPRO" || clean === "ALCPT2026" || clean === "CADETE100") {
+    if (clean === "CONANPRO" || clean === "ALCPT2026" || clean === "AIRFORCE100" || clean === "USAF100") {
       setPaymentState("verifying");
       setTimeout(() => {
         setPaymentState("confirmed");
@@ -183,7 +183,7 @@ export default function ProSubscriptionModal({
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-sm">
-            Conan<span className="text-yellow-200">PRO</span> Cadete Supremo
+            Conan<span className="text-yellow-200">PRO</span> Élite Táctica
           </h2>
 
           <p className="text-xs sm:text-sm text-amber-50 font-medium max-w-md mx-auto mt-1 leading-relaxed">
@@ -330,7 +330,7 @@ export default function ProSubscriptionModal({
                 ¡Pago Confirmado Exitosamente!
               </h3>
               <p className="text-xs text-slate-700 dark:text-slate-300 max-w-sm mx-auto font-medium">
-                Tu suscripción <strong>Conan PRO</strong> ha sido activada con <strong>Vidas Infinitas (∞)</strong> y sin publicidad. ¡Bienvenido, Cadete Supremo!
+                Tu suscripción <strong>Conan PRO</strong> ha sido activada con <strong>Vidas Infinitas (∞)</strong> y sin publicidad. ¡Bienvenido a bordo!
               </p>
             </div>
           )}

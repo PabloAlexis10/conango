@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import ConanMascot from "./ConanMascot";
-import { Trophy, Sparkles, Volume2, ShieldAlert, RotateCcw, Heart } from "lucide-react";
+import { Trophy, Sparkles, Volume2, ShieldAlert, RotateCcw, Heart, Star, Award } from "lucide-react";
 import { soundEffects } from "@/lib/soundEffects";
+import { getCurrentUser } from "@/lib/supabase";
+import { getUserRankTitle, getUserRankBadge } from "@/lib/accessories";
 import confetti from "canvas-confetti";
 
 interface ConanResultVideoSceneProps {
@@ -20,6 +21,9 @@ export default function ConanResultVideoScene({
 }: ConanResultVideoSceneProps) {
   const isPassed = percentage >= 70;
   const [isPlayingBark, setIsPlayingBark] = useState(false);
+  const user = getCurrentUser();
+  const playerRank = getUserRankTitle(user?.xp || 0);
+  const rankBadge = getUserRankBadge(user?.xp || 0);
 
   const handleInteract = () => {
     setIsPlayingBark(true);
@@ -27,8 +31,8 @@ export default function ConanResultVideoScene({
       soundEffects.playLevelUp();
       try {
         confetti({
-          particleCount: 70,
-          spread: 80,
+          particleCount: 75,
+          spread: 85,
           origin: { y: 0.6 },
           colors: ["#F59E0B", "#10B981", "#3B82F6"],
         });
@@ -40,11 +44,11 @@ export default function ConanResultVideoScene({
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const phrase = isPassed
-        ? "Mission accomplished, cadet! Great job on your test!"
-        : "Hold your head high, cadet! Review your mistakes and try again!";
+        ? `Mission accomplished, ${playerRank}! Outstanding performance on your test!`
+        : `Hold your head high, ${playerRank}! Review your tactical debrief and try again!`;
       const utterance = new SpeechSynthesisUtterance(phrase);
       utterance.lang = "en-US";
-      utterance.rate = 1.0;
+      utterance.rate = 0.95;
       window.speechSynthesis.speak(utterance);
     }
 
@@ -67,50 +71,57 @@ export default function ConanResultVideoScene({
         {isPassed ? (
           <>
             <Sparkles className="w-4 h-4 text-yellow-300 animate-spin" />
-            <span>¡Misión Cumplida! • Escena de Victoria</span>
+            <span>¡Misión Cumplida! • Victoria {rankBadge}</span>
           </>
         ) : (
           <>
             <ShieldAlert className="w-4 h-4 text-amber-400" />
-            <span>Debriefing Táctico • Conan te Apoya</span>
+            <span>Debriefing Táctico • {playerRank}</span>
           </>
         )}
       </div>
 
-      {/* Mascot Animated Character */}
+      {/* Interactive Tactical Emoji Mascot (No moving photo image) */}
       <div className="flex justify-center mb-4 relative">
         <motion.div
-          animate={isPassed ? { y: [0, -10, 0] } : { y: [0, -3, 0] }}
-          transition={{ repeat: Infinity, duration: isPassed ? 1.5 : 3, ease: "easeInOut" }}
+          onClick={handleInteract}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+          animate={isPassed ? { scale: [1, 1.05, 1] } : {}}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          className={`w-28 h-28 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center text-5xl sm:text-6xl cursor-pointer select-none shadow-2xl border-4 transition-all ${
+            isPassed
+              ? "bg-gradient-to-tr from-yellow-300 via-amber-400 to-yellow-500 border-white shadow-yellow-500/40"
+              : "bg-gradient-to-tr from-slate-700 via-slate-800 to-slate-900 border-slate-600 shadow-slate-900/50"
+          }`}
+          title="Toca al compañero táctico para interactuar"
         >
-          <ConanMascot
-            size="hero"
-            mood={isPassed ? "celebrate" : "thinking"}
-            animate={true}
-          />
+          {isPassed ? "🐶🏆" : "🐶🛡️"}
         </motion.div>
 
-        {isPassed && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute -top-2 right-1/4 sm:right-1/3 bg-yellow-400 text-amber-950 p-2 rounded-2xl shadow-lg"
-          >
-            <Trophy className="w-6 h-6" />
-          </motion.div>
-        )}
+        {/* Floating Rank Crest */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1, rotate: [0, 8, -8, 0] }}
+          transition={{ repeat: Infinity, duration: 2.5 }}
+          className="absolute -top-2 right-1/4 sm:right-1/3 bg-yellow-400 text-amber-950 px-2.5 py-1 rounded-xl shadow-lg font-black text-xs flex items-center gap-1"
+        >
+          <span>{rankBadge}</span>
+          <span>{playerRank}</span>
+        </motion.div>
       </div>
 
       {/* Title & Message */}
       <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-2 text-white drop-shadow-sm">
-        {isPassed ? "¡Felicitaciones, Aprobaste con Éxito!" : "¡Cabeza en alto, Cadete!"}
+        {isPassed
+          ? `¡Felicitaciones, Aprobaste con Éxito, ${playerRank}!`
+          : `¡Cabeza en alto, ${playerRank}!`}
       </h2>
 
       <p className="text-sm sm:text-base max-w-lg mx-auto font-medium leading-relaxed opacity-95 mb-6">
         {isPassed
-          ? `Obtuviste un ${percentage}% de efectividad (${correct} de ${correct + incorrect} correctas). Conan y el comando militar celebran tu avance en inglés.`
-          : `Tuviste ${incorrect} fallos en esta misión. Los mejores pilotos de la Fuerza Aérea se forjan repitiendo las fórmulas hasta dominar la regla.`}
+          ? `Obtuviste un ${percentage}% de efectividad (${correct} de ${correct + incorrect} correctas). Conan y el mando de la USAF celebran tu precisión táctica en inglés.`
+          : `Tuviste ${incorrect} fallos en esta misión. Como ${playerRank}, repasa la retroalimentación de cada reactivo para dominar las 100 fórmulas.`}
       </p>
 
       {/* Interactive Interaction Button */}
@@ -118,7 +129,7 @@ export default function ConanResultVideoScene({
         type="button"
         onClick={handleInteract}
         disabled={isPlayingBark}
-        className={`px-6 py-3.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 mx-auto transition-transform active:scale-95 ${
+        className={`px-6 py-3.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 mx-auto transition-transform active:scale-95 cursor-pointer ${
           isPassed
             ? "bg-white text-amber-900 hover:bg-yellow-50"
             : "bg-amber-500 hover:bg-amber-600 text-white"
@@ -128,11 +139,11 @@ export default function ConanResultVideoScene({
         <span>
           {isPassed
             ? isPlayingBark
-              ? "🐾 ¡Celebrando con Conan!"
-              : "🐾 Toca para interactuar con Conan"
+              ? `🐾 ¡${playerRank} en Victoria!`
+              : `🐾 Toca para escuchar saludo oficial`
             : isPlayingBark
-            ? "🐾 '¡La próxima la dominamos!'"
-            : "🐾 Mensaje de apoyo de Conan"}
+            ? `🐾 '¡La próxima la dominamos, ${playerRank}!'`
+            : `🐾 Mensaje táctico de apoyo`}
         </span>
       </button>
     </div>

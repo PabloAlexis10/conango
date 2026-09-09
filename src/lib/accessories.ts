@@ -7,7 +7,7 @@ export const MAGIC_POTIONS: ShopPowerUp[] = [
     name: "Poción Multijugos (Doble XP ⚡)",
     emoji: "🧪",
     category: "booster",
-    description: "Multiplica por 2 toda la experiencia (XP) obtenida en evaluaciones y lecciones durante 15 minutos. ¡Exclusiva para cadetes registrados!",
+    description: "Multiplica por 2 toda la experiencia (XP) obtenida en evaluaciones y lecciones durante 15 minutos. ¡Exclusiva para personal registrado!",
     priceGems: 100,
   },
   {
@@ -90,3 +90,16 @@ export function getRankByXp(xp: number) {
     progress,
   };
 }
+
+export function getUserRankTitle(xp: number): string {
+  return getRankByXp(xp).currentRank.name;
+}
+
+export function getUserRankGrade(xp: number): string {
+  return getRankByXp(xp).currentRank.usGrade;
+}
+
+export function getUserRankBadge(xp: number): string {
+  return getRankByXp(xp).currentRank.badge;
+}
+

@@ -51,67 +51,45 @@ export function getCurrentUser(): UserProfile | null {
   return null;
 }
 
+export function getRegisteredAccounts(): UserProfile[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]");
+  } catch {
+    return [];
+  }
+}
+
 export async function registerAccount(
   name: string,
   email: string,
   password: string
 ): Promise<{ user: UserProfile; error?: string }> {
   const cleanEmail = email.trim().toLowerCase();
+  const cleanPass = password.trim();
   const cleanName = name.trim() || cleanEmail.split("@")[0];
 
-  // Try Supabase first if configured
-  if (supabase) {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password,
-        options: {
-          data: { name: cleanName },
-        },
-      });
-
-      if (error) return { user: null as unknown as UserProfile, error: error.message };
-
-      if (data.user) {
-        const newUser: UserProfile = {
-          id: data.user.id,
-          name: cleanName,
-          email: cleanEmail,
-          medals: 15,
-          created_at: new Date().toISOString(),
-        };
-
-        await supabase.from("users").upsert([
-          {
-            id: newUser.id,
-            email: newUser.email,
-            medals: newUser.medals,
-            created_at: newUser.created_at,
-          },
-        ]);
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(newUser));
-        }
-        notifyAuthListeners(newUser);
-        return { user: newUser };
-      }
-    } catch (err: unknown) {
-      console.warn("Supabase signup fallback to local:", err);
-    }
+  if (!cleanEmail || !cleanPass) {
+    return { user: null as unknown as UserProfile, error: "Ingresa un correo y contraseña válidos." };
   }
 
-  // Local / Offline Multi-Account Engine
+  // Preserve any guest session progress so the user doesn't lose what they just played!
+  const guestUser = getCurrentUser();
+  const initialXp = guestUser && guestUser.id === "guest" ? (guestUser.xp || 0) : 0;
+  const initialStreak = guestUser && guestUser.id === "guest" ? (guestUser.streakDays || 0) : 0;
+  const initialMedals = guestUser && guestUser.id === "guest" && guestUser.medals ? guestUser.medals : 15;
+
+  // Local / Offline Multi-Account Engine (Always saved locally for zero data loss)
   if (typeof window !== "undefined") {
     const accounts: UserProfile[] = JSON.parse(
       localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
     );
 
-    const exists = accounts.find((a) => a.email.toLowerCase() === cleanEmail);
+    const exists = accounts.find((a) => a.email.trim().toLowerCase() === cleanEmail);
     if (exists) {
       return {
         user: null as unknown as UserProfile,
-        error: "Ya existe una cuenta registrada con este correo electrónico.",
+        error: "Ya existe una cuenta registrada con este correo electrónico. Por favor inicia sesión.",
       };
     }
 
@@ -119,10 +97,10 @@ export async function registerAccount(
       id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       name: cleanName,
       email: cleanEmail,
-      password, // securely kept in user local storage
-      medals: 15,
-      streakDays: 0,
-      xp: 0,
+      password: cleanPass, // securely kept in device local storage
+      medals: initialMedals,
+      streakDays: initialStreak,
+      xp: initialXp,
       coins: 50,
       gems: 50,
       streakFreeze: 0,
@@ -132,6 +110,18 @@ export async function registerAccount(
     accounts.push(newUser);
     localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
     localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(newUser));
+
+    // Migrate any guest exam and session history to this newly registered account
+    try {
+      const guestExams = localStorage.getItem("conango_exams_guest");
+      if (guestExams) {
+        localStorage.setItem(`conango_exams_${newUser.id}`, guestExams);
+      }
+      const guestSessions = localStorage.getItem("conango_sessions_guest");
+      if (guestSessions) {
+        localStorage.setItem(`conango_sessions_${newUser.id}`, guestSessions);
+      }
+    } catch {}
 
     notifyAuthListeners(newUser);
     return { user: newUser };
@@ -145,33 +135,10 @@ export async function loginAccount(
   password: string
 ): Promise<{ user: UserProfile; error?: string }> {
   const cleanEmail = email.trim().toLowerCase();
+  const cleanPass = password.trim();
 
-  // Try Supabase first if configured
-  if (supabase) {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
-        password,
-      });
-
-      if (!error && data.user) {
-        const loggedUser: UserProfile = {
-          id: data.user.id,
-          name: data.user.user_metadata?.name || cleanEmail.split("@")[0],
-          email: cleanEmail,
-          medals: 15,
-          created_at: data.user.created_at,
-        };
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(loggedUser));
-        }
-        notifyAuthListeners(loggedUser);
-        return { user: loggedUser };
-      }
-    } catch (err) {
-      console.warn("Supabase login fallback to local storage:", err);
-    }
+  if (!cleanEmail || !cleanPass) {
+    return { user: null as unknown as UserProfile, error: "Ingresa tu correo y contraseña." };
   }
 
   // Local Accounts Verification
@@ -181,18 +148,41 @@ export async function loginAccount(
     );
 
     const match = accounts.find(
-      (a) => a.email.toLowerCase() === cleanEmail && a.password === password
+      (a) =>
+        a.email.trim().toLowerCase() === cleanEmail &&
+        (a.password || "").trim() === cleanPass
     );
 
     if (match) {
+      // Migrate any guest exams played in current unauthenticated session
+      try {
+        const guestExams = localStorage.getItem("conango_exams_guest");
+        if (guestExams) {
+          const userExamKey = `conango_exams_${match.id}`;
+          const currentExams: ExamResult[] = JSON.parse(localStorage.getItem(userExamKey) || "[]");
+          const incomingExams: ExamResult[] = JSON.parse(guestExams);
+          const merged = [...incomingExams, ...currentExams];
+          localStorage.setItem(userExamKey, JSON.stringify(merged));
+        }
+      } catch {}
+
       localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(match));
       notifyAuthListeners(match);
       return { user: match };
     }
 
+    // Helpful feedback if email exists vs if account doesn't exist
+    const emailExists = accounts.some((a) => a.email.trim().toLowerCase() === cleanEmail);
+    if (emailExists) {
+      return {
+        user: null as unknown as UserProfile,
+        error: "Contraseña incorrecta. Puedes restablecerla con la opción ¿Olvidaste tu clave?",
+      };
+    }
+
     return {
       user: null as unknown as UserProfile,
-      error: "Credenciales incorrectas. Verifica tu correo y contraseña.",
+      error: "No existe ninguna cuenta registrada con este correo. Puedes crear tu cuenta en la pestaña Registrarse.",
     };
   }
 
@@ -219,19 +209,9 @@ export async function resetPassword(
   newPassword: string
 ): Promise<{ success: boolean; error?: string }> {
   const cleanEmail = email.trim().toLowerCase();
-  if (!cleanEmail || !newPassword || newPassword.length < 6) {
+  const cleanPass = newPassword.trim();
+  if (!cleanEmail || !cleanPass || cleanPass.length < 6) {
     return { success: false, error: "La nueva contraseña debe tener al menos 6 caracteres." };
-  }
-
-  if (supabase) {
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail);
-      if (error) {
-        console.warn("Supabase password reset fallback:", error.message);
-      }
-    } catch (e) {
-      console.warn("Supabase reset error fallback:", e);
-    }
   }
 
   if (typeof window !== "undefined") {
@@ -239,17 +219,17 @@ export async function resetPassword(
       localStorage.getItem(STORAGE_KEY_ACCOUNTS) || "[]"
     );
 
-    const idx = accounts.findIndex((a) => a.email.toLowerCase() === cleanEmail);
+    const idx = accounts.findIndex((a) => a.email.trim().toLowerCase() === cleanEmail);
     if (idx === -1) {
       return { success: false, error: "No se encontró ninguna cuenta registrada con este correo electrónico." };
     }
 
-    accounts[idx].password = newPassword;
+    accounts[idx].password = cleanPass;
     localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
 
     const cur = getCurrentUser();
-    if (cur && cur.email.toLowerCase() === cleanEmail) {
-      cur.password = newPassword;
+    if (cur && cur.email.trim().toLowerCase() === cleanEmail) {
+      cur.password = cleanPass;
       localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(cur));
       notifyAuthListeners(cur);
     }
@@ -548,7 +528,7 @@ export function updateUserStreak(): { streak: number; increased: boolean } {
     user = {
       id: "guest",
       email: "invitado@conango.com",
-      name: "Cadete Invitado",
+      name: "Aviador Invitado",
       medals: 5,
       streakDays: 0,
       xp: 0,
@@ -684,8 +664,8 @@ export function setProStatus(isPro: boolean): void {
   if (!user) {
     user = {
       id: "guest_pro",
-      email: "cadete.pro@conango.com",
-      name: "Cadete Supremo",
+      email: "oficial.pro@conango.com",
+      name: "Aviador PRO",
       medals: 9999, // Vidas infinitas
       isPro: true,
       streakDays: 0,
