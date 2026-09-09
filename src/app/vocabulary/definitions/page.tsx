@@ -6,7 +6,7 @@ import { definitionCards, DefinitionCard } from "@/lib/vocabularyData";
 import ConanMascot from "@/components/ConanMascot";
 import Header from "@/components/Header";
 import { soundEffects } from "@/lib/soundEffects";
-import { getCurrentUser, hasReachedGuestLimit, incrementGuestUsage } from "@/lib/supabase";
+import { getCurrentUser, hasReachedGuestLimit, incrementGuestUsage, updateUserStreak, addExperience } from "@/lib/supabase";
 import GuestLimitWall from "@/components/GuestLimitWall";
 import AuthModal from "@/components/AuthModal";
 import {
@@ -232,6 +232,8 @@ export default function VocabularyPronunciationPage() {
     } else {
       setIsCompleted(true);
       soundEffects.playLevelUp();
+      updateUserStreak();
+      addExperience(50);
       if (!getCurrentUser()) {
         incrementGuestUsage();
       }

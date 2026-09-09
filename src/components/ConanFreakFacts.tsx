@@ -217,7 +217,7 @@ export default function ConanFreakFacts() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
-  const DURATION_MS = 8000; // Aumentado a 8 segundos para lectura cómoda bilingüe
+  const DURATION_MS = 13000; // 13 segundos para lectura cómoda bilingüe
   const STEP_MS = 50;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -233,7 +233,7 @@ export default function ConanFreakFacts() {
     setCurrentIndex((prev) => (prev - 1 + FREAK_FACTS.length) % FREAK_FACTS.length);
   };
 
-  // 4-second auto-advancing timer
+  // 13-second auto-advancing timer
   useEffect(() => {
     if (isPaused) {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -268,12 +268,12 @@ export default function ConanFreakFacts() {
 
   return (
     <div
-      className="w-full bg-gradient-to-br from-[#FAF6F0] via-white to-amber-50/50 rounded-3xl border-2 border-[#E5D5C5] shadow-conan-card overflow-hidden my-6 transition-all"
+      className="w-full bg-gradient-to-br from-[#FAF6F0] via-white to-amber-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-700 shadow-conan-card overflow-hidden my-6 transition-all"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* 4-second Progress Bar */}
-      <div className="w-full bg-amber-100/70 h-1.5 overflow-hidden">
+      {/* 13-second Progress Bar */}
+      <div className="w-full bg-amber-100/70 dark:bg-slate-800 h-1.5 overflow-hidden">
         <div
           className="bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400 h-full transition-all duration-75 ease-linear"
           style={{ width: `${progress}%` }}
@@ -281,22 +281,22 @@ export default function ConanFreakFacts() {
       </div>
 
       {/* Header bar */}
-      <div className="px-5 py-3 border-b border-[#E5D5C5] flex items-center justify-between bg-white/80 backdrop-blur-xs">
+      <div className="px-5 py-3 border-b border-[#E5D5C5] dark:border-slate-700 flex items-center justify-between bg-white/80 dark:bg-slate-800/80 backdrop-blur-xs">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center text-lg shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-950 flex items-center justify-center text-lg shadow-xs">
             {currentFact.icon}
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#A67B5B]">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400">
                 {currentFact.category}
               </span>
-              <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
+              <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800">
                 {currentFact.tag}
               </span>
             </div>
-            <h3 className="text-xs sm:text-sm font-black text-[#6B4423]">
-              ⚡ Ventana Freak de Conan &bull; 8 Segundos Auto
+            <h3 className="text-xs sm:text-sm font-black text-[#6B4423] dark:text-white">
+              Curiosidades & Tips Tácticos de Inglés 🇺🇸
             </h3>
           </div>
         </div>
@@ -394,12 +394,12 @@ export default function ConanFreakFacts() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Footer info: 4s auto reminder & dots */}
-        <div className="flex items-center justify-between pt-4 mt-2 border-t border-[#E5D5C5]/60 text-[10px] text-[#A67B5B] font-semibold">
+        {/* Footer info: Clean tag & dots */}
+        <div className="flex items-center justify-between pt-4 mt-2 border-t border-[#E5D5C5]/60 dark:border-slate-700/60 text-[10px] text-[#A67B5B] dark:text-slate-400 font-semibold">
           <div className="flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>
-              {isPaused ? "Pausado (pasa el cursor para leer con calma)" : "Avanza solo cada 8 segundos"}
+              {isPaused ? "Pausado para lectura" : "ConanGO • Tips Oficiales & Modismos 🇺🇸"}
             </span>
           </div>
 

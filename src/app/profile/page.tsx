@@ -187,12 +187,15 @@ export default function ProfilePage() {
             <div className="flex items-center gap-3">
               <span className="text-3xl">{getRankByXp(user?.xp || 0).currentRank.badge}</span>
               <div>
-                <span className="text-xs font-black text-[#A67B5B] uppercase tracking-wider block">
-                  Rango Militar
+                <span className="text-xs font-black text-[#A67B5B] dark:text-slate-400 uppercase tracking-wider block">
+                  Rango Oficial USAF (Fuerza Aérea EE.UU.)
                 </span>
-                <h3 className="text-lg font-black text-[#6B4423]">
-                  {getRankByXp(user?.xp || 0).currentRank.name} (Nivel {getRankByXp(user?.xp || 0).currentRank.level})
+                <h3 className="text-lg font-black text-[#6B4423] dark:text-white">
+                  {getRankByXp(user?.xp || 0).currentRank.name} ({getRankByXp(user?.xp || 0).currentRank.usGrade})
                 </h3>
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mt-0.5">
+                  {getRankByXp(user?.xp || 0).currentRank.desc}
+                </p>
               </div>
             </div>
 

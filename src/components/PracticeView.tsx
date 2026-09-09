@@ -60,9 +60,9 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
       return;
     }
     setLimitReached(false);
-    setIsLoading(true);
     setIsGameOver(false);
-    setMedals(5);
+    const curUser = getCurrentUser();
+    setMedals(curUser?.isPro ? 9999 : 5);
     setCurrentIndex(0);
     setCorrectCount(0);
     setIncorrectCount(0);
@@ -127,8 +127,9 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
         },
       ]);
 
-      // If lives mode (10, 30, 50), subtract 1 medal
-      if (!isExamMode) {
+    // If lives mode (10, 30, 50), subtract 1 medal (PRO users have infinite lives)
+      const currentUser = getCurrentUser();
+      if (!isExamMode && !currentUser?.isPro) {
         setMedals((prev) => {
           const newMedals = prev - 1;
           if (newMedals <= 0) {

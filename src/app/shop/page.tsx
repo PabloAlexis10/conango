@@ -5,7 +5,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import ConanMascot from "@/components/ConanMascot";
 import ProSubscriptionModal from "@/components/ProSubscriptionModal";
-import { DUOLINGO_POWERUPS } from "@/lib/accessories";
+import { MAGIC_POTIONS } from "@/lib/accessories";
 import { getCurrentUser, subscribeAuth, buyPowerUp } from "@/lib/supabase";
 import { UserProfile, ShopPowerUp } from "@/lib/types";
 import { soundEffects } from "@/lib/soundEffects";
@@ -33,7 +33,7 @@ export default function ShopPage() {
     }
 
     if (!user) {
-      setMsg({ text: "Debes iniciar sesión para comprar potenciadores.", type: "error" });
+      setMsg({ text: "Debes iniciar sesión para adquirir pociones mágicas.", type: "error" });
       setTimeout(() => setMsg(null), 3000);
       return;
     }
@@ -47,7 +47,7 @@ export default function ShopPage() {
         origin: { y: 0.6 },
         colors: ["#3B82F6", "#F59E0B", "#10B981"],
       });
-      setMsg({ text: `¡Has adquirido ${item.name}!`, type: "success" });
+      setMsg({ text: `¡Has adquirido la ${item.name}!`, type: "success" });
       setTimeout(() => setMsg(null), 3000);
     } else {
       soundEffects.playIncorrect();
@@ -57,15 +57,15 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans text-[#6B4423]">
-      <Header sessionTitle="Tienda Táctica de Potenciadores" />
+    <div className="min-h-screen bg-[#FAF6F0] dark:bg-slate-950 flex flex-col font-sans text-[#6B4423] dark:text-slate-100 transition-colors">
+      <Header sessionTitle="Tienda" />
 
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col">
         {/* Top Navigation */}
         <div className="flex items-center justify-between gap-3 mb-6">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs font-bold text-[#A67B5B] hover:text-[#6B4423] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#A67B5B] dark:text-slate-400 hover:text-[#6B4423] dark:hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver al Inicio</span>
@@ -73,7 +73,7 @@ export default function ShopPage() {
 
           {/* Balance Badges */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs font-black text-blue-900 shadow-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-full text-xs font-black text-blue-900 dark:text-blue-300 shadow-xs">
               <span className="text-sm">💎</span>
               <span>{gems} Gemas</span>
             </div>
@@ -94,8 +94,8 @@ export default function ShopPage() {
           <div
             className={`mb-6 p-4 rounded-2xl text-xs font-bold flex items-center gap-2 ${
               msg.type === "success"
-                ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
-                : "bg-red-100 text-red-900 border border-red-300"
+                ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-800"
+                : "bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-200 border border-red-300 dark:border-red-800"
             }`}
           >
             {msg.type === "success" ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <span>⚠️</span>}
@@ -103,18 +103,18 @@ export default function ShopPage() {
           </div>
         )}
 
-        {/* Super Conan PRO Card (Estilo Super Duolingo) */}
+        {/* Super Conan PRO Card */}
         <div className="bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-500 rounded-3xl p-6 sm:p-8 text-white shadow-conan-card mb-8 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="flex-1 text-center sm:text-left">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-wider mb-2">
               <Crown className="w-3.5 h-3.5 text-yellow-200" />
-              <span>Super Duolingo Táctico</span>
+              <span>Membresía Suprema Oficial</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
               Conan<span className="text-yellow-200">PRO</span>
             </h2>
             <p className="text-xs sm:text-sm text-amber-100 font-medium mt-1 leading-relaxed max-w-md">
-              Vidas infinitas (∞), cero anuncios en toda la plataforma y potenciador 2x XP permanente para ascender de rango militar.
+              Vidas infinitas (∞), cero anuncios en toda la plataforma y potenciador 2x XP permanente para ascender a los grados máximos de la Fuerza Aérea.
             </p>
           </div>
 
@@ -127,35 +127,38 @@ export default function ShopPage() {
           </button>
         </div>
 
-        {/* Powerups List */}
+        {/* Magic Potions List */}
         <div>
-          <h3 className="text-lg font-black text-[#6B4423] mb-3">
-            Potenciadores Tácticos
-          </h3>
-          <p className="text-xs text-[#A67B5B] font-semibold mb-6">
-            Usa las gemas que ganas en tus lecciones y misiones diarias para equipar ventajas.
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xl">🧪</span>
+            <h3 className="text-lg font-black text-[#6B4423] dark:text-white">
+              Pociones Mágicas & Elixires
+            </h3>
+          </div>
+          <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-semibold mb-6">
+            Usa las gemas que ganas en tus lecciones para adquirir brebajes de alta concentración táctica.
           </p>
 
           <div className="space-y-4">
-            {DUOLINGO_POWERUPS.filter((p) => p.category !== "pro").map((item) => {
+            {MAGIC_POTIONS.filter((p) => p.category !== "pro").map((item) => {
               return (
                 <div
                   key={item.id}
-                  className="bg-white rounded-2xl border-2 border-[#E5D5C5] hover:border-[#A67B5B] p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all"
+                  className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-[#E5D5C5] dark:border-slate-800 hover:border-[#A67B5B] p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-[#FAF6F0] border border-[#E5D5C5] flex items-center justify-center text-3xl shadow-xs flex-shrink-0">
+                    <div className="w-14 h-14 rounded-2xl bg-[#FAF6F0] dark:bg-slate-800 border border-[#E5D5C5] dark:border-slate-700 flex items-center justify-center text-3xl shadow-xs flex-shrink-0">
                       {item.emoji}
                     </div>
                     <div>
-                      <h4 className="text-sm sm:text-base font-black text-[#6B4423]">
+                      <h4 className="text-sm sm:text-base font-black text-[#6B4423] dark:text-white">
                         {item.name}
                       </h4>
-                      <p className="text-xs text-[#A67B5B] font-medium mt-0.5 leading-relaxed max-w-md">
+                      <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mt-0.5 leading-relaxed max-w-md">
                         {item.description}
                       </p>
                       {item.id === "streak_freeze" && streakFreezes > 0 && (
-                        <span className="inline-block mt-1 text-[10px] font-black text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                        <span className="inline-block mt-1 text-[10px] font-black text-blue-700 bg-blue-50 dark:bg-blue-950 dark:text-blue-300 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
                           Equipados: {streakFreezes}
                         </span>
                       )}
@@ -179,6 +182,10 @@ export default function ShopPage() {
       <ProSubscriptionModal
         isOpen={proModalOpen}
         onClose={() => setProModalOpen(false)}
+        onSuccess={() => {
+          soundEffects.playLevelUp();
+          setUser(getCurrentUser());
+        }}
       />
     </div>
   );

@@ -7,6 +7,7 @@ import ConanMascot from "@/components/ConanMascot";
 import AdBanner from "@/components/AdBanner";
 import AudioPlayer from "@/components/AudioPlayer";
 import TacticalCertificateModal from "@/components/TacticalCertificateModal";
+import ConanResultVideoScene from "@/components/ConanResultVideoScene";
 import { getCurrentUser } from "@/lib/supabase";
 import { QuestionReview } from "@/lib/types";
 import {
@@ -103,12 +104,19 @@ function ResultsContent() {
   const optionLetters = ["A", "B", "C", "D"];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 text-[#6B4423] dark:text-slate-100 transition-colors">
       <Header />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 sm:py-12">
+        {/* Animated Conan Victory / Support Scene */}
+        <ConanResultVideoScene
+          percentage={percentage}
+          correct={correct}
+          incorrect={incorrect}
+        />
+
         {/* Results Hero Header */}
-        <div className="bg-gradient-to-b from-[#FAF6F0] to-white rounded-3xl border-2 border-[#E5D5C5] shadow-conan-card p-6 sm:p-10 text-center mb-10 relative overflow-hidden">
+        <div className="bg-gradient-to-b from-[#FAF6F0] to-white dark:from-slate-900 dark:to-slate-900 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-800 shadow-conan-card p-6 sm:p-10 text-center mb-10 relative overflow-hidden">
           <div className="flex justify-center mb-4">
             <ConanMascot size="lg" mood={levelInfo.mood} animate={true} />
           </div>

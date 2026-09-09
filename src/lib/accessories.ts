@@ -1,52 +1,69 @@
 import { ShopPowerUp } from "./types";
 
-export const DUOLINGO_POWERUPS: ShopPowerUp[] = [
+// POCIONES MÁGICAS DE LA TIENDA (ESTILO HARRY POTTER)
+export const MAGIC_POTIONS: ShopPowerUp[] = [
   {
     id: "double_xp_15",
-    name: "Poción Doble Experiencia (15 Min)",
-    emoji: "⚡",
+    name: "Poción Multijugos (Doble XP ⚡)",
+    emoji: "🧪",
     category: "booster",
-    description: "Duplica toda la XP obtenida en evaluaciones y exámenes durante 15 minutos. ¡Exclusivo para cadetes registrados!",
+    description: "Multiplica por 2 toda la experiencia (XP) obtenida en evaluaciones y lecciones durante 15 minutos. ¡Exclusiva para cadetes registrados!",
     priceGems: 100,
   },
   {
     id: "streak_freeze",
-    name: "Protector de Racha (Streak Freeze)",
-    emoji: "❄️",
+    name: "Poción Félix Felicis (Suerte Líquida ❄️)",
+    emoji: "🧪",
     category: "streak",
-    description: "Equipa un congelador de racha. Si estás 1 día sin entrenar, tu racha de fuego 🔥 queda 100% protegida.",
+    description: "Protector de racha mágica. Si un día no puedes entrenar, tu racha de fuego 🔥 queda congelada y 100% protegida.",
     priceGems: 200,
   },
   {
     id: "refill_hearts",
-    name: "Recarga Completa de 5 Vidas",
-    emoji: "❤️",
+    name: "Poción Vigorizante (Recarga de Vidas ❤️)",
+    emoji: "🧪",
     category: "hearts",
-    description: "Restaura inmediatamente tus 5 vidas al 100% para continuar practicando sin esperar ni ver anuncios.",
+    description: "Restaura inmediatamente tus 5 vidas al 100% para continuar practicando sin interrupciones.",
     priceGems: 150,
   },
   {
     id: "conan_pro_pass",
-    name: "Conan PRO (Super Duolingo)",
-    emoji: "👑",
+    name: "Elixir de la Inmortalidad (Piedra Filosofal 👑)",
+    emoji: "⚗️",
     category: "pro",
-    description: "Vidas infinitas (∞), cero anuncios en toda la plataforma y potenciador 2x XP permanente.",
+    description: "Membresía Conan PRO: Vidas infinitas (∞), cero anuncios en toda la plataforma y potenciador 2x XP permanente.",
     priceGems: 0,
   },
 ];
 
+// Alias para compatibilidad hacia atrás
+export const DUOLINGO_POWERUPS = MAGIC_POTIONS;
+
+// ESCALA OFICIAL DE GRADOS DE LA FUERZA AÉREA DE ESTADOS UNIDOS (USAF - PERSONAS) EN INGLÉS
 export const MILITARY_RANKS = [
-  { level: 1, name: "PVT K9 • Recruit Pup", minXp: 0, badge: "🐾", usGrade: "E-1 Private", desc: "Recluta canino en adiestramiento básico de obediencia y señales tácticas." },
-  { level: 2, name: "PFC K9 • Scout Dog", minXp: 150, badge: "🥉", usGrade: "E-3 Private First Class", desc: "Perro rastreador de vanguardia para detección de objetivos." },
-  { level: 3, name: "SPC K9 • Patrol Specialist", minXp: 400, badge: "🎖️", usGrade: "E-4 Specialist", desc: "Especialista canino en seguridad perimétrica y rondas tácticas." },
-  { level: 4, name: "SGT K9 • Tactical Sentry Dog", minXp: 800, badge: "⭐", usGrade: "E-5 Sergeant", desc: "Sargento K9 de centinela y patrulla armada con certificación de combate." },
-  { level: 5, name: "SSG K9 • Combat Assault K9", minXp: 1500, badge: "⭐⭐", usGrade: "E-6 Staff Sergeant", desc: "Líder canino de escuadra para asalto táctico y neutralización rápida." },
-  { level: 6, name: "SFC K9 • Search & Rescue Lead", minXp: 2600, badge: "⭐⭐⭐", usGrade: "E-7 Sergeant First Class", desc: "Sargento Primero canino, especialista jefe en búsqueda, rescate y radio." },
-  { level: 7, name: "1SG K9 • Operations Master Dog", minXp: 4200, badge: "🏅", usGrade: "E-8 First Sergeant", desc: "Primer Sargento canino a cargo de la disciplina y misiones de compañía." },
-  { level: 8, name: "CSM K9 • Command Sergeant Major", minXp: 6500, badge: "🛡️", usGrade: "E-9 Command Sergeant Major", desc: "Suboficial mayor canino superior, consejero táctico del comando." },
-  { level: 9, name: "CPT K9 • Special Recon Commander", minXp: 9500, badge: "💎", usGrade: "O-3 Captain", desc: "Oficial canino al mando de misiones de reconocimiento avanzado." },
-  { level: 10, name: "COL K9 • Brigade Chief Canine", minXp: 13000, badge: "🦅", usGrade: "O-6 Colonel", desc: "Coronel canino al mando de todas las brigadas tácticas K9." },
-  { level: 11, name: "GEN Conan • Supreme K9 Commander", minXp: 18000, badge: "👑", usGrade: "O-10 General", desc: "Comandante General Supremo K9 de todas las fuerzas militares Conan." },
+  // Clases / Personal Alistado (Enlisted Airmen)
+  { level: 1, name: "Airman Basic", abbr: "AB", minXp: 0, badge: "🪖", usGrade: "E-1 Airman Basic", desc: "Nivel inicial de instrucción militar y aprendizaje básico de aviación." },
+  { level: 2, name: "Airman", abbr: "Amn", minXp: 50, badge: "🥉", usGrade: "E-2 Airman", desc: "Aviador en período de servicio activo con destrezas tácticas elementales." },
+  { level: 3, name: "Airman First Class", abbr: "A1C", minXp: 120, badge: "🎖️", usGrade: "E-3 Airman First Class", desc: "Aviador de primera clase con dominio técnico en comunicaciones en inglés." },
+  { level: 4, name: "Senior Airman", abbr: "SrA", minXp: 250, badge: "⭐", usGrade: "E-4 Senior Airman", desc: "Aviador senior con liderazgo de escuadrilla y alta precisión técnica." },
+  { level: 5, name: "Staff Sergeant", abbr: "SSgt", minXp: 450, badge: "⭐⭐", usGrade: "E-5 Staff Sergeant", desc: "Suboficial de escuadra a cargo de la supervisión de entrenamiento táctico." },
+  { level: 6, name: "Technical Sergeant", abbr: "TSgt", minXp: 750, badge: "⭐⭐⭐", usGrade: "E-6 Technical Sergeant", desc: "Sargento técnico responsable de sistemas avanzados y preparación ALCPT." },
+  { level: 7, name: "Master Sergeant", abbr: "MSgt", minXp: 1200, badge: "🏅", usGrade: "E-7 Master Sergeant", desc: "Sargento maestro de sección operativa con excelencia en radiofonía." },
+  { level: 8, name: "Senior Master Sergeant", abbr: "SMSgt", minXp: 1800, badge: "🛡️", usGrade: "E-8 Senior Master Sergeant", desc: "Suboficial superior de ala táctica y gestión de misiones aéreas." },
+  { level: 9, name: "Chief Master Sergeant", abbr: "CMSgt", minXp: 2600, badge: "🦅", usGrade: "E-9 Chief Master Sergeant", desc: "Máximo grado de la categoría de suboficiales de la Fuerza Aérea." },
+
+  // Oficiales de la Fuerza Aérea (Commissioned Officers)
+  { level: 10, name: "Second Lieutenant", abbr: "2d Lt", minXp: 3600, badge: "🔹", usGrade: "O-1 Second Lieutenant", desc: "Oficial subalterno al mando de vuelo y operaciones iniciales." },
+  { level: 11, name: "First Lieutenant", abbr: "1st Lt", minXp: 4800, badge: "🔷", usGrade: "O-2 First Lieutenant", desc: "Teniente primero con experiencia de vuelo y combate comprobada." },
+  { level: 12, name: "Captain", abbr: "Capt", minXp: 6200, badge: "⚡", usGrade: "O-3 Captain", desc: "Capitán comandante de escuadrón aéreo y especialista bilingüe." },
+  { level: 13, name: "Major", abbr: "Maj", minXp: 8000, badge: "⚜️", usGrade: "O-4 Major", desc: "Oficial superior a cargo del estado mayor de operaciones aéreas." },
+  { level: 14, name: "Lieutenant Colonel", abbr: "Lt Col", minXp: 10500, badge: "🥈", usGrade: "O-5 Lieutenant Colonel", desc: "Teniente coronel al mando de escuadrón táctico de combate y bombardeo." },
+  { level: 15, name: "Colonel", abbr: "Col", minXp: 14000, badge: "🥇", usGrade: "O-6 Colonel", desc: "Coronel jefe de ala aérea de la Fuerza Aérea de los Estados Unidos." },
+  { level: 16, name: "Brigadier General", abbr: "Brig Gen", minXp: 19000, badge: "🌟", usGrade: "O-7 Brigadier General", desc: "General de una estrella, comandante de brigada aeroespacial." },
+  { level: 17, name: "Major General", abbr: "Maj Gen", minXp: 26000, badge: "🌟🌟", usGrade: "O-8 Major General", desc: "General de dos estrellas al mando de división de operaciones estratégicas." },
+  { level: 18, name: "Lieutenant General", abbr: "Lt Gen", minXp: 36000, badge: "🌟🌟🌟", usGrade: "O-9 Lieutenant General", desc: "Teniente general de tres estrellas, jefe de fuerza aérea expedicionaria." },
+  { level: 19, name: "General", abbr: "Gen", minXp: 50000, badge: "🌟🌟🌟🌟", usGrade: "O-10 General", desc: "General de cuatro estrellas, comandante del cuartel general de la USAF." },
+  { level: 20, name: "General of the Air Force", abbr: "GAF", minXp: 75000, badge: "👑", usGrade: "Special 5-Star General", desc: "Grado supremo de cinco estrellas de la Fuerza Aérea. ¡Héroe legendario supremo!" },
 ];
 
 export function getRankByXp(xp: number) {

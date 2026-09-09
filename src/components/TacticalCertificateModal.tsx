@@ -107,7 +107,7 @@ export default function TacticalCertificateModal({
     ctx.textAlign = "center";
     ctx.fillStyle = "#8C5D35";
     ctx.font = "bold 16px sans-serif";
-    ctx.fillText("UNITED STATES MILITARY WORKING DOG COMMAND • A.L.C.P.T. CORPS 🇺🇸", 600, 95);
+    ctx.fillText("UNITED STATES AIR FORCE • A.L.C.P.T. TRAINING SQUADRON 🇺🇸", 600, 95);
 
     ctx.fillStyle = "#6B4423";
     ctx.font = "900 36px sans-serif";
@@ -183,7 +183,7 @@ export default function TacticalCertificateModal({
     ctx.font = "italic 22px serif";
     ctx.fillText("General Conan 🐾", 1080, 675);
     ctx.font = "bold 13px sans-serif";
-    ctx.fillText("Comandante Supremo K9 • US Army MWD", 1080, 700);
+    ctx.fillText("Comandante de Entrenamiento • US Air Force", 1080, 700);
     ctx.fillStyle = "#10B981";
     ctx.font = "900 13px sans-serif";
     ctx.fillText("SELLO OFICIALMENTE REGISTRADO ✓", 1080, 725);
@@ -267,7 +267,7 @@ export default function TacticalCertificateModal({
             {/* Top insignia */}
             <div className="flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-[#8C5D35]">
               <span>★</span>
-              <span>United States Military Working Dog Command</span>
+              <span>United States Air Force • Training Squadron</span>
               <span>★</span>
             </div>
 

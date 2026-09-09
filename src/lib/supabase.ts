@@ -121,6 +121,11 @@ export async function registerAccount(
       email: cleanEmail,
       password, // securely kept in user local storage
       medals: 15,
+      streakDays: 0,
+      xp: 0,
+      coins: 50,
+      gems: 50,
+      streakFreeze: 0,
       created_at: new Date().toISOString(),
     };
 
@@ -683,7 +688,7 @@ export function setProStatus(isPro: boolean): void {
       name: "Cadete Supremo",
       medals: 9999, // Vidas infinitas
       isPro: true,
-      streakDays: 1,
+      streakDays: 0,
       xp: 500,
       coins: 50,
       gems: 50, // NO da gemas infinitas, solo las vidas

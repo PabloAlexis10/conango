@@ -18,6 +18,33 @@ body {
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark body {
+  background-color: #090D16 !important;
+  color: #F1F5F9 !important;
+}
+
+/* Dark mode inputs and cards support */
+html.dark .bg-white {
+  background-color: #0F172A;
+}
+
+html.dark .bg-\[\#FAF6F0\] {
+  background-color: #1E293B;
+}
+
+html.dark .border-\[\#E5D5C5\] {
+  border-color: #334155;
+}
+
+html.dark .text-\[\#6B4423\] {
+  color: #F1F5F9;
+}
+
+html.dark .text-\[\#A67B5B\] {
+  color: #94A3B8;
 }
 
 /* Custom 3D button press styles */
@@ -51,6 +78,19 @@ body {
   box-shadow: 0 2px 0 0 #A67B5B;
 }
 
+html.dark .option-btn {
+  border-color: #334155;
+  background-color: #1E293B;
+  color: #F1F5F9;
+  box-shadow: 0 4px 0 0 #0F172A;
+}
+
+html.dark .option-btn:hover:not(:disabled) {
+  border-color: #F59E0B;
+  background-color: #334155;
+  box-shadow: 0 6px 0 0 #B45309;
+}
+
 /* Shaking animation for lost lives */
 @keyframes conan-shake {
   0%, 100% { transform: translateX(0); }
@@ -61,3 +101,4 @@ body {
 .animate-shake {
   animation: conan-shake 0.4s ease-in-out;
 }
+

@@ -222,19 +222,31 @@ export default function QuestionCard({
                   : "bg-red-50 border-red-300 text-red-900"
               }`}
             >
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <div className="flex items-center gap-2 font-bold text-base sm:text-lg">
-                  {isCorrect ? (
-                    <>
-                      <CheckCircle2 className="w-6 h-6 text-green-600" />
-                      <span>¡Excelente! Respuesta correcta</span>
-                    </>
-                  ) : (
-                    <>
-                      <XCircle className="w-6 h-6 text-red-600" />
-                      <span>Respuesta incorrecta</span>
-                    </>
-                  )}
+              <div className="flex items-center gap-3 mb-3 bg-white/90 dark:bg-slate-800/90 p-3 rounded-2xl border border-current/20 shadow-xs">
+                <ConanMascot
+                  size="sm"
+                  mood={isCorrect ? "celebrate" : "thinking"}
+                  animate={true}
+                />
+                <div>
+                  <div className="flex items-center gap-1.5 font-black text-sm sm:text-base">
+                    {isCorrect ? (
+                      <>
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                        <span>¡Excelente impacto, cadete! +10 XP 🎯</span>
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="w-5 h-5 text-red-600" />
+                        <span>¡Atención cadete! Repasa la regla 🛡️</span>
+                      </>
+                    )}
+                  </div>
+                  <p className="text-xs font-semibold opacity-90 mt-0.5">
+                    {isCorrect
+                      ? "Conan celebra tu precisión en el entrenamiento de la USAF."
+                      : "No te desanimes. Analiza la explicación para dominar esta fórmula."}
+                  </p>
                 </div>
               </div>
 
