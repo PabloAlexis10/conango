@@ -8,7 +8,7 @@ import QuestionCard from "@/components/QuestionCard";
 import ConanMascot from "@/components/ConanMascot";
 import { Question, QuestionReview, SessionSize, SessionType } from "@/lib/types";
 import { soundEffects } from "@/lib/soundEffects";
-import { saveSessionResult, saveExamResult, getCurrentUser, updateUserMedals, hasReachedGuestLimit, incrementGuestUsage, recordLessonProgress } from "@/lib/supabase";
+import { saveSessionResult, saveExamResult, getCurrentUser, updateUserMedals, hasReachedGuestLimit, incrementGuestUsage, recordLessonProgress, recordQuestionMistake, markMistakeMastered } from "@/lib/supabase";
 import GuestLimitWall from "@/components/GuestLimitWall";
 import AuthModal from "@/components/AuthModal";
 import RewardedVideoModal from "@/components/RewardedVideoModal";
@@ -100,9 +100,22 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
     if (isCorrect) {
       soundEffects.playCorrect();
       setCorrectCount((prev) => prev + 1);
+      markMistakeMastered(currentQ.id);
     } else {
       soundEffects.playIncorrect();
       setIncorrectCount((prev) => prev + 1);
+
+      // Guardar en la Bóveda de Errores Táctica (Caja Negra PRO)
+      recordQuestionMistake({
+        questionId: currentQ.id,
+        questionText: currentQ.question,
+        context: currentQ.context,
+        options: currentQ.options,
+        correctAnswer: currentQ.correctAnswer,
+        selectedAnswer: selectedIndex,
+        explanation: currentQ.explanation,
+        formula: currentQ.formula,
+      });
 
       // Save question review record
       setReviews((prev) => [

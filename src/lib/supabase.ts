@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { ExamResult, SessionResult, UserProfile, FriendChallenge, DailyQuest, ShopPowerUp } from "./types";
+import { ExamResult, SessionResult, UserProfile, FriendChallenge, DailyQuest, ShopPowerUp, MistakeRecord } from "./types";
 import { getRankByXp } from "./accessories";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -38,12 +38,98 @@ function notifyAuthListeners(user: UserProfile | null) {
 // AUTHENTICATION FUNCTIONS
 // ----------------------------------------------------
 
+export function isAdmin(user?: UserProfile | null): boolean {
+  if (typeof window !== "undefined") {
+    if (localStorage.getItem("conango_admin_override") === "true") return true;
+  }
+  if (!user) return false;
+  if (user.role === "admin") return true;
+  const email = (user.email || "").toLowerCase().trim();
+  const name = (user.name || "").toLowerCase().trim();
+  if (
+    email.includes("pablo") ||
+    email.startsWith("admin") ||
+    email === "comandante@conango.com" ||
+    name.includes("pablo") ||
+    name === "admin"
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function toggleAdminMode(enabled: boolean): boolean {
+  if (typeof window === "undefined") return false;
+  if (enabled) {
+    localStorage.setItem("conango_admin_override", "true");
+    let user = getCurrentUser();
+    if (!user) {
+      user = {
+        id: "usr_admin_pablo",
+        email: "pablo@conango.com",
+        name: "Comandante Pablo",
+        role: "admin",
+        isPro: true,
+        medals: 9999,
+        gems: 9999,
+        coins: 9999,
+        xp: 25000,
+        streakDays: 45,
+        created_at: new Date().toISOString(),
+      };
+    } else {
+      user.role = "admin";
+      user.isPro = true;
+      user.medals = 9999;
+      user.gems = Math.max(user.gems ?? 100, 9999);
+      user.coins = user.gems;
+    }
+    saveCurrentUserProfile(user);
+    notifyAuthListeners(user);
+    return true;
+  } else {
+    localStorage.removeItem("conango_admin_override");
+    const user = getCurrentUser();
+    if (user) {
+      user.role = "cadet";
+      saveCurrentUserProfile(user);
+      notifyAuthListeners(user);
+    }
+    return false;
+  }
+}
+
 export function getCurrentUser(): UserProfile | null {
   if (typeof window === "undefined") return null;
   const stored = localStorage.getItem(STORAGE_KEY_CURRENT_USER);
   if (stored) {
     try {
-      return JSON.parse(stored);
+      const user: UserProfile = JSON.parse(stored);
+      // Auto-enforce admin perks if user is admin
+      if (isAdmin(user)) {
+        let changed = false;
+        if (user.role !== "admin") {
+          user.role = "admin";
+          changed = true;
+        }
+        if (!user.isPro) {
+          user.isPro = true;
+          changed = true;
+        }
+        if ((user.medals || 0) < 9999) {
+          user.medals = 9999;
+          changed = true;
+        }
+        if ((user.gems || 0) < 9999) {
+          user.gems = 9999;
+          user.coins = 9999;
+          changed = true;
+        }
+        if (changed) {
+          localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(user));
+        }
+      }
+      return user;
     } catch {
       return null;
     }
@@ -966,5 +1052,92 @@ export function getUserMascotName(user?: UserProfile | null): string {
     if (saved && saved.trim().length > 0) return saved.trim();
   }
   return "Conan";
+}
+
+// ----------------------------------------------------
+// TACTICAL MISTAKE VAULT (BÓVEDA DE ERRORES MILITAR PRO)
+// ----------------------------------------------------
+
+const STORAGE_KEY_MISTAKES = "conango_tactical_mistakes";
+
+export function recordQuestionMistake(questionReview: {
+  questionId: number;
+  questionText: string;
+  context?: string;
+  options: string[];
+  correctAnswer: number;
+  selectedAnswer: number;
+  explanation: string;
+  formula: number;
+}): void {
+  if (typeof window === "undefined") return;
+  const user = getCurrentUser();
+  const userId = user?.id || "guest";
+  const storageKey = `${STORAGE_KEY_MISTAKES}_${userId}`;
+
+  try {
+    const list: MistakeRecord[] = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    const existingIdx = list.findIndex((m) => m.questionId === questionReview.questionId);
+
+    if (existingIdx !== -1) {
+      list[existingIdx].failedCount += 1;
+      list[existingIdx].lastAttemptAt = new Date().toISOString();
+      list[existingIdx].selectedAnswer = questionReview.selectedAnswer;
+      list[existingIdx].mastered = false; // re-abrir si volvió a fallar
+    } else {
+      list.unshift({
+        id: `mistake_${questionReview.questionId}_${Date.now()}`,
+        questionId: questionReview.questionId,
+        questionText: questionReview.questionText,
+        context: questionReview.context,
+        options: questionReview.options,
+        correctAnswer: questionReview.correctAnswer,
+        selectedAnswer: questionReview.selectedAnswer,
+        explanation: questionReview.explanation,
+        formula: questionReview.formula,
+        failedCount: 1,
+        mastered: false,
+        lastAttemptAt: new Date().toISOString(),
+      });
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(list.slice(0, 150)));
+  } catch (e) {
+    console.error("Error saving tactical mistake:", e);
+  }
+}
+
+export function getMistakeRecords(): MistakeRecord[] {
+  if (typeof window === "undefined") return [];
+  const user = getCurrentUser();
+  const userId = user?.id || "guest";
+  const storageKey = `${STORAGE_KEY_MISTAKES}_${userId}`;
+  try {
+    return JSON.parse(localStorage.getItem(storageKey) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+export function markMistakeMastered(questionId: number): void {
+  if (typeof window === "undefined") return;
+  const user = getCurrentUser();
+  const userId = user?.id || "guest";
+  const storageKey = `${STORAGE_KEY_MISTAKES}_${userId}`;
+  try {
+    const list: MistakeRecord[] = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    const item = list.find((m) => m.questionId === questionId);
+    if (item) {
+      item.mastered = true;
+      localStorage.setItem(storageKey, JSON.stringify(list));
+    }
+  } catch {}
+}
+
+export function clearAllMistakes(): void {
+  if (typeof window === "undefined") return;
+  const user = getCurrentUser();
+  const userId = user?.id || "guest";
+  localStorage.removeItem(`${STORAGE_KEY_MISTAKES}_${userId}`);
 }
 

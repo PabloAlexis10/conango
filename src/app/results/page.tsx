@@ -9,6 +9,9 @@ import AudioPlayer from "@/components/AudioPlayer";
 import TacticalCertificateModal from "@/components/TacticalCertificateModal";
 import ConanResultVideoScene from "@/components/ConanResultVideoScene";
 import InteractiveWordText from "@/components/InteractiveWordText";
+import MistakeVaultModal from "@/components/MistakeVaultModal";
+import AlcptPredictorModal from "@/components/AlcptPredictorModal";
+import ProSubscriptionModal from "@/components/ProSubscriptionModal";
 import { getCurrentUser, recordLessonProgress } from "@/lib/supabase";
 import { getUserRankTitle } from "@/lib/accessories";
 import { QuestionReview } from "@/lib/types";
@@ -25,6 +28,9 @@ import {
   Sparkles,
   Volume2,
   BookOpen,
+  ShieldAlert,
+  Plane,
+  Crown,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -42,6 +48,9 @@ function ResultsContent() {
   const [reviews, setReviews] = useState<QuestionReview[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const [certModalOpen, setCertModalOpen] = useState(false);
+  const [mistakeModalOpen, setMistakeModalOpen] = useState(false);
+  const [predictorModalOpen, setPredictorModalOpen] = useState(false);
+  const [proModalOpen, setProModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -197,6 +206,27 @@ function ResultsContent() {
                 <span>🎖️ El <strong>Diploma Oficial ALCPT</strong> se otorga exclusivamente al completar la evaluación oficial completa de <strong>100 reactivos</strong>. (Has completado una lección de práctica de {total} preguntas).</span>
               </div>
             )}
+
+            {/* Acciones Tácticas Avanzadas */}
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                onClick={() => setMistakeModalOpen(true)}
+                className="w-full py-3 px-4 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 text-red-800 dark:text-red-300 font-black text-xs uppercase tracking-wider rounded-2xl border-2 border-red-300 dark:border-red-800 flex items-center justify-center gap-2 shadow-xs transition-transform active:scale-95"
+              >
+                <ShieldAlert className="w-4 h-4 text-red-600" />
+                <span>Entrenar en Bóveda de Errores</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPredictorModalOpen(true)}
+                className="w-full py-3 px-4 bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 text-sky-800 dark:text-sky-300 font-black text-xs uppercase tracking-wider rounded-2xl border-2 border-sky-300 dark:border-sky-800 flex items-center justify-center gap-2 shadow-xs transition-transform active:scale-95"
+              >
+                <Plane className="w-4 h-4 text-sky-600" />
+                <span>Predecir Aprobación ALCPT</span>
+              </button>
+            </div>
 
             <button
               type="button"
@@ -390,6 +420,23 @@ function ResultsContent() {
           percentage={percentage}
           correctAnswers={correct}
           formulaNumber={searchParams.get("formula") || "Mixta"}
+        />
+
+        <MistakeVaultModal
+          isOpen={mistakeModalOpen}
+          onClose={() => setMistakeModalOpen(false)}
+          onUpgradePro={() => setProModalOpen(true)}
+        />
+
+        <AlcptPredictorModal
+          isOpen={predictorModalOpen}
+          onClose={() => setPredictorModalOpen(false)}
+          onUpgradePro={() => setProModalOpen(true)}
+        />
+
+        <ProSubscriptionModal
+          isOpen={proModalOpen}
+          onClose={() => setProModalOpen(false)}
         />
       </main>
     </div>

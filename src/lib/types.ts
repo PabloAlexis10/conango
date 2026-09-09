@@ -86,7 +86,43 @@ export interface UserProfile {
   dailyLessonsCompleted?: number;
   dailyBestScore?: number;
   claimedQuests?: string[];
+  role?: "admin" | "cadet";
   created_at: string;
+}
+
+export interface PromoCode {
+  id: string;
+  code: string;
+  type: "discount" | "gift" | "pro_trial";
+  value: number;
+  description: string;
+  rewardDetail?: {
+    gems?: number;
+    streakFreeze?: number;
+    discountPercent?: number;
+    proDays?: number;
+  };
+  expiresAt?: string;
+  maxUses?: number;
+  usedCount: number;
+  active: boolean;
+  createdAt: string;
+  createdBy?: string;
+}
+
+export interface MistakeRecord {
+  id: string;
+  questionId: number;
+  questionText: string;
+  context?: string;
+  options: string[];
+  correctAnswer: number;
+  selectedAnswer: number;
+  explanation: string;
+  formula: number;
+  failedCount: number;
+  mastered: boolean;
+  lastAttemptAt: string;
 }
 
 export interface ShopPowerUp {

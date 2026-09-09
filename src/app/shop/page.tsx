@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 import ConanMascot from "@/components/ConanMascot";
 import ProSubscriptionModal from "@/components/ProSubscriptionModal";
+import RedeemCodeModal from "@/components/RedeemCodeModal";
 import AuthModal from "@/components/AuthModal";
 import { MAGIC_POTIONS, DIAMOND_PACKS } from "@/lib/accessories";
 import {
@@ -27,6 +28,7 @@ import {
   CheckCircle2,
   CreditCard,
   Loader2,
+  Gift,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -34,6 +36,7 @@ function ShopContent() {
   const searchParams = useSearchParams();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [proModalOpen, setProModalOpen] = useState(false);
+  const [redeemModalOpen, setRedeemModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [loadingPayId, setLoadingPayId] = useState<string | null>(null);
   const [msg, setMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
@@ -273,6 +276,31 @@ function ShopContent() {
           </div>
         )}
 
+        {/* Banner de Canje de Códigos Tácticos */}
+        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10 border-2 border-amber-400 dark:border-amber-600 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-400 dark:bg-amber-500 text-white flex items-center justify-center font-black text-lg shadow-sm shrink-0">
+              🎁
+            </div>
+            <div>
+              <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-amber-300">
+                ¿Tienes un Código de Regalo o Cupón de Descuento?
+              </h3>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">
+                Canjea pases de prueba PRO de 7/30 días, descuentos o diamantes autorizados por la Comandancia.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setRedeemModalOpen(true)}
+            className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-xs transition-transform active:scale-95 shrink-0 flex items-center justify-center gap-1.5"
+          >
+            <Gift className="w-3.5 h-3.5" />
+            <span>Canjear Código</span>
+          </button>
+        </div>
+
         {/* Super Conan PRO Card */}
         <div className="bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-500 rounded-3xl p-6 sm:p-8 text-white shadow-conan-card mb-8 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="flex-1 text-center sm:text-left">
@@ -453,6 +481,15 @@ function ShopContent() {
       <ProSubscriptionModal
         isOpen={proModalOpen}
         onClose={() => setProModalOpen(false)}
+        onSuccess={() => {
+          soundEffects.playLevelUp();
+          setUser(getCurrentUser());
+        }}
+      />
+
+      <RedeemCodeModal
+        isOpen={redeemModalOpen}
+        onClose={() => setRedeemModalOpen(false)}
         onSuccess={() => {
           soundEffects.playLevelUp();
           setUser(getCurrentUser());

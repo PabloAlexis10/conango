@@ -10,8 +10,12 @@ import StreakModal from "./StreakModal";
 import BoosterModal from "./BoosterModal";
 import DailyQuestsModal from "./DailyQuestsModal";
 import ProSubscriptionModal from "./ProSubscriptionModal";
-import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords, Trophy, Moon, Sun, Bell } from "lucide-react";
-import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive, getUserMascotName } from "@/lib/supabase";
+import AdminControlModal from "./AdminControlModal";
+import RedeemCodeModal from "./RedeemCodeModal";
+import MistakeVaultModal from "./MistakeVaultModal";
+import AlcptPredictorModal from "./AlcptPredictorModal";
+import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords, Trophy, Moon, Sun, Bell, ShieldCheck, Gift, ShieldAlert, Plane } from "lucide-react";
+import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive, getUserMascotName, isAdmin } from "@/lib/supabase";
 import { getAppTheme, toggleAppTheme, subscribeTheme, AppTheme } from "@/lib/theme";
 import { requestNotificationPermission, getNotificationPermission, checkAndSendStreakReminder } from "@/lib/notifications";
 import { UserProfile } from "@/lib/types";
@@ -42,6 +46,10 @@ export default function Header({
   const [boosterModalOpen, setBoosterModalOpen] = useState(false);
   const [questsModalOpen, setQuestsModalOpen] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [redeemModalOpen, setRedeemModalOpen] = useState(false);
+  const [mistakeModalOpen, setMistakeModalOpen] = useState(false);
+  const [predictorModalOpen, setPredictorModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasDoubleXp, setHasDoubleXp] = useState(false);
   const [theme, setTheme] = useState<AppTheme>("light");
@@ -181,73 +189,145 @@ export default function Header({
 
             {/* 6. User Account / Auth Section */}
             {user ? (
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 bg-[#FAF6F0] dark:bg-slate-800 hover:bg-[#F5EFEB] dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 rounded-full text-[#6B4423] dark:text-amber-100 font-bold text-xs transition-colors shadow-sm"
-                >
-                  <div className="w-6 h-6 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 flex items-center justify-center font-black text-xs">
-                    {user.name ? user.name.charAt(0).toUpperCase() : "C"}
-                  </div>
-                  <span className="max-w-[80px] truncate hidden sm:inline">
-                    {user.name || "Usuario"}
-                  </span>
-                </button>
+              <div className="flex items-center gap-1.5">
+                {isAdmin(user) && (
+                  <button
+                    type="button"
+                    onClick={() => setAdminModalOpen(true)}
+                    className="hidden sm:flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-full text-xs font-black shadow-xs transition-transform active:scale-95"
+                    title="Panel de Comandancia General (Administrador)"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>ADMIN</span>
+                  </button>
+                )}
 
-                {/* Dropdown Menu */}
-                {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 border-2 border-[#E5D5C5] dark:border-slate-700 rounded-2xl shadow-xl p-2 z-50">
-                    {/* User & Rank Summary Card */}
-                    <div className="p-3 bg-[#FAF6F0]/80 dark:bg-slate-800/80 rounded-xl border border-[#E5D5C5]/60 dark:border-slate-700/60 mb-2">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-black text-[#6B4423] dark:text-amber-300 truncate">
-                          {user.name || user.email || "Usuario ConanGo"}
-                        </p>
-                        <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 font-extrabold rounded-md">
-                          {getRankByXp(user.xp || 0).currentRank.abbr}
-                        </span>
-                      </div>
-                      <p className="text-[11px] font-bold text-slate-600 dark:text-slate-300 mt-0.5">
-                        {getUserRankBadge(user.xp || 0)} {getRankByXp(user.xp || 0).currentRank.name}
-                      </p>
-                      <p className="text-[10px] text-[#A67B5B] dark:text-slate-400 truncate mt-0.5">
-                        🐾 Mascota: <span className="font-bold text-[#6B4423] dark:text-amber-200">{getUserMascotName(user)}</span>
-                      </p>
-
-                      {/* Rank Progression */}
-                      <div className="mt-2 pt-2 border-t border-[#E5D5C5]/50 dark:border-slate-700/50">
-                        <div className="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
-                          <span>Progreso de Ascenso</span>
-                          <span>{getRankByXp(user.xp || 0).progress}%</span>
-                        </div>
-                        <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full rounded-full transition-all"
-                            style={{ width: `${getRankByXp(user.xp || 0).progress}%` }}
-                          />
-                        </div>
-                        <p className="text-[9px] text-amber-700 dark:text-amber-400 font-semibold mt-1">
-                          {getRankByXp(user.xp || 0).nextRank
-                            ? `Faltan ${Math.max(0, (getRankByXp(user.xp || 0).nextRank?.minXp || 0) - (user.xp || 0))} XP para ascender a ${getRankByXp(user.xp || 0).nextRank?.name} (${getRankByXp(user.xp || 0).nextRank?.abbr})`
-                            : "¡Grado Máximo Supremo de la USAF alcanzado!"}
-                        </p>
-                      </div>
-
-                      <div className="mt-2 flex items-center justify-between text-[11px] font-bold text-[#F59E0B]">
-                        <span>🏅 {user.isPro ? "Vidas ∞" : `${user.medals} Medallas`}</span>
-                        <span>💎 {user.gems ?? user.coins ?? 100}</span>
-                      </div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 bg-[#FAF6F0] dark:bg-slate-800 hover:bg-[#F5EFEB] dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 rounded-full text-[#6B4423] dark:text-amber-100 font-bold text-xs transition-colors shadow-sm"
+                  >
+                    <div className="w-6 h-6 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 flex items-center justify-center font-black text-xs">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "C"}
                     </div>
+                    <span className="max-w-[80px] truncate hidden sm:inline">
+                      {user.name || "Usuario"}
+                    </span>
+                  </button>
 
-                    <Link
-                      href="/profile"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
-                    >
-                      <User className="w-4 h-4 text-[#A67B5B]" />
-                      <span>Mi Perfil y Base Táctica</span>
-                    </Link>
+                  {/* Dropdown Menu */}
+                  {menuOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 border-2 border-[#E5D5C5] dark:border-slate-700 rounded-2xl shadow-xl p-2 z-50">
+                      {/* User & Rank Summary Card */}
+                      <div className="p-3 bg-[#FAF6F0]/80 dark:bg-slate-800/80 rounded-xl border border-[#E5D5C5]/60 dark:border-slate-700/60 mb-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-black text-[#6B4423] dark:text-amber-300 truncate">
+                            {user.name || user.email || "Usuario ConanGo"}
+                          </p>
+                          <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 font-extrabold rounded-md">
+                            {getRankByXp(user.xp || 0).currentRank.abbr}
+                          </span>
+                        </div>
+                        {isAdmin(user) && (
+                          <div className="mt-1 px-2 py-0.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-[9px] font-black uppercase rounded text-center shadow-xs">
+                            ⭐ COMANDANTE GENERAL (ADMIN)
+                          </div>
+                        )}
+                        <p className="text-[11px] font-bold text-slate-600 dark:text-slate-300 mt-0.5">
+                          {getUserRankBadge(user.xp || 0)} {getRankByXp(user.xp || 0).currentRank.name}
+                        </p>
+                        <p className="text-[10px] text-[#A67B5B] dark:text-slate-400 truncate mt-0.5">
+                          🐾 Mascota: <span className="font-bold text-[#6B4423] dark:text-amber-200">{getUserMascotName(user)}</span>
+                        </p>
+
+                        {/* Rank Progression */}
+                        <div className="mt-2 pt-2 border-t border-[#E5D5C5]/50 dark:border-slate-700/50">
+                          <div className="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
+                            <span>Progreso de Ascenso</span>
+                            <span>{getRankByXp(user.xp || 0).progress}%</span>
+                          </div>
+                          <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full rounded-full transition-all"
+                              style={{ width: `${getRankByXp(user.xp || 0).progress}%` }}
+                            />
+                          </div>
+                          <p className="text-[9px] text-amber-700 dark:text-amber-400 font-semibold mt-1">
+                            {getRankByXp(user.xp || 0).nextRank
+                              ? `Faltan ${Math.max(0, (getRankByXp(user.xp || 0).nextRank?.minXp || 0) - (user.xp || 0))} XP para ascender a ${getRankByXp(user.xp || 0).nextRank?.name} (${getRankByXp(user.xp || 0).nextRank?.abbr})`
+                              : "¡Grado Máximo Supremo de la USAF alcanzado!"}
+                          </p>
+                        </div>
+
+                        <div className="mt-2 flex items-center justify-between text-[11px] font-bold text-[#F59E0B]">
+                          <span>🏅 {user.isPro ? "Vidas ∞" : `${user.medals} Medallas`}</span>
+                          <span>💎 {user.gems ?? user.coins ?? 100}</span>
+                        </div>
+                      </div>
+
+                      {/* Botón Administrador */}
+                      {isAdmin(user) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMenuOpen(false);
+                            setAdminModalOpen(true);
+                          }}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-black text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/70 hover:bg-amber-200 dark:hover:bg-amber-900/80 rounded-xl transition-colors text-left border border-amber-300 dark:border-amber-700 shadow-xs mb-1"
+                        >
+                          <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                          <span>⭐ Panel Comandante (Admin)</span>
+                        </button>
+                      )}
+
+                      {/* Canjear Códigos */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMenuOpen(false);
+                          setRedeemModalOpen(true);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-amber-800 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-xl transition-colors text-left"
+                      >
+                        <Gift className="w-4 h-4 text-amber-500 shrink-0" />
+                        <span>Canjear Cupón o Regalo</span>
+                      </button>
+
+                      {/* Bóveda de Errores Táctica */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMenuOpen(false);
+                          setMistakeModalOpen(true);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors text-left"
+                      >
+                        <ShieldAlert className="w-4 h-4 text-red-500 shrink-0" />
+                        <span>Bóveda de Errores (Caja Negra)</span>
+                      </button>
+
+                      {/* Predictor ALCPT */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMenuOpen(false);
+                          setPredictorModalOpen(true);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-950/40 rounded-xl transition-colors text-left"
+                      >
+                        <Plane className="w-4 h-4 text-sky-500 shrink-0" />
+                        <span>Predictor Comisión USAF</span>
+                      </button>
+
+                      <Link
+                        href="/profile"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
+                      >
+                        <User className="w-4 h-4 text-[#A67B5B]" />
+                        <span>Mi Perfil y Base Táctica</span>
+                      </Link>
 
                     <Link
                       href="/shop"
@@ -333,6 +413,7 @@ export default function Header({
                     </button>
                   </div>
                 )}
+                </div>
               </div>
             ) : (
               <button
@@ -377,6 +458,35 @@ export default function Header({
       <ProSubscriptionModal
         isOpen={proModalOpen}
         onClose={() => setProModalOpen(false)}
+        onSuccess={() => setUser(getCurrentUser())}
+      />
+
+      {/* Admin Control Modal */}
+      <AdminControlModal
+        isOpen={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
+        onSuccess={() => setUser(getCurrentUser())}
+      />
+
+      {/* Redeem Promo Code Modal */}
+      <RedeemCodeModal
+        isOpen={redeemModalOpen}
+        onClose={() => setRedeemModalOpen(false)}
+        onSuccess={() => setUser(getCurrentUser())}
+      />
+
+      {/* Tactical Mistake Vault Modal (Caja Negra PRO) */}
+      <MistakeVaultModal
+        isOpen={mistakeModalOpen}
+        onClose={() => setMistakeModalOpen(false)}
+        onUpgradePro={() => setProModalOpen(true)}
+      />
+
+      {/* Official ALCPT Flight Commission Predictor */}
+      <AlcptPredictorModal
+        isOpen={predictorModalOpen}
+        onClose={() => setPredictorModalOpen(false)}
+        onUpgradePro={() => setProModalOpen(true)}
       />
     </>
   );

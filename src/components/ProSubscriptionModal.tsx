@@ -24,6 +24,7 @@ import ConanMascot from "./ConanMascot";
 import { setProStatus } from "@/lib/supabase";
 import { soundEffects } from "@/lib/soundEffects";
 import { getCheckoutUrl, verifyPaymentWithServer, createCheckoutPreference } from "@/lib/payments";
+import { redeemCode, getActiveDiscount } from "@/lib/adminCodes";
 import confetti from "canvas-confetti";
 
 interface ProSubscriptionModalProps {
@@ -50,9 +51,19 @@ export default function ProSubscriptionModal({
   const [operationNumber, setOperationNumber] = useState<string>("");
   const [verifyError, setVerifyError] = useState<string>("");
 
+  const activeDiscount = getActiveDiscount();
+  const discountPercent = activeDiscount ? activeDiscount.percent : 0;
+
   if (!isOpen) return null;
 
-  const planPrice = selectedPlan === "yearly" ? "$39.900 CLP" : "$4.990 CLP";
+  const rawYearly = 39900;
+  const rawMonthly = 4990;
+  const finalYearly = discountPercent > 0 ? Math.round(rawYearly * (1 - discountPercent / 100)) : rawYearly;
+  const finalMonthly = discountPercent > 0 ? Math.round(rawMonthly * (1 - discountPercent / 100)) : rawMonthly;
+
+  const planPrice = selectedPlan === "yearly"
+    ? `$${finalYearly.toLocaleString("es-CL")} CLP`
+    : `$${finalMonthly.toLocaleString("es-CL")} CLP`;
   const planUsd = selectedPlan === "yearly" ? "$40 USD / Año" : "$5 USD / Mes";
 
   // Iniciar proceso de pago real mediante pasarela blindada
@@ -127,32 +138,50 @@ export default function ProSubscriptionModal({
     }
   };
 
-  // Validación de cupón
+  // Validación de cupón conectado al motor de códigos
   const handleCouponSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = couponCode.trim().toUpperCase();
-    if (clean === "CONANPRO" || clean === "ALCPT2026" || clean === "AIRFORCE100" || clean === "USAF100") {
-      setPaymentState("verifying");
-      setTimeout(() => {
-        setPaymentState("confirmed");
-        setProStatus(true);
+    const clean = couponCode.trim();
+    if (!clean) return;
+
+    setPaymentState("verifying");
+    setTimeout(() => {
+      const res = redeemCode(clean);
+      if (res.success) {
         soundEffects.playLevelUp();
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ["#F59E0B", "#FBBF24", "#6B4423"],
-        });
-        setTimeout(() => {
-          if (onSuccess) onSuccess();
-          onClose();
+        try {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ["#F59E0B", "#FBBF24", "#10B981"],
+          });
+        } catch {}
+
+        setCouponMsg(res.message);
+        if (res.rewardType === "pro_trial" || clean.toUpperCase() === "CONANPRO") {
+          setPaymentState("confirmed");
+          setProStatus(true);
+          setTimeout(() => {
+            if (onSuccess) onSuccess();
+            onClose();
+            setPaymentState("idle");
+          }, 2400);
+        } else {
           setPaymentState("idle");
-        }, 2200);
-      }, 1500);
-    } else {
-      setCouponMsg("Código inválido o expirado. Ingresa un cupón autorizado.");
-      setTimeout(() => setCouponMsg(""), 3500);
-    }
+          if (onSuccess) onSuccess();
+          setTimeout(() => {
+            setCouponMsg("");
+            setActiveTab("gateway");
+          }, 2000);
+        }
+      } else {
+        setPaymentState("idle");
+        setCouponMsg(res.message);
+        soundEffects.playIncorrect();
+        setTimeout(() => setCouponMsg(""), 4000);
+      }
+    }, 800);
   };
 
   return (
@@ -370,6 +399,55 @@ export default function ProSubscriptionModal({
                     <div className="mt-2 text-[10px] font-black text-white bg-amber-600 py-0.5 rounded-lg shadow-xs">
                       Completa
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4 Pilares Tácticos Exclusivos de Conan PRO */}
+              <div className="mb-5">
+                <span className="text-[11px] font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400 block mb-2">
+                  ¿Por qué Conan PRO es Imprescindible para el ALCPT?
+                </span>
+
+                <div className="grid grid-cols-2 gap-2 text-left">
+                  <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-emerald-600 dark:text-emerald-400">
+                      <span>🎙️</span>
+                      <span>Radio Cabina F-22 (ATC)</span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                      Filtro militar real y comunicaciones de Torre de Control USAF.
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-red-600 dark:text-red-400">
+                      <span>🗃️</span>
+                      <span>Bóveda de Errores</span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                      Entrenamiento enfocado 100% en preguntas falladas.
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-sky-600 dark:text-sky-400">
+                      <span>📊</span>
+                      <span>Predictor de Vuelo USAF</span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                      Proyección de aptitud para Comisión y Escuela de Pilotos.
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-amber-600 dark:text-amber-400">
+                      <span>⭐</span>
+                      <span>Vidas Infinitas y 0 Ads</span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                      Estudia sin límites, 2x XP permanente y sin pausas forzadas.
+                    </p>
                   </div>
                 </div>
               </div>

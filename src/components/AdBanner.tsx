@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Sparkles, ExternalLink, ShieldCheck, Info } from "lucide-react";
-import { getCurrentUser } from "@/lib/supabase";
+import { getCurrentUser, isAdmin } from "@/lib/supabase";
 
 interface AdBannerProps {
   slotId?: string;
@@ -33,7 +33,7 @@ export default function AdBanner({
   const adClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-4340035809584049";
 
   useEffect(() => {
-    if (user?.isPro) return;
+    if (user?.isPro || isAdmin(user)) return;
     if (typeof window !== "undefined") {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -43,8 +43,8 @@ export default function AdBanner({
     }
   }, [user]);
 
-  // PRO USERS SEE ZERO ADS
-  if (user?.isPro) {
+  // PRO USERS AND ADMINS SEE ZERO ADS
+  if (user?.isPro || isAdmin(user)) {
     return null;
   }
 

@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { getWordGrammarInfo, fetchWordTranslationAsync, WordGrammarInfo } from "@/lib/wordDictionary";
 import { speakHumanText } from "@/lib/audioVoice";
-import { Volume2, X, Sparkles, Clock, ArrowRight, ShieldAlert } from "lucide-react";
+import { Volume2, X, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface InteractiveWordTextProps {
@@ -168,20 +168,20 @@ export default function InteractiveWordText({
                   onClick={closePopover}
                 />
 
-                {/* Tarjeta Flotante Única */}
+                {/* Tarjeta Flotante Única y Ultra Compacta */}
                 <motion.div
                   ref={popoverRef}
-                  initial={{ opacity: 0, y: 30, scale: 0.97 }}
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 25, scale: 0.97 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
                   onClick={(e) => e.stopPropagation()}
-                  className="fixed bottom-3 inset-x-3 sm:bottom-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 w-[calc(100%-24px)] sm:w-[480px] max-w-lg p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-3xl border-2 border-amber-400 dark:border-amber-600 shadow-2xl z-[9999] text-left pointer-events-auto select-text text-slate-800 dark:text-slate-100 font-sans max-h-[82vh] overflow-y-auto"
+                  className="fixed bottom-4 inset-x-4 sm:bottom-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 w-auto sm:min-w-[280px] max-w-sm px-4 py-3 bg-white dark:bg-slate-900 rounded-2xl border-2 border-amber-400 dark:border-amber-600 shadow-2xl z-[9999] text-left pointer-events-auto select-text text-slate-800 dark:text-slate-100 font-sans"
                 >
-                  {/* Encabezado: Palabra, Fonética, Audio Humano y Botón Cerrar */}
-                  <div className="flex items-center justify-between border-b border-amber-200 dark:border-slate-700 pb-2.5 mb-2.5">
+                  {/* Encabezado: Palabra, Fonética, Audio y Botón Cerrar */}
+                  <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="font-black text-lg sm:text-xl text-[#6B4423] dark:text-amber-300 truncate">
+                      <span className="font-black text-base sm:text-lg text-[#6B4423] dark:text-amber-300 truncate">
                         {activeInfo.cleanWord}
                       </span>
                       {activeInfo.phonetic && (
@@ -191,108 +191,47 @@ export default function InteractiveWordText({
                       )}
                       <button
                         type="button"
-                        title="Escuchar pronunciación con voz humana"
+                        title="Escuchar pronunciación"
                         onClick={(e) => playPronunciation(e, activeInfo.cleanWord)}
-                        className="p-1.5 rounded-xl bg-amber-100 dark:bg-slate-800 text-amber-800 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-slate-700 transition-colors shrink-0"
+                        className="p-1 rounded-lg bg-amber-100 dark:bg-slate-800 text-amber-800 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-slate-700 transition-colors shrink-0"
                       >
-                        <Volume2 className="w-4 h-4" />
+                        <Volume2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60">
-                        {activeInfo.partOfSpeech}
-                      </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {activeInfo.partOfSpeech && (
+                        <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60">
+                          {activeInfo.partOfSpeech}
+                        </span>
+                      )}
                       <button
                         type="button"
                         onClick={closePopover}
-                        className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-full bg-slate-100 dark:bg-slate-800 transition-colors"
-                        title="Cerrar ventana"
+                        className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        title="Cerrar"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
 
-                  {/* Modo Examen Oficial o Traducción Directa */}
+                  {/* Traducción al Español (Directa, limpia y sin textos largos) */}
                   {isExamMode ? (
-                    <div className="mb-3 p-2.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-xs text-red-900 dark:text-red-200 font-bold flex items-center gap-2">
-                      <ShieldAlert className="w-4 h-4 text-red-600 shrink-0" />
-                      <span>Modo Examen Oficial ALCPT: Traducción al español restringida según normativa USAF.</span>
+                    <div className="mt-2 text-xs text-red-600 dark:text-red-400 font-bold flex items-center gap-1.5">
+                      <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+                      <span>Modo Examen: Traducción bloqueada según normativa USAF.</span>
                     </div>
                   ) : (
-                    <div className="mb-3 bg-amber-50 dark:bg-slate-800/80 p-2.5 rounded-2xl border border-amber-200 dark:border-slate-700">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-400 block mb-0.5">
-                        Traducción en Español:
+                    <div className="mt-2 pt-2 border-t border-amber-200/70 dark:border-slate-800 flex items-baseline gap-2">
+                      <span className="text-[10px] font-black tracking-wider text-amber-800 dark:text-amber-400 uppercase">
+                        Traducción:
                       </span>
-                      <p className="text-base font-extrabold text-slate-900 dark:text-white leading-snug">
+                      <span className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
                         {activeInfo.translation}
-                      </p>
+                      </span>
                     </div>
                   )}
-
-                  {/* Aplicación en Tiempos Verbales */}
-                  <div className="space-y-2 text-xs">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400 block">
-                      Tiempos Verbales (Pasado, Presente, Futuro):
-                    </span>
-
-                    {/* Pasado */}
-                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                      <div className="flex items-center gap-1 font-bold text-indigo-700 dark:text-indigo-400 mb-0.5">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>Pasado ({activeInfo.past.form}):</span>
-                      </div>
-                      <p className="italic text-slate-800 dark:text-slate-200 leading-snug">
-                        &ldquo;{activeInfo.past.exampleEn}&rdquo;
-                      </p>
-                      {!isExamMode && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                          &rarr; {activeInfo.past.exampleEs}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Presente */}
-                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                      <div className="flex items-center gap-1 font-bold text-emerald-700 dark:text-emerald-400 mb-0.5">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>Presente ({activeInfo.present.form}):</span>
-                      </div>
-                      <p className="italic text-slate-800 dark:text-slate-200 leading-snug">
-                        &ldquo;{activeInfo.present.exampleEn}&rdquo;
-                      </p>
-                      {!isExamMode && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                          &rarr; {activeInfo.present.exampleEs}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Futuro */}
-                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                      <div className="flex items-center gap-1 font-bold text-amber-700 dark:text-amber-400 mb-0.5">
-                        <ArrowRight className="w-3.5 h-3.5" />
-                        <span>Futuro ({activeInfo.future.form}):</span>
-                      </div>
-                      <p className="italic text-slate-800 dark:text-slate-200 leading-snug">
-                        &ldquo;{activeInfo.future.exampleEn}&rdquo;
-                      </p>
-                      {!isExamMode && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                          &rarr; {activeInfo.future.exampleEs}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={closePopover}
-                    className="mt-3 w-full py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-xs transition-colors"
-                  >
-                    Cerrar Ventana
-                  </button>
                 </motion.div>
               </>
             )}

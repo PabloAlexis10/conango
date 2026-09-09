@@ -18,6 +18,7 @@ import {
   GUEST_LIMIT,
   updateUserProfile,
   getUserMascotName,
+  isAdmin,
 } from "@/lib/supabase";
 import {
   Trophy,
@@ -38,11 +39,19 @@ import {
   Zap,
   Swords,
   Coins,
+  ShieldCheck,
+  Gift,
+  ShieldAlert,
+  Plane,
 } from "lucide-react";
 import Link from "next/link";
 import { getRankByXp } from "@/lib/accessories";
 import ProSubscriptionModal from "@/components/ProSubscriptionModal";
 import TacticalCertificateModal from "@/components/TacticalCertificateModal";
+import AdminControlModal from "@/components/AdminControlModal";
+import RedeemCodeModal from "@/components/RedeemCodeModal";
+import MistakeVaultModal from "@/components/MistakeVaultModal";
+import AlcptPredictorModal from "@/components/AlcptPredictorModal";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -50,6 +59,10 @@ export default function ProfilePage() {
   const [sessionHistory, setSessionHistory] = useState<SessionResult[]>([]);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [redeemModalOpen, setRedeemModalOpen] = useState(false);
+  const [mistakeModalOpen, setMistakeModalOpen] = useState(false);
+  const [predictorModalOpen, setPredictorModalOpen] = useState(false);
   const [guestUsage, setGuestUsage] = useState<number>(0);
   const [selectedCertExam, setSelectedCertExam] = useState<ExamResult | null>(null);
 
@@ -149,7 +162,12 @@ export default function ProfilePage() {
           <div className="flex items-center gap-5 text-center sm:text-left">
             <ConanMascot size="lg" mood="celebrate" animate={true} />
             <div>
-              {user?.isPro ? (
+              {isAdmin(user) ? (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-white rounded-full text-xs font-black uppercase tracking-wider mb-2 shadow-md">
+                  <ShieldCheck className="w-3.5 h-3.5 text-yellow-100" />
+                  <span>⭐ COMANDANTE GENERAL (ADMIN - ACCESO TOTAL)</span>
+                </div>
+              ) : user?.isPro ? (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-full text-xs font-black uppercase tracking-wider mb-2 shadow-xs">
                   <Crown className="w-3.5 h-3.5 text-yellow-200" />
                   <span>{getUserRankTitle(user?.xp || 0)} Conan PRO (Vidas ∞)</span>
@@ -168,7 +186,7 @@ export default function ProfilePage() {
                   <>
                     Correo: <span className="font-mono text-[#6B4423]">{user.email}</span> &bull; Compañero:{" "}
                     <strong className="text-amber-700 font-bold">{getUserMascotName(user)} 🐾</strong> &bull; Medallas:{" "}
-                    <strong className="text-[#F59E0B] font-black">{user.medals}</strong>
+                    <strong className="text-[#F59E0B] font-black">{isAdmin(user) || user.isPro ? "∞" : user.medals}</strong>
                   </>
                 ) : (
                   <>
@@ -198,6 +216,56 @@ export default function ProfilePage() {
               </button>
             )}
           </div>
+        </div>
+
+        {/* Barra de Comandos y Operaciones Tácticas */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          {isAdmin(user) ? (
+            <button
+              type="button"
+              onClick={() => setAdminModalOpen(true)}
+              className="p-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-2xl shadow-md flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider transition-transform active:scale-95"
+            >
+              <ShieldCheck className="w-4 h-4 shrink-0" />
+              <span>⭐ Panel Admin</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setProModalOpen(true)}
+              className="p-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-2xl shadow-md flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider transition-transform active:scale-95"
+            >
+              <Crown className="w-4 h-4 shrink-0" />
+              <span>Conan PRO</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setRedeemModalOpen(true)}
+            className="p-3.5 bg-white dark:bg-slate-800 border-2 border-amber-300 dark:border-amber-600 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-amber-50 dark:hover:bg-slate-700 transition-all shadow-xs"
+          >
+            <Gift className="w-4 h-4 text-amber-500 shrink-0" />
+            <span>Canjear Código</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMistakeModalOpen(true)}
+            className="p-3.5 bg-white dark:bg-slate-800 border-2 border-red-300 dark:border-red-700 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-red-50 dark:hover:bg-slate-700 transition-all shadow-xs"
+          >
+            <ShieldAlert className="w-4 h-4 text-red-500 shrink-0" />
+            <span>Bóveda Errores</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setPredictorModalOpen(true)}
+            className="p-3.5 bg-white dark:bg-slate-800 border-2 border-sky-300 dark:border-sky-700 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-sky-50 dark:hover:bg-slate-700 transition-all shadow-xs"
+          >
+            <Plane className="w-4 h-4 text-sky-500 shrink-0" />
+            <span>Predictor ALCPT</span>
+          </button>
         </div>
 
         {/* Global Statistics Grid */}
@@ -658,6 +726,36 @@ export default function ProfilePage() {
           })}
         />
       )}
+
+      <ProSubscriptionModal
+        isOpen={proModalOpen}
+        onClose={() => setProModalOpen(false)}
+        onSuccess={() => loadData()}
+      />
+
+      <AdminControlModal
+        isOpen={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
+        onSuccess={() => loadData()}
+      />
+
+      <RedeemCodeModal
+        isOpen={redeemModalOpen}
+        onClose={() => setRedeemModalOpen(false)}
+        onSuccess={() => loadData()}
+      />
+
+      <MistakeVaultModal
+        isOpen={mistakeModalOpen}
+        onClose={() => setMistakeModalOpen(false)}
+        onUpgradePro={() => setProModalOpen(true)}
+      />
+
+      <AlcptPredictorModal
+        isOpen={predictorModalOpen}
+        onClose={() => setPredictorModalOpen(false)}
+        onUpgradePro={() => setProModalOpen(true)}
+      />
     </div>
   );
 }
