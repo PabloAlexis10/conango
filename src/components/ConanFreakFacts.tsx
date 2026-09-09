@@ -217,7 +217,7 @@ export default function ConanFreakFacts() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
-  const DURATION_MS = 13000; // 13 segundos para lectura cómoda bilingüe
+  const DURATION_MS = 20000; // 20 segundos para lectura cómoda bilingüe
   const STEP_MS = 50;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 

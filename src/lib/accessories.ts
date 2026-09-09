@@ -42,28 +42,28 @@ export const DUOLINGO_POWERUPS = MAGIC_POTIONS;
 // ESCALA OFICIAL DE GRADOS DE LA FUERZA AÉREA DE ESTADOS UNIDOS (USAF - PERSONAS) EN INGLÉS
 export const MILITARY_RANKS = [
   // Clases / Personal Alistado (Enlisted Airmen)
-  { level: 1, name: "Airman Basic", abbr: "AB", minXp: 0, badge: "🪖", usGrade: "E-1 Airman Basic", desc: "Nivel inicial de instrucción militar y aprendizaje básico de aviación." },
-  { level: 2, name: "Airman", abbr: "Amn", minXp: 50, badge: "🥉", usGrade: "E-2 Airman", desc: "Aviador en período de servicio activo con destrezas tácticas elementales." },
-  { level: 3, name: "Airman First Class", abbr: "A1C", minXp: 120, badge: "🎖️", usGrade: "E-3 Airman First Class", desc: "Aviador de primera clase con dominio técnico en comunicaciones en inglés." },
-  { level: 4, name: "Senior Airman", abbr: "SrA", minXp: 250, badge: "⭐", usGrade: "E-4 Senior Airman", desc: "Aviador senior con liderazgo de escuadrilla y alta precisión técnica." },
-  { level: 5, name: "Staff Sergeant", abbr: "SSgt", minXp: 450, badge: "⭐⭐", usGrade: "E-5 Staff Sergeant", desc: "Suboficial de escuadra a cargo de la supervisión de entrenamiento táctico." },
-  { level: 6, name: "Technical Sergeant", abbr: "TSgt", minXp: 750, badge: "⭐⭐⭐", usGrade: "E-6 Technical Sergeant", desc: "Sargento técnico responsable de sistemas avanzados y preparación ALCPT." },
-  { level: 7, name: "Master Sergeant", abbr: "MSgt", minXp: 1200, badge: "🏅", usGrade: "E-7 Master Sergeant", desc: "Sargento maestro de sección operativa con excelencia en radiofonía." },
-  { level: 8, name: "Senior Master Sergeant", abbr: "SMSgt", minXp: 1800, badge: "🛡️", usGrade: "E-8 Senior Master Sergeant", desc: "Suboficial superior de ala táctica y gestión de misiones aéreas." },
-  { level: 9, name: "Chief Master Sergeant", abbr: "CMSgt", minXp: 2600, badge: "🦅", usGrade: "E-9 Chief Master Sergeant", desc: "Máximo grado de la categoría de suboficiales de la Fuerza Aérea." },
+  { level: 1, name: "Airman Basic", abbr: "AB", minXp: 0, badge: "🪖", usGrade: "Airman Basic", desc: "Nivel inicial de instrucción militar y aprendizaje básico de aviación." },
+  { level: 2, name: "Airman", abbr: "Amn", minXp: 50, badge: "🥉", usGrade: "Airman", desc: "Aviador en período de servicio activo con destrezas tácticas elementales." },
+  { level: 3, name: "Airman First Class", abbr: "A1C", minXp: 120, badge: "🎖️", usGrade: "Airman First Class", desc: "Aviador de primera clase con dominio técnico en comunicaciones en inglés." },
+  { level: 4, name: "Senior Airman", abbr: "SrA", minXp: 250, badge: "⭐", usGrade: "Senior Airman", desc: "Aviador senior con liderazgo de escuadrilla y alta precisión técnica." },
+  { level: 5, name: "Staff Sergeant", abbr: "SSgt", minXp: 450, badge: "⭐⭐", usGrade: "Staff Sergeant", desc: "Suboficial de escuadra a cargo de la supervisión de entrenamiento táctico." },
+  { level: 6, name: "Technical Sergeant", abbr: "TSgt", minXp: 750, badge: "⭐⭐⭐", usGrade: "Technical Sergeant", desc: "Sargento técnico responsable de sistemas avanzados y preparación ALCPT." },
+  { level: 7, name: "Master Sergeant", abbr: "MSgt", minXp: 1200, badge: "🏅", usGrade: "Master Sergeant", desc: "Sargento maestro de sección operativa con excelencia en radiofonía." },
+  { level: 8, name: "Senior Master Sergeant", abbr: "SMSgt", minXp: 1800, badge: "🛡️", usGrade: "Senior Master Sergeant", desc: "Suboficial superior de ala táctica y gestión de misiones aéreas." },
+  { level: 9, name: "Chief Master Sergeant", abbr: "CMSgt", minXp: 2600, badge: "🦅", usGrade: "Chief Master Sergeant", desc: "Máximo grado de la categoría de suboficiales de la Fuerza Aérea." },
 
   // Oficiales de la Fuerza Aérea (Commissioned Officers)
-  { level: 10, name: "Second Lieutenant", abbr: "2d Lt", minXp: 3600, badge: "🔹", usGrade: "O-1 Second Lieutenant", desc: "Oficial subalterno al mando de vuelo y operaciones iniciales." },
-  { level: 11, name: "First Lieutenant", abbr: "1st Lt", minXp: 4800, badge: "🔷", usGrade: "O-2 First Lieutenant", desc: "Teniente primero con experiencia de vuelo y combate comprobada." },
-  { level: 12, name: "Captain", abbr: "Capt", minXp: 6200, badge: "⚡", usGrade: "O-3 Captain", desc: "Capitán comandante de escuadrón aéreo y especialista bilingüe." },
-  { level: 13, name: "Major", abbr: "Maj", minXp: 8000, badge: "⚜️", usGrade: "O-4 Major", desc: "Oficial superior a cargo del estado mayor de operaciones aéreas." },
-  { level: 14, name: "Lieutenant Colonel", abbr: "Lt Col", minXp: 10500, badge: "🥈", usGrade: "O-5 Lieutenant Colonel", desc: "Teniente coronel al mando de escuadrón táctico de combate y bombardeo." },
-  { level: 15, name: "Colonel", abbr: "Col", minXp: 14000, badge: "🥇", usGrade: "O-6 Colonel", desc: "Coronel jefe de ala aérea de la Fuerza Aérea de los Estados Unidos." },
-  { level: 16, name: "Brigadier General", abbr: "Brig Gen", minXp: 19000, badge: "🌟", usGrade: "O-7 Brigadier General", desc: "General de una estrella, comandante de brigada aeroespacial." },
-  { level: 17, name: "Major General", abbr: "Maj Gen", minXp: 26000, badge: "🌟🌟", usGrade: "O-8 Major General", desc: "General de dos estrellas al mando de división de operaciones estratégicas." },
-  { level: 18, name: "Lieutenant General", abbr: "Lt Gen", minXp: 36000, badge: "🌟🌟🌟", usGrade: "O-9 Lieutenant General", desc: "Teniente general de tres estrellas, jefe de fuerza aérea expedicionaria." },
-  { level: 19, name: "General", abbr: "Gen", minXp: 50000, badge: "🌟🌟🌟🌟", usGrade: "O-10 General", desc: "General de cuatro estrellas, comandante del cuartel general de la USAF." },
-  { level: 20, name: "General of the Air Force", abbr: "GAF", minXp: 75000, badge: "👑", usGrade: "Special 5-Star General", desc: "Grado supremo de cinco estrellas de la Fuerza Aérea. ¡Héroe legendario supremo!" },
+  { level: 10, name: "Second Lieutenant", abbr: "2d Lt", minXp: 3600, badge: "🔹", usGrade: "Second Lieutenant", desc: "Oficial subalterno al mando de vuelo y operaciones iniciales." },
+  { level: 11, name: "First Lieutenant", abbr: "1st Lt", minXp: 4800, badge: "🔷", usGrade: "First Lieutenant", desc: "Teniente primero con experiencia de vuelo y combate comprobada." },
+  { level: 12, name: "Captain", abbr: "Capt", minXp: 6200, badge: "⚡", usGrade: "Captain", desc: "Capitán comandante de escuadrón aéreo y especialista bilingüe." },
+  { level: 13, name: "Major", abbr: "Maj", minXp: 8000, badge: "⚜️", usGrade: "Major", desc: "Oficial superior a cargo del estado mayor de operaciones aéreas." },
+  { level: 14, name: "Lieutenant Colonel", abbr: "Lt Col", minXp: 10500, badge: "🥈", usGrade: "Lieutenant Colonel", desc: "Teniente coronel al mando de escuadrón táctico de combate y bombardeo." },
+  { level: 15, name: "Colonel", abbr: "Col", minXp: 14000, badge: "🥇", usGrade: "Colonel", desc: "Coronel jefe de ala aérea de la Fuerza Aérea de los Estados Unidos." },
+  { level: 16, name: "Brigadier General", abbr: "Brig Gen", minXp: 19000, badge: "🌟", usGrade: "Brigadier General", desc: "General de una estrella, comandante de brigada aeroespacial." },
+  { level: 17, name: "Major General", abbr: "Maj Gen", minXp: 26000, badge: "🌟🌟", usGrade: "Major General", desc: "General de dos estrellas al mando de división de operaciones estratégicas." },
+  { level: 18, name: "Lieutenant General", abbr: "Lt Gen", minXp: 36000, badge: "🌟🌟🌟", usGrade: "Lieutenant General", desc: "Teniente general de tres estrellas, jefe de fuerza aérea expedicionaria." },
+  { level: 19, name: "General", abbr: "Gen", minXp: 50000, badge: "🌟🌟🌟🌟", usGrade: "General", desc: "General de cuatro estrellas, comandante del cuartel general de la USAF." },
+  { level: 20, name: "General of the Air Force", abbr: "GAF", minXp: 75000, badge: "👑", usGrade: "General of the Air Force", desc: "Grado supremo de cinco estrellas de la Fuerza Aérea. ¡Héroe legendario supremo!" },
 ];
 
 export function getRankByXp(xp: number) {

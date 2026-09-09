@@ -183,22 +183,25 @@ export default function HomePage() {
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2 py-0.5 rounded-md bg-amber-200 dark:bg-amber-900/60 text-amber-950 dark:text-amber-200 text-[10px] font-black uppercase tracking-wider">
-                    {getRankByXp(user?.xp || 0).currentRank.abbr} • {getRankByXp(user?.xp || 0).currentRank.usGrade}
+                  <span className="text-sm font-black text-[#6B4423] dark:text-white">
+                    {user ? (user.name || user.email) : "Invitado"}
                   </span>
-                  {user && (
-                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                      Piloto: <strong className="text-[#6B4423] dark:text-white">{user.name || user.email}</strong>
-                    </span>
-                  )}
+                  <span className="px-2 py-0.5 rounded-md bg-amber-200 dark:bg-amber-900/60 text-amber-950 dark:text-amber-200 text-[11px] font-black uppercase tracking-wider">
+                    {getRankByXp(user?.xp || 0).currentRank.abbr}
+                  </span>
                   <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                    🐾 Mascota: <strong className="text-amber-700 dark:text-amber-300">{getUserMascotName(user)}</strong>
+                    🐾 <strong className="text-amber-700 dark:text-amber-300">{getUserMascotName(user)}</strong>
                   </span>
                 </div>
                 <h3 className="text-lg sm:text-xl font-black text-[#6B4423] dark:text-white mt-1">
                   {getUserRankTitle(user?.xp || 0)}
                 </h3>
-                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium">
+                {getRankByXp(user?.xp || 0).nextRank && (
+                  <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mt-0.5">
+                    Siguiente grado: <span className="font-black">{getRankByXp(user?.xp || 0).nextRank?.name}</span> ({getRankByXp(user?.xp || 0).nextRank?.abbr})
+                  </p>
+                )}
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mt-1">
                   {getRankByXp(user?.xp || 0).currentRank.desc}
                 </p>
               </div>
@@ -220,7 +223,7 @@ export default function HomePage() {
                   onClick={() => setAuthModalOpen(true)}
                   className="px-4 py-2 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-xl text-xs font-black transition-all shadow-xs"
                 >
-                  Registrar mi Piloto & Mascota
+                  Registrar mi Cuenta & Mascota
                 </button>
               )}
             </div>
@@ -243,7 +246,7 @@ export default function HomePage() {
               <div className="text-xs font-black text-amber-800 dark:text-amber-300">
                 {getRankByXp(user?.xp || 0).nextRank ? (
                   <span>
-                    Faltan <span className="underline decoration-amber-500 font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</span> para ascender a {getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.usGrade})
+                    Faltan <span className="underline decoration-amber-500 font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</span> para ascender a {getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.abbr})
                   </span>
                 ) : (
                   <span className="text-emerald-600 dark:text-emerald-400">

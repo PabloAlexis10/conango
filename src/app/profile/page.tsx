@@ -208,12 +208,17 @@ export default function ProfilePage() {
               <span className="text-3xl">{getRankByXp(user?.xp || 0).currentRank.badge}</span>
               <div>
                 <span className="text-xs font-black text-[#A67B5B] dark:text-slate-400 uppercase tracking-wider block">
-                  Rango Oficial USAF (Fuerza Aérea EE.UU.)
+                  Rango Oficial USAF
                 </span>
                 <h3 className="text-lg font-black text-[#6B4423] dark:text-white">
-                  {getRankByXp(user?.xp || 0).currentRank.name} ({getRankByXp(user?.xp || 0).currentRank.usGrade})
+                  {getRankByXp(user?.xp || 0).currentRank.name} • {getRankByXp(user?.xp || 0).currentRank.abbr}
                 </h3>
-                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mt-0.5">
+                {getRankByXp(user?.xp || 0).nextRank && (
+                  <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mt-0.5">
+                    Siguiente grado: <span className="font-black">{getRankByXp(user?.xp || 0).nextRank?.name}</span> ({getRankByXp(user?.xp || 0).nextRank?.abbr})
+                  </p>
+                )}
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mt-1">
                   {getRankByXp(user?.xp || 0).currentRank.desc}
                 </p>
               </div>
@@ -257,7 +262,7 @@ export default function ProfilePage() {
           <div className="mt-2 pt-2 border-t border-[#E5D5C5]/60 flex items-center justify-between text-xs font-bold text-amber-900">
             {getRankByXp(user?.xp || 0).nextRank ? (
               <span>
-                🎯 Te faltan <strong className="text-[#F59E0B] font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</strong> para ascender a <strong>{getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.usGrade})</strong>
+                🎯 Te faltan <strong className="text-[#F59E0B] font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</strong> para ascender a <strong>{getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.abbr})</strong>
               </span>
             ) : (
               <span className="text-emerald-700">🎖️ ¡Has alcanzado el Grado Supremo de General de la USAF!</span>
@@ -324,7 +329,7 @@ export default function ProfilePage() {
                 <span className="text-2xl">🪖</span>
                 <div>
                   <h3 className="font-black text-lg text-[#6B4423]">
-                    Personaliza tu Base: Piloto y Mascota Táctica
+                    Personaliza tu Base: Usuario y Mascota Táctica
                   </h3>
                   <p className="text-xs text-[#A67B5B] font-semibold">
                     Esta es tu aplicación de adiestramiento y tu compañero canino. Modifica tu nombre de usuario y el de tu mascota a tu gusto.
@@ -340,13 +345,13 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
-                    Tu Nombre o Indicativo (Callsign)
+                    Tu Nombre de Usuario
                   </label>
                   <input
                     type="text"
                     value={profileName}
                     onChange={(e) => setProfileName(e.target.value)}
-                    placeholder="Ej. Capitán Alex, Maverick..."
+                    placeholder="Ej. Pablo, Alex, Carlos..."
                     required
                     className="w-full px-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423] font-bold"
                   />

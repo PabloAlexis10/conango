@@ -156,7 +156,7 @@ export default function Header({
               <Link
                 href="/profile"
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-colors shadow-xs"
-                title={`Grado USAF: ${getRankByXp(user.xp || 0).currentRank.usGrade}`}
+                title={`Grado USAF: ${getRankByXp(user.xp || 0).currentRank.name} (${getRankByXp(user.xp || 0).currentRank.abbr})`}
               >
                 <span>{getUserRankBadge(user.xp || 0)}</span>
                 <span className="text-[11px] uppercase tracking-wide font-extrabold">{getRankByXp(user.xp || 0).currentRank.abbr}</span>
@@ -191,7 +191,7 @@ export default function Header({
                     {user.name ? user.name.charAt(0).toUpperCase() : "C"}
                   </div>
                   <span className="max-w-[80px] truncate hidden sm:inline">
-                    {user.name || "Piloto"}
+                    {user.name || "Usuario"}
                   </span>
                 </button>
 
@@ -202,17 +202,17 @@ export default function Header({
                     <div className="p-3 bg-[#FAF6F0]/80 dark:bg-slate-800/80 rounded-xl border border-[#E5D5C5]/60 dark:border-slate-700/60 mb-2">
                       <div className="flex items-center justify-between">
                         <p className="text-xs font-black text-[#6B4423] dark:text-amber-300 truncate">
-                          {user.name || "Piloto ConanGo"}
+                          {user.name || user.email || "Usuario ConanGo"}
                         </p>
                         <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 font-extrabold rounded-md">
                           {getRankByXp(user.xp || 0).currentRank.abbr}
                         </span>
                       </div>
                       <p className="text-[11px] font-bold text-slate-600 dark:text-slate-300 mt-0.5">
-                        {getUserRankBadge(user.xp || 0)} {getRankByXp(user.xp || 0).currentRank.usGrade}
+                        {getUserRankBadge(user.xp || 0)} {getRankByXp(user.xp || 0).currentRank.name}
                       </p>
                       <p className="text-[10px] text-[#A67B5B] dark:text-slate-400 truncate mt-0.5">
-                        🐾 Compañero: <span className="font-bold text-[#6B4423] dark:text-amber-200">{getUserMascotName(user)}</span>
+                        🐾 Mascota: <span className="font-bold text-[#6B4423] dark:text-amber-200">{getUserMascotName(user)}</span>
                       </p>
 
                       {/* Rank Progression */}
@@ -229,7 +229,7 @@ export default function Header({
                         </div>
                         <p className="text-[9px] text-amber-700 dark:text-amber-400 font-semibold mt-1">
                           {getRankByXp(user.xp || 0).nextRank
-                            ? `Faltan ${Math.max(0, (getRankByXp(user.xp || 0).nextRank?.minXp || 0) - (user.xp || 0))} XP para ascender a ${getRankByXp(user.xp || 0).nextRank?.name}`
+                            ? `Faltan ${Math.max(0, (getRankByXp(user.xp || 0).nextRank?.minXp || 0) - (user.xp || 0))} XP para ascender a ${getRankByXp(user.xp || 0).nextRank?.name} (${getRankByXp(user.xp || 0).nextRank?.abbr})`
                             : "¡Grado Máximo Supremo de la USAF alcanzado!"}
                         </p>
                       </div>

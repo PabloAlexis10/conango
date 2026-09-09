@@ -247,7 +247,7 @@ export default function AuthModal({
           {mode === "register" && (
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] dark:text-slate-300 mb-1">
-                Nombre del Aviador / Piloto
+                Tu Nombre de Usuario
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-[#A67B5B] dark:text-slate-400 absolute left-3.5 top-3" />
@@ -256,7 +256,7 @@ export default function AuthModal({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ej: John Miller"
+                  placeholder="Ej: Pablo"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-[#E5D5C5] dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-[#F59E0B] focus:outline-none text-sm text-[#6B4423] dark:text-slate-100"
                 />
               </div>
@@ -274,7 +274,7 @@ export default function AuthModal({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="piloto@conango.com"
+                placeholder="usuario@conango.com"
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-[#E5D5C5] dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-[#F59E0B] focus:outline-none text-sm text-[#6B4423] dark:text-slate-100"
               />
             </div>
