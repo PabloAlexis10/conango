@@ -23,7 +23,7 @@ import {
 import ConanMascot from "./ConanMascot";
 import { setProStatus } from "@/lib/supabase";
 import { soundEffects } from "@/lib/soundEffects";
-import { getCheckoutUrl, verifyPaymentWithServer } from "@/lib/payments";
+import { getCheckoutUrl, verifyPaymentWithServer, createCheckoutPreference } from "@/lib/payments";
 import confetti from "canvas-confetti";
 
 interface ProSubscriptionModalProps {
@@ -56,7 +56,7 @@ export default function ProSubscriptionModal({
   const planUsd = selectedPlan === "yearly" ? "$40 USD / Año" : "$5 USD / Mes";
 
   // Iniciar proceso de pago real mediante pasarela blindada
-  const handleInitiatePayment = (gateway: "mercadopago" | "stripe") => {
+  const handleInitiatePayment = async (gateway: "mercadopago" | "stripe") => {
     setSelectedGateway(gateway);
     const newOrderId = "CNP-" + Math.floor(100000 + Math.random() * 900000);
     setOrderId(newOrderId);
@@ -65,11 +65,24 @@ export default function ProSubscriptionModal({
 
     soundEffects.playClick();
 
-    // Obtiene la URL de pago configurada (Link de Pago oficial o Checkout)
-    const checkoutUrl = getCheckoutUrl(gateway, selectedPlan);
-
-    if (typeof window !== "undefined") {
-      window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+    if (gateway === "mercadopago") {
+      try {
+        const pref = await createCheckoutPreference(selectedPlan, newOrderId);
+        const urlToOpen = pref.initPoint || getCheckoutUrl("mercadopago", selectedPlan);
+        if (typeof window !== "undefined") {
+          window.open(urlToOpen, "_blank", "noopener,noreferrer");
+        }
+      } catch {
+        const fallbackUrl = getCheckoutUrl("mercadopago", selectedPlan);
+        if (typeof window !== "undefined") {
+          window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+        }
+      }
+    } else {
+      const checkoutUrl = getCheckoutUrl(gateway, selectedPlan);
+      if (typeof window !== "undefined") {
+        window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+      }
     }
   };
 
