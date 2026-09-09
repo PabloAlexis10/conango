@@ -9,20 +9,20 @@ import {
   ShieldCheck,
   Zap,
   CreditCard,
-  Building2,
   KeyRound,
   ExternalLink,
-  Send,
   Loader2,
   Clock,
-  AlertCircle,
   CheckCircle2,
-  ArrowRight,
+  Lock,
+  Sparkles,
   Info,
+  BadgeCheck,
 } from "lucide-react";
 import ConanMascot from "./ConanMascot";
 import { setProStatus } from "@/lib/supabase";
 import { soundEffects } from "@/lib/soundEffects";
+import { getCheckoutUrl } from "@/lib/payments";
 import confetti from "canvas-confetti";
 
 interface ProSubscriptionModalProps {
@@ -39,35 +39,29 @@ export default function ProSubscriptionModal({
   onSuccess,
 }: ProSubscriptionModalProps) {
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("yearly");
-  const [activeTab, setActiveTab] = useState<"gateway" | "transfer" | "coupon">("gateway");
+  const [activeTab, setActiveTab] = useState<"gateway" | "coupon">("gateway");
   const [paymentState, setPaymentState] = useState<PaymentState>("idle");
-  const [selectedGateway, setSelectedGateway] = useState<"mercadopago" | "stripe" | "transfer">("mercadopago");
+  const [selectedGateway, setSelectedGateway] = useState<"mercadopago" | "stripe">("mercadopago");
   const [orderId, setOrderId] = useState<string>("");
-  const [transactionRef, setTransactionRef] = useState<string>("");
   const [couponCode, setCouponCode] = useState("");
   const [couponMsg, setCouponMsg] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   if (!isOpen) return null;
 
   const planPrice = selectedPlan === "yearly" ? "$39.900 CLP" : "$4.990 CLP";
   const planUsd = selectedPlan === "yearly" ? "$40 USD / Año" : "$5 USD / Mes";
 
-  // Iniciar proceso de pago real sin otorgar de inmediato los beneficios
+  // Iniciar proceso de pago real mediante pasarela blindada
   const handleInitiatePayment = (gateway: "mercadopago" | "stripe") => {
     setSelectedGateway(gateway);
     const newOrderId = "CNP-" + Math.floor(100000 + Math.random() * 900000);
     setOrderId(newOrderId);
     setPaymentState("waiting_confirmation");
-    setErrorMessage("");
 
     soundEffects.playClick();
 
-    // Abrir pasarela en pestaña nueva para el pago real
-    const checkoutUrl =
-      gateway === "mercadopago"
-        ? "https://www.mercadopago.com" // URL de pasarela Mercado Pago / Webpay
-        : "https://stripe.com"; // URL de pasarela Stripe
+    // Obtiene la URL de pago configurada (Link de Pago oficial o Checkout)
+    const checkoutUrl = getCheckoutUrl(gateway, selectedPlan);
 
     if (typeof window !== "undefined") {
       window.open(checkoutUrl, "_blank", "noopener,noreferrer");
@@ -101,7 +95,6 @@ export default function ProSubscriptionModal({
         if (onSuccess) onSuccess();
         onClose();
         setPaymentState("idle");
-        setTransactionRef("");
       }, 2600);
     }, 2200);
   };
@@ -134,32 +127,13 @@ export default function ProSubscriptionModal({
     }
   };
 
-  // Transferencia bancaria y WhatsApp
-  const handleTransferSubmit = () => {
-    if (!transactionRef.trim()) {
-      setErrorMessage("Por favor ingresa el número de operación o RUT del titular que transfirió.");
-      return;
-    }
-    setErrorMessage("");
-    setSelectedGateway("transfer");
-    setOrderId("TRF-" + Math.floor(100000 + Math.random() * 900000));
-    setPaymentState("waiting_confirmation");
-  };
-
-  const handleWhatsAppReceipt = () => {
-    const text = encodeURIComponent(
-      `Hola, acabo de transferir ${planPrice} por la suscripción Conan PRO (${selectedPlan === "yearly" ? "Plan Anual" : "Plan Mensual"}). Mi N° de Operación es: ${transactionRef || "Adjunto comprobante"}. Solicito confirmación para activar mi cuenta.`
-    );
-    window.open(`https://wa.me/?text=${text}`, "_blank");
-  };
-
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-3xl border-4 border-amber-300 shadow-2xl max-w-xl w-full overflow-hidden relative my-auto"
+        className="bg-white dark:bg-slate-900 rounded-3xl border-4 border-amber-300 dark:border-amber-500 shadow-2xl max-w-xl w-full overflow-hidden relative my-auto"
       >
         <button
           type="button"
@@ -199,78 +173,58 @@ export default function ProSubscriptionModal({
           {/* CASO 1: ESPERANDO CONFIRMACIÓN DEL PAGO REAL */}
           {paymentState === "waiting_confirmation" && (
             <div className="space-y-4 text-center py-2">
-              <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto text-2xl animate-pulse">
+              <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 flex items-center justify-center mx-auto text-2xl animate-pulse">
                 <Clock className="w-8 h-8 text-[#F59E0B]" />
               </div>
 
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#A67B5B] block">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400 block">
                   Orden #{orderId}
                 </span>
-                <h3 className="text-lg font-black text-[#6B4423]">
-                  Esperando Confirmación del Pago Real
+                <h3 className="text-lg font-black text-[#6B4423] dark:text-white">
+                  Completando Pago en Modo Seguro
                 </h3>
-                <p className="text-xs text-[#A67B5B] mt-1 max-w-sm mx-auto">
-                  Se ha abierto la pasarela segura de{" "}
-                  <strong>
-                    {selectedGateway === "mercadopago"
-                      ? "Mercado Pago / Webpay"
-                      : selectedGateway === "stripe"
-                      ? "Stripe"
-                      : "Transferencia Bancaria"}
+                <p className="text-xs text-[#A67B5B] dark:text-slate-300 mt-1 max-w-sm mx-auto">
+                  Se abrió la pasarela oficial de{" "}
+                  <strong className="text-blue-600 dark:text-blue-400">
+                    {selectedGateway === "mercadopago" ? "Webpay Plus / Mercado Pago" : "Stripe"}
                   </strong>
-                  . Por favor completa el pago de <strong>{planPrice}</strong>.
+                  . Tus datos y los del vendedor están 100% blindados y cifrados.
                 </p>
               </div>
 
-              <div className="bg-[#FAF6F0] p-3.5 rounded-2xl border border-[#E5D5C5] text-left text-xs space-y-1.5 font-medium text-[#6B4423]">
+              <div className="bg-[#FAF6F0] dark:bg-slate-800/80 p-3.5 rounded-2xl border border-[#E5D5C5] dark:border-slate-700 text-left text-xs space-y-1.5 font-medium text-[#6B4423] dark:text-slate-200">
                 <div className="flex justify-between">
-                  <span className="text-[#A67B5B]">Plan Seleccionado:</span>
+                  <span className="text-[#A67B5B] dark:text-slate-400">Plan Seleccionado:</span>
                   <strong>{selectedPlan === "yearly" ? "Plan Anual (33% Dcto)" : "Plan Mensual"}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#A67B5B]">Total a Validar:</span>
-                  <strong className="text-amber-700 text-sm">{planPrice}</strong>
+                  <span className="text-[#A67B5B] dark:text-slate-400">Total a Validar:</span>
+                  <strong className="text-amber-700 dark:text-amber-400 text-sm">{planPrice}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#A67B5B]">Estado:</span>
-                  <span className="text-orange-600 font-bold flex items-center gap-1">
+                  <span className="text-[#A67B5B] dark:text-slate-400">Estado:</span>
+                  <span className="text-orange-600 dark:text-orange-400 font-bold flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-orange-500 animate-ping" />
-                    Pendiente de Aprobación Bancaria
+                    Esperando Pago en Pasarela
                   </span>
                 </div>
               </div>
 
-              {selectedGateway === "transfer" && (
-                <div className="text-left space-y-2">
-                  <label className="block text-[11px] font-black uppercase text-[#6B4423]">
-                    N° de Operación o Comprobante:
-                  </label>
-                  <input
-                    type="text"
-                    value={transactionRef}
-                    onChange={(e) => setTransactionRef(e.target.value)}
-                    placeholder="Ej: OP-984210 o RUT pagador"
-                    className="w-full p-2.5 rounded-xl border-2 border-[#E5D5C5] text-xs font-mono font-bold text-[#6B4423]"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleWhatsAppReceipt}
-                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>Enviar foto del comprobante a WhatsApp</span>
-                  </button>
-                </div>
-              )}
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300 flex items-start gap-2 text-left">
+                <Lock className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span>
+                  <strong>Transacción Privada:</strong> Al pagar con Webpay / Redcompra o Tarjeta, no necesitas transferir ni ver cuentas personales. El cobro entra seguro a la plataforma y se acredita al instante.
+                </span>
+              </div>
 
               <div className="flex flex-col sm:flex-row gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setPaymentState("idle")}
-                  className="flex-1 py-3 border-2 border-[#E5D5C5] text-[#A67B5B] hover:text-[#6B4423] rounded-xl text-xs font-bold transition-colors"
+                  className="flex-1 py-3 border-2 border-[#E5D5C5] dark:border-slate-700 text-[#A67B5B] dark:text-slate-300 hover:text-[#6B4423] rounded-xl text-xs font-bold transition-colors"
                 >
-                  Volver a Opciones
+                  Volver a Planes
                 </button>
 
                 <button
@@ -279,7 +233,7 @@ export default function ProSubscriptionModal({
                   className="flex-2 py-3 bg-gradient-to-r from-[#F59E0B] to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-black shadow-conan-btn flex items-center justify-center gap-2 transition-transform active:scale-95"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Verificar y Confirmar Pago Real</span>
+                  <span>Ya Pagué en Webpay &bull; Activar PRO</span>
                 </button>
               </div>
             </div>
@@ -289,11 +243,11 @@ export default function ProSubscriptionModal({
           {paymentState === "verifying" && (
             <div className="py-10 text-center space-y-3">
               <Loader2 className="w-10 h-10 text-[#F59E0B] animate-spin mx-auto" />
-              <h3 className="text-base font-black text-[#6B4423]">
+              <h3 className="text-base font-black text-[#6B4423] dark:text-white">
                 Consultando con la pasarela de pago...
               </h3>
-              <p className="text-xs text-[#A67B5B]">
-                Verificando la aprobación bancaria y acreditación del cobro.
+              <p className="text-xs text-[#A67B5B] dark:text-slate-300">
+                Verificando la aprobación bancaria de Webpay / Mercado Pago.
               </p>
             </div>
           )}
@@ -301,13 +255,13 @@ export default function ProSubscriptionModal({
           {/* CASO 3: CONFIRMADO EXITOSAMENTE */}
           {paymentState === "confirmed" && (
             <div className="py-8 text-center space-y-3">
-              <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-black text-[#6B4423]">
+              <h3 className="text-xl font-black text-[#6B4423] dark:text-white">
                 ¡Pago Confirmado Exitosamente!
               </h3>
-              <p className="text-xs text-slate-700 max-w-sm mx-auto font-medium">
+              <p className="text-xs text-slate-700 dark:text-slate-300 max-w-sm mx-auto font-medium">
                 Tu suscripción <strong>Conan PRO</strong> ha sido activada con <strong>Vidas Infinitas (∞)</strong> y sin publicidad. ¡Bienvenido, Cadete Supremo!
               </p>
             </div>
@@ -318,33 +272,33 @@ export default function ProSubscriptionModal({
             <>
               {/* THE 3 TIERS COMPARISON */}
               <div className="mb-5">
-                <span className="text-[11px] font-black uppercase tracking-wider text-[#A67B5B] block mb-2">
+                <span className="text-[11px] font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400 block mb-2">
                   Las 3 Versiones de ConanGO
                 </span>
 
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
-                    <span className="font-black text-slate-800 block text-[11px]">1. Invitado</span>
-                    <span className="text-[10px] text-slate-500 font-semibold block mt-1">2 Sesiones gratis</span>
-                    <div className="mt-2 text-[10px] font-bold text-amber-700 bg-amber-50 py-0.5 rounded-lg">
+                  <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                    <span className="font-black text-slate-800 dark:text-slate-200 block text-[11px]">1. Invitado</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold block mt-1">2 Sesiones</span>
+                    <div className="mt-2 text-[10px] font-bold text-amber-700 bg-amber-50 dark:bg-amber-950/40 py-0.5 rounded-lg">
                       Límite 2
                     </div>
                   </div>
 
-                  <div className="p-2.5 rounded-2xl bg-amber-50/70 border border-amber-200">
-                    <span className="font-black text-amber-900 block text-[11px]">2. Gratis</span>
-                    <span className="text-[10px] text-amber-800 font-semibold block mt-1">100 Fórmulas</span>
-                    <div className="mt-2 text-[10px] font-bold text-blue-700 bg-blue-50 py-0.5 rounded-lg">
+                  <div className="p-2.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+                    <span className="font-black text-amber-900 dark:text-amber-200 block text-[11px]">2. Gratis</span>
+                    <span className="text-[10px] text-amber-800 dark:text-amber-300 font-semibold block mt-1">100 Fórmulas</span>
+                    <div className="mt-2 text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 py-0.5 rounded-lg">
                       Con Anuncios
                     </div>
                   </div>
 
-                  <div className="p-2.5 rounded-2xl bg-gradient-to-b from-amber-100 to-yellow-100 border-2 border-amber-400 shadow-xs ring-1 ring-amber-300">
-                    <div className="inline-flex items-center gap-1 font-black text-amber-950 text-[11px]">
-                      <Crown className="w-3 h-3 text-amber-600" />
+                  <div className="p-2.5 rounded-2xl bg-gradient-to-b from-amber-100 to-yellow-100 dark:from-amber-950/60 dark:to-yellow-950/40 border-2 border-amber-400 dark:border-amber-500 shadow-xs ring-1 ring-amber-300">
+                    <div className="inline-flex items-center gap-1 font-black text-amber-950 dark:text-amber-100 text-[11px]">
+                      <Crown className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                       <span>3. PRO</span>
                     </div>
-                    <span className="text-[10px] text-amber-900 font-semibold block mt-1">Vidas ∞ y 0 Ads</span>
+                    <span className="text-[10px] text-amber-900 dark:text-amber-200 font-semibold block mt-1">Vidas ∞ y 0 Ads</span>
                     <div className="mt-2 text-[10px] font-black text-white bg-amber-600 py-0.5 rounded-lg shadow-xs">
                       Completa
                     </div>
@@ -359,18 +313,18 @@ export default function ProSubscriptionModal({
                   onClick={() => setSelectedPlan("yearly")}
                   className={`p-3.5 rounded-2xl border-2 text-left relative transition-all ${
                     selectedPlan === "yearly"
-                      ? "border-amber-500 bg-amber-50/50 shadow-sm"
-                      : "border-[#E5D5C5] hover:border-[#A67B5B]"
+                      ? "border-amber-500 bg-amber-50/50 dark:bg-amber-950/40 shadow-sm"
+                      : "border-[#E5D5C5] dark:border-slate-700 hover:border-[#A67B5B]"
                   }`}
                 >
                   <div className="absolute -top-2.5 right-2 bg-amber-500 text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
                     Ahorra 33%
                   </div>
-                  <span className="text-xs font-black text-[#6B4423] block">Plan Anual</span>
-                  <div className="text-base font-black text-amber-800 mt-0.5">
+                  <span className="text-xs font-black text-[#6B4423] dark:text-slate-200 block">Plan Anual</span>
+                  <div className="text-base font-black text-amber-800 dark:text-amber-400 mt-0.5">
                     $39.900 CLP
                   </div>
-                  <span className="text-[10px] text-[#A67B5B] font-bold block">
+                  <span className="text-[10px] text-[#A67B5B] dark:text-slate-400 font-bold block">
                     $40 USD &bull; Todo el año
                   </span>
                 </button>
@@ -380,46 +334,33 @@ export default function ProSubscriptionModal({
                   onClick={() => setSelectedPlan("monthly")}
                   className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
                     selectedPlan === "monthly"
-                      ? "border-amber-500 bg-amber-50/50 shadow-sm"
-                      : "border-[#E5D5C5] hover:border-[#A67B5B]"
+                      ? "border-amber-500 bg-amber-50/50 dark:bg-amber-950/40 shadow-sm"
+                      : "border-[#E5D5C5] dark:border-slate-700 hover:border-[#A67B5B]"
                   }`}
                 >
-                  <span className="text-xs font-black text-[#6B4423] block">Plan Mensual</span>
-                  <div className="text-base font-black text-[#6B4423] mt-0.5">
+                  <span className="text-xs font-black text-[#6B4423] dark:text-slate-200 block">Plan Mensual</span>
+                  <div className="text-base font-black text-[#6B4423] dark:text-white mt-0.5">
                     $4.990 CLP
                   </div>
-                  <span className="text-[10px] text-[#A67B5B] font-bold block">
+                  <span className="text-[10px] text-[#A67B5B] dark:text-slate-400 font-bold block">
                     $5 USD &bull; Cancela cuando quieras
                   </span>
                 </button>
               </div>
 
-              {/* PAYMENT METHOD TABS */}
-              <div className="flex border-b border-[#E5D5C5] mb-4 text-xs font-black">
+              {/* PAYMENT METHOD TABS: EXCLUSIVELY SECURE GATEWAYS (NO MANUAL DATA LEAK) */}
+              <div className="flex border-b border-[#E5D5C5] dark:border-slate-700 mb-4 text-xs font-black">
                 <button
                   type="button"
                   onClick={() => setActiveTab("gateway")}
                   className={`flex-1 py-2.5 text-center border-b-2 flex items-center justify-center gap-1.5 transition-colors ${
                     activeTab === "gateway"
-                      ? "border-[#F59E0B] text-amber-900"
-                      : "border-transparent text-[#A67B5B] hover:text-[#6B4423]"
+                      ? "border-[#F59E0B] text-amber-900 dark:text-amber-400"
+                      : "border-transparent text-[#A67B5B] dark:text-slate-400 hover:text-[#6B4423]"
                   }`}
                 >
                   <CreditCard className="w-3.5 h-3.5" />
-                  <span>Pasarelas Seguras</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("transfer")}
-                  className={`flex-1 py-2.5 text-center border-b-2 flex items-center justify-center gap-1.5 transition-colors ${
-                    activeTab === "transfer"
-                      ? "border-[#F59E0B] text-amber-900"
-                      : "border-transparent text-[#A67B5B] hover:text-[#6B4423]"
-                  }`}
-                >
-                  <Building2 className="w-3.5 h-3.5" />
-                  <span>Transferencia</span>
+                  <span>Pasarelas Seguras (Webpay & Tarjetas)</span>
                 </button>
 
                 <button
@@ -427,108 +368,100 @@ export default function ProSubscriptionModal({
                   onClick={() => setActiveTab("coupon")}
                   className={`flex-1 py-2.5 text-center border-b-2 flex items-center justify-center gap-1.5 transition-colors ${
                     activeTab === "coupon"
-                      ? "border-[#F59E0B] text-amber-900"
-                      : "border-transparent text-[#A67B5B] hover:text-[#6B4423]"
+                      ? "border-[#F59E0B] text-amber-900 dark:text-amber-400"
+                      : "border-transparent text-[#A67B5B] dark:text-slate-400 hover:text-[#6B4423]"
                   }`}
                 >
                   <KeyRound className="w-3.5 h-3.5" />
-                  <span>Cupón</span>
+                  <span>Beca / Cupón</span>
                 </button>
               </div>
 
-              {/* TAB 1: CARD GATEWAYS (MERCADO PAGO & STRIPE) */}
+              {/* TAB 1: 100% SECURE GATEWAYS */}
               {activeTab === "gateway" && (
                 <div className="space-y-3">
-                  <p className="text-xs text-[#A67B5B] font-medium leading-relaxed">
-                    Selecciona tu medio de pago. El sistema esperará la <strong>confirmación del pago real</strong> antes de activar tu cuenta:
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2.5">
-                    <button
-                      type="button"
-                      onClick={() => handleInitiatePayment("mercadopago")}
-                      className="p-3.5 rounded-2xl bg-blue-50 border-2 border-blue-200 hover:border-blue-500 text-center transition-all active:scale-95 group"
-                    >
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <span className="text-sm font-black text-blue-900">Mercado Pago</span>
-                        <ExternalLink className="w-3.5 h-3.5 text-blue-600" />
+                  {/* Opción 1: Mercado Pago / Webpay Plus (Principal para Chile) */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-sky-50 dark:from-blue-950/40 dark:to-sky-950/20 border-2 border-blue-300 dark:border-blue-700 relative">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-black text-blue-950 dark:text-blue-200">
+                            Mercado Pago • Webpay Plus 🇨🇱
+                          </span>
+                          <span className="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[9px] font-black uppercase">
+                            Recomendado
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-blue-800 dark:text-blue-300 font-medium mt-1">
+                          Paga con <strong>Redcompra</strong>, <strong>CuentaRUT</strong>, Débito o Crédito en cuotas.
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          <span className="px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold border border-slate-200 dark:border-slate-600 shadow-2xs">
+                            Webpay Plus
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold border border-slate-200 dark:border-slate-600 shadow-2xs">
+                            CuentaRUT
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold border border-slate-200 dark:border-slate-600 shadow-2xs">
+                            Redcompra
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold border border-slate-200 dark:border-slate-600 shadow-2xs">
+                            Tarjetas Bancarias
+                          </span>
+                        </div>
                       </div>
-                      <span className="text-[10px] text-blue-700 font-bold block">Webpay, Débito, Cuenta RUT</span>
-                      <span className="text-[9px] font-black text-blue-950 mt-1 inline-block bg-blue-100 px-2 py-0.5 rounded-md">
-                        Pagar {planPrice}
+
+                      <button
+                        type="button"
+                        onClick={() => handleInitiatePayment("mercadopago")}
+                        className="py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-md transition-transform active:scale-95 flex items-center gap-1.5 shrink-0 self-center"
+                      >
+                        <span>Pagar {planPrice}</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Opción 2: Stripe (Internacional) */}
+                  <div className="p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-black text-indigo-950 dark:text-indigo-200">
+                          Stripe (Tarjetas Internacionales) 🌎
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-indigo-700 dark:text-indigo-300 font-medium block mt-0.5">
+                        Visa, Mastercard, American Express, Apple Pay y Google Pay.
                       </span>
-                    </button>
+                    </div>
 
                     <button
                       type="button"
                       onClick={() => handleInitiatePayment("stripe")}
-                      className="p-3.5 rounded-2xl bg-indigo-50 border-2 border-indigo-200 hover:border-indigo-500 text-center transition-all active:scale-95 group"
+                      className="py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs transition-transform active:scale-95 flex items-center gap-1 shrink-0"
                     >
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <span className="text-sm font-black text-indigo-900">Stripe</span>
-                        <ExternalLink className="w-3.5 h-3.5 text-indigo-600" />
-                      </div>
-                      <span className="text-[10px] text-indigo-700 font-bold block">Tarjetas, Apple Pay</span>
-                      <span className="text-[9px] font-black text-indigo-950 mt-1 inline-block bg-indigo-100 px-2 py-0.5 rounded-md">
-                        Pagar {planUsd}
-                      </span>
+                      <span>Pagar {planUsd}</span>
+                      <ExternalLink className="w-3 h-3" />
                     </button>
                   </div>
 
-                  <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl text-[11px] text-[#6B4423]">
-                    <strong>Seguridad garantizada:</strong> Al hacer clic serás redirigido a la pasarela bancaria oficial y deberás confirmar el comprobante de pago para la activación.
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: BANK TRANSFER & WHATSAPP */}
-              {activeTab === "transfer" && (
-                <div className="space-y-3 bg-[#FAF6F0] p-4 rounded-2xl border border-[#E5D5C5]">
-                  <div className="flex items-center gap-2 text-xs font-black text-[#6B4423]">
-                    <Building2 className="w-4 h-4 text-[#F59E0B]" />
-                    <span>Datos para Transferencia Bancaria:</span>
-                  </div>
-                  <div className="text-xs font-mono bg-white p-3 rounded-xl border border-[#E5D5C5] text-[#6B4423] space-y-1">
-                    <div><strong>Monto Exacto:</strong> {planPrice}</div>
-                    <div><strong>Tipo de Cuenta:</strong> Cuenta Vista / Corriente</div>
-                    <div><strong>Asunto / Mensaje:</strong> Conan PRO + tu correo</div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-[#6B4423] mb-1">
-                      N° de Transacción / Operación Bancaria:
-                    </label>
-                    <input
-                      type="text"
-                      value={transactionRef}
-                      onChange={(e) => setTransactionRef(e.target.value)}
-                      placeholder="Ej: 94821033"
-                      className="w-full p-2.5 rounded-xl border-2 border-[#E5D5C5] text-xs font-mono text-[#6B4423]"
-                    />
-                  </div>
-
-                  {errorMessage && (
-                    <div className="p-2 bg-red-50 text-red-700 text-xs font-bold rounded-lg flex items-center gap-1.5">
-                      <AlertCircle className="w-3.5 h-3.5" />
-                      <span>{errorMessage}</span>
+                  {/* Banner de Cero Exposición de Datos Personales */}
+                  <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-[11px] text-emerald-900 dark:text-emerald-300 flex items-start gap-2">
+                    <Lock className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong>Privacidad 100% Protegida:</strong>
+                      <p className="text-[10px] text-emerald-800 dark:text-emerald-300 mt-0.5 leading-relaxed">
+                        Nadie ve tus datos bancarios ni tu RUT. La transacción la procesan directamente los servidores seguros de Webpay Plus y Mercado Pago bajo cifrado bancario SSL 256-bit.
+                      </p>
                     </div>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={handleTransferSubmit}
-                    className="w-full py-3 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-xs transition-transform active:scale-95"
-                  >
-                    <span>Validar Transferencia</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  </div>
                 </div>
               )}
 
-              {/* TAB 3: COUPON CODE */}
+              {/* TAB 2: COUPON CODE */}
               {activeTab === "coupon" && (
                 <form onSubmit={handleCouponSubmit} className="space-y-3">
-                  <p className="text-xs text-[#A67B5B] font-medium">
+                  <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium">
                     Si posees un código promocional o beca institucional, ingrésalo aquí para validación:
                   </p>
                   <div className="flex gap-2">
@@ -537,11 +470,11 @@ export default function ProSubscriptionModal({
                       placeholder="Ej: CONANPRO"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      className="flex-1 p-3 rounded-xl border-2 border-[#E5D5C5] bg-[#FAF6F0] text-xs font-black text-[#6B4423] uppercase tracking-wider focus:outline-none focus:border-[#F59E0B]"
+                      className="flex-1 p-3 rounded-xl border-2 border-[#E5D5C5] dark:border-slate-700 bg-[#FAF6F0] dark:bg-slate-800 text-xs font-black text-[#6B4423] dark:text-white uppercase tracking-wider focus:outline-none focus:border-[#F59E0B]"
                     />
                     <button
                       type="submit"
-                      className="px-5 py-3 bg-[#6B4423] hover:bg-[#8C5D35] text-white font-black text-xs rounded-xl shadow-xs transition-transform active:scale-95"
+                      className="px-5 py-3 bg-[#6B4423] dark:bg-amber-600 hover:bg-[#8C5D35] text-white font-black text-xs rounded-xl shadow-xs transition-transform active:scale-95"
                     >
                       Validar
                     </button>
@@ -549,15 +482,15 @@ export default function ProSubscriptionModal({
                   {couponMsg && (
                     <p className="text-xs font-bold text-red-600">{couponMsg}</p>
                   )}
-                  <p className="text-[10px] text-[#A67B5B] font-bold">
+                  <p className="text-[10px] text-[#A67B5B] dark:text-slate-400 font-bold">
                     (Código de demostración para pruebas del sistema: <code>CONANPRO</code>)
                   </p>
                 </form>
               )}
 
-              <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#A67B5B] font-bold mt-4 text-center">
+              <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#A67B5B] dark:text-slate-400 font-bold mt-4 text-center">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Encriptación bancaria SSL 256 bits &bull; Cancelación inmediata sin cargos sorpresa.</span>
+                <span>Cifrado bancario seguro &bull; Activación oficial de Vidas Infinitas (∞).</span>
               </div>
             </>
           )}
