@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const sizeParam = parseInt(searchParams.get("size") || "100", 10);
   const formulaParam = searchParams.get("formula"); // e.g. "1", "45", "random"
 
-  const validSizes: SessionSize[] = [10, 20, 30, 50, 100];
+  const validSizes: SessionSize[] = [10, 20, 30, 40, 50, 100];
   const size: SessionSize = validSizes.includes(sizeParam as SessionSize)
     ? (sizeParam as SessionSize)
     : 100;

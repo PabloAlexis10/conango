@@ -30,7 +30,7 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
   const typeParam = (searchParams.get("type") || defaultType) as SessionType;
   const rawSize = parseInt(searchParams.get("size") || "100", 10);
   const formulaParam = searchParams.get("formula"); // "random" or "1", "2", etc.
-  const size: SessionSize = [10, 30, 50, 100].includes(rawSize as SessionSize)
+  const size: SessionSize = [10, 20, 30, 40, 50, 100].includes(rawSize as SessionSize)
     ? (rawSize as SessionSize)
     : 100;
 

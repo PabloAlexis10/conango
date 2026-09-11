@@ -347,6 +347,33 @@ export default function Header({
                       <span>Ligas y Clasificación</span>
                     </Link>
 
+                    <Link
+                      href="/vocabulary"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
+                    >
+                      <BookOpen className="w-4 h-4 text-amber-500" />
+                      <span>Biblioteca de Vocabulario</span>
+                    </Link>
+
+                    <Link
+                      href="/vocabulary/matching"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
+                    >
+                      <span>🃏</span>
+                      <span>Juego de Cartas Finito</span>
+                    </Link>
+
+                    <Link
+                      href="/about"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors"
+                    >
+                      <Sparkles className="w-4 h-4 text-amber-500" />
+                      <span>Acerca de ConanGo & Conan</span>
+                    </Link>
+
                     <button
                       type="button"
                       onClick={() => {

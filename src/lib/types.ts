@@ -1,5 +1,5 @@
 export type SessionType = "listening" | "reading" | "mixed";
-export type SessionSize = 10 | 20 | 30 | 50 | 100;
+export type SessionSize = 10 | 20 | 30 | 40 | 50 | 100;
 
 export interface Question {
   id: number;

@@ -6,11 +6,35 @@ import { matchingPairs, MatchingPair } from "@/lib/vocabularyData";
 import ConanMascot from "@/components/ConanMascot";
 import Header from "@/components/Header";
 import { soundEffects } from "@/lib/soundEffects";
-import { getCurrentUser, hasReachedGuestLimit, incrementGuestUsage, updateUserStreak, addExperience, recordLessonProgress } from "@/lib/supabase";
+import {
+  getCurrentUser,
+  hasReachedGuestLimit,
+  incrementGuestUsage,
+  updateUserStreak,
+  addExperience,
+  recordLessonProgress,
+  isAdmin,
+} from "@/lib/supabase";
 import GuestLimitWall from "@/components/GuestLimitWall";
 import AuthModal from "@/components/AuthModal";
-import { ArrowLeft, RotateCcw, Sparkles, Check, Volume2, Trophy, Zap } from "lucide-react";
+import RewardedVideoModal from "@/components/RewardedVideoModal";
+import ProSubscriptionModal from "@/components/ProSubscriptionModal";
+import {
+  ArrowLeft,
+  RotateCcw,
+  Sparkles,
+  Check,
+  Volume2,
+  Trophy,
+  Zap,
+  Heart,
+  Video,
+  Crown,
+  BookOpen,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
+import { UserProfile } from "@/lib/types";
 
 interface ColumnCard {
   uid: string;
@@ -29,8 +53,10 @@ function shuffle<T>(array: T[]): T[] {
 }
 
 const VISIBLE_COUNT = 5;
+const ROUND_TARGET = 10; // Finite game limit: 10 pairs to victory!
 
 export default function VocabularyMatchingPage() {
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [reservePool, setReservePool] = useState<MatchingPair[]>([]);
   const [leftCards, setLeftCards] = useState<ColumnCard[]>([]);
   const [rightCards, setRightCards] = useState<ColumnCard[]>([]);
@@ -43,15 +69,24 @@ export default function VocabularyMatchingPage() {
 
   const [totalMatched, setTotalMatched] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [lives, setLives] = useState(3);
   const [isFinished, setIsFinished] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
+
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [rewardModalOpen, setRewardModalOpen] = useState(false);
+  const [proModalOpen, setProModalOpen] = useState(false);
+
+  const isUserPro = Boolean(user?.isPro || (user && isAdmin(user)));
 
   // Initialize game
   const initGame = () => {
     const shuffledBank = shuffle([...matchingPairs]);
-    const initialActive = shuffledBank.slice(0, VISIBLE_COUNT);
-    const initialReserve = shuffledBank.slice(VISIBLE_COUNT);
+    // Take 10 pairs total for this finite round
+    const sessionBank = shuffledBank.slice(0, ROUND_TARGET);
+    const initialActive = sessionBank.slice(0, VISIBLE_COUNT);
+    const initialReserve = sessionBank.slice(VISIBLE_COUNT);
 
     const left: ColumnCard[] = initialActive.map((p) => ({
       uid: `${p.id}_es_${Math.random()}`,
@@ -78,10 +113,14 @@ export default function VocabularyMatchingPage() {
     setWrongUids([]);
     setTotalMatched(0);
     setStreak(0);
+    setLives(isUserPro ? 9999 : 3);
     setIsFinished(false);
+    setIsGameOver(false);
   };
 
   useEffect(() => {
+    const cur = getCurrentUser();
+    setUser(cur);
     if (hasReachedGuestLimit()) {
       setLimitReached(true);
     } else {
@@ -105,10 +144,33 @@ export default function VocabularyMatchingPage() {
       soundEffects.playCorrect();
       speakEnglishWord(rightCard.text);
 
-      const matchedPairId = leftCard.pairId;
       setMatchedUids([leftCard.uid, rightCard.uid]);
-      setTotalMatched((prev) => prev + 1);
+      const newMatched = totalMatched + 1;
+      setTotalMatched(newMatched);
       setStreak((prev) => prev + 1);
+
+      // Check if finished (reached ROUND_TARGET)
+      if (newMatched >= ROUND_TARGET) {
+        setTimeout(() => {
+          setIsFinished(true);
+          soundEffects.playLevelUp();
+          try {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ["#F59E0B", "#10B981", "#6366F1"],
+            });
+          } catch {}
+          updateUserStreak();
+          addExperience(50);
+          recordLessonProgress(50, 100);
+          if (!getCurrentUser()) {
+            incrementGuestUsage();
+          }
+        }, 400);
+        return;
+      }
 
       setTimeout(() => {
         // Remove matched pair from columns
@@ -136,7 +198,6 @@ export default function VocabularyMatchingPage() {
             };
 
             setLeftCards((prev) => [...prev, newLeft]);
-            // Insert new right card at random position so it's shuffled
             setRightCards((prev) => {
               const copy = [...prev];
               const randomPos = Math.floor(Math.random() * (copy.length + 1));
@@ -145,23 +206,8 @@ export default function VocabularyMatchingPage() {
             });
 
             return remainingPool;
-          } else {
-            // Check if board is cleared
-            setLeftCards((prev) => {
-              if (prev.length <= 1) {
-                setIsFinished(true);
-                soundEffects.playLevelUp();
-                updateUserStreak();
-                addExperience(50);
-                recordLessonProgress(50, 100);
-                if (!getCurrentUser()) {
-                  incrementGuestUsage();
-                }
-              }
-              return prev;
-            });
-            return [];
           }
+          return [];
         });
 
         setSelectedLeft(null);
@@ -169,10 +215,22 @@ export default function VocabularyMatchingPage() {
         setMatchedUids([]);
       }, 380);
     } else {
-      // MISMATCH
+      // MISMATCH - deduct life!
       soundEffects.playIncorrect();
       setWrongUids([leftCard.uid, rightCard.uid]);
       setStreak(0);
+
+      if (!isUserPro) {
+        setLives((prev) => {
+          const updated = Math.max(0, prev - 1);
+          if (updated === 0) {
+            setTimeout(() => {
+              setIsGameOver(true);
+            }, 600);
+          }
+          return updated;
+        });
+      }
 
       setTimeout(() => {
         setWrongUids([]);
@@ -183,6 +241,7 @@ export default function VocabularyMatchingPage() {
   };
 
   const handleLeftClick = (card: ColumnCard) => {
+    if (isGameOver || isFinished) return;
     if (matchedUids.includes(card.uid)) return;
     setSelectedLeft(card);
     setWrongUids([]);
@@ -193,6 +252,7 @@ export default function VocabularyMatchingPage() {
   };
 
   const handleRightClick = (card: ColumnCard) => {
+    if (isGameOver || isFinished) return;
     if (matchedUids.includes(card.uid)) return;
     setSelectedRight(card);
     setWrongUids([]);
@@ -202,210 +262,316 @@ export default function VocabularyMatchingPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans text-[#6B4423]">
-      <Header sessionTitle="Vocabulario en Dos Columnas" />
+  // Called after rewarded video ad completes
+  const handleAdRewarded = () => {
+    setLives(3);
+    setIsGameOver(false);
+    setRewardModalOpen(false);
+  };
 
-      <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
-        {/* Top Header Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+  return (
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 text-[#6B4423] dark:text-slate-100 transition-colors select-none">
+      <Header />
+
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-4 md:py-8 flex flex-col">
+        {/* Navigation & Header */}
+        <div className="flex items-center justify-between gap-4 mb-4">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs font-bold text-[#A67B5B] hover:text-[#6B4423] transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6F0] dark:bg-slate-900 border border-[#E5D5C5] dark:border-slate-800 text-xs font-black text-[#6B4423] dark:text-slate-200 hover:bg-[#F5EFEB] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Volver al Inicio</span>
+            <span>Base</span>
           </Link>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-[#E5D5C5] shadow-xs text-xs font-black text-amber-800">
-              <Zap className="w-3.5 h-3.5 text-[#F59E0B]" />
-              <span>Racha: {streak}</span>
+            {/* Lives Display */}
+            <div className="flex items-center gap-1 px-3 py-1 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-full shadow-xs">
+              <Heart className="w-4 h-4 fill-red-500 text-red-500" />
+              <span className="text-xs font-black text-red-700 dark:text-red-300">
+                {isUserPro ? "∞" : lives}
+              </span>
             </div>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-[#E5D5C5] shadow-xs text-xs font-black text-emerald-800">
-              <Check className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Pares: {totalMatched}</span>
-            </div>
+            {/* Streak */}
+            {streak > 1 && (
+              <div className="flex items-center gap-1 px-2.5 py-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-full text-xs font-black text-amber-700 dark:text-amber-300">
+                <Zap className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                <span>{streak}x Combo</span>
+              </div>
+            )}
 
             <button
               type="button"
               onClick={initGame}
-              className="p-2 text-[#A67B5B] hover:text-[#6B4423] hover:bg-white rounded-xl border border-[#E5D5C5] transition-colors"
-              title="Reiniciar con nuevas cartas"
+              className="p-1.5 rounded-xl bg-[#FAF6F0] dark:bg-slate-900 border border-[#E5D5C5] dark:border-slate-800 text-[#6B4423] dark:text-slate-300 hover:bg-[#F5EFEB]"
+              title="Reiniciar ronda"
             >
               <RotateCcw className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Mascot & Instruction */}
-        <div className="flex items-center justify-between bg-white p-4 sm:p-5 rounded-3xl border-2 border-[#E5D5C5] shadow-sm mb-6">
-          <div className="flex items-center gap-3.5">
-            <ConanMascot
-              size="sm"
-              mood={isFinished ? "celebrate" : streak > 2 ? "celebrate" : "thinking"}
+        {/* Progress Bar (0 to 10 pairs) */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between text-xs font-black mb-1.5 text-[#6B4423] dark:text-slate-300">
+            <span>Objetivo Táctico: 10 Pares</span>
+            <span className="text-indigo-600 dark:text-indigo-400 font-black">
+              {totalMatched} / {ROUND_TARGET} completados
+            </span>
+          </div>
+          <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+            <div
+              className="bg-gradient-to-r from-indigo-500 to-amber-500 h-full rounded-full transition-all duration-300"
+              style={{ width: `${(totalMatched / ROUND_TARGET) * 100}%` }}
             />
-            <div>
-              <h2 className="text-base sm:text-lg font-black text-[#6B4423]">
-                Emparejamiento por Columnas
-              </h2>
-              <p className="text-xs sm:text-sm text-[#A67B5B] font-medium">
-                Toca una palabra en <strong className="text-[#6B4423]">Español</strong> (izquierda) y su pareja en <strong className="text-[#6B4423]">Inglés</strong> (derecha). ¡Al acertar se eliminan y aparecen más!
-              </p>
+          </div>
+        </div>
+
+        {/* Game Area */}
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 mb-6">
+            {/* Left Column (Spanish) */}
+            <div className="space-y-3">
+              <div className="text-center text-xs font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400 mb-2">
+                🇪🇸 Español
+              </div>
+              <AnimatePresence>
+                {leftCards.map((card) => {
+                  const isSelected = selectedLeft?.uid === card.uid;
+                  const isMatched = matchedUids.includes(card.uid);
+                  const isWrong = wrongUids.includes(card.uid);
+
+                  return (
+                    <motion.button
+                      key={card.uid}
+                      layout
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.7, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      type="button"
+                      onClick={() => handleLeftClick(card)}
+                      className={`w-full p-3.5 sm:p-4 rounded-2xl border-2 font-bold text-xs sm:text-sm text-center shadow-xs transition-all flex items-center justify-center min-h-[58px] sm:min-h-[68px] ${
+                        isMatched
+                          ? "bg-emerald-500 text-white border-emerald-600 shadow-md scale-98"
+                          : isWrong
+                          ? "bg-red-500 text-white border-red-600 shadow-md animate-shake"
+                          : isSelected
+                          ? "bg-amber-100 dark:bg-amber-950/70 border-amber-500 text-amber-950 dark:text-amber-100 ring-2 ring-amber-400"
+                          : "bg-white dark:bg-slate-900 border-[#E5D5C5] dark:border-slate-800 text-[#6B4423] dark:text-slate-100 hover:border-amber-400"
+                      }`}
+                    >
+                      <span>{card.text}</span>
+                    </motion.button>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+
+            {/* Right Column (English) */}
+            <div className="space-y-3">
+              <div className="text-center text-xs font-black uppercase tracking-wider text-[#A67B5B] dark:text-slate-400 mb-2">
+                🇺🇸 English
+              </div>
+              <AnimatePresence>
+                {rightCards.map((card) => {
+                  const isSelected = selectedRight?.uid === card.uid;
+                  const isMatched = matchedUids.includes(card.uid);
+                  const isWrong = wrongUids.includes(card.uid);
+
+                  return (
+                    <motion.button
+                      key={card.uid}
+                      layout
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.7, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      type="button"
+                      onClick={() => handleRightClick(card)}
+                      className={`w-full p-3.5 sm:p-4 rounded-2xl border-2 font-black text-xs sm:text-sm text-center shadow-xs transition-all flex items-center justify-center min-h-[58px] sm:min-h-[68px] ${
+                        isMatched
+                          ? "bg-emerald-500 text-white border-emerald-600 shadow-md scale-98"
+                          : isWrong
+                          ? "bg-red-500 text-white border-red-600 shadow-md animate-shake"
+                          : isSelected
+                          ? "bg-indigo-100 dark:bg-indigo-950/70 border-indigo-500 text-indigo-950 dark:text-indigo-100 ring-2 ring-indigo-400"
+                          : "bg-white dark:bg-slate-900 border-[#E5D5C5] dark:border-slate-800 text-[#6B4423] dark:text-slate-100 hover:border-indigo-400"
+                      }`}
+                    >
+                      <span>{card.text}</span>
+                    </motion.button>
+                  );
+                })}
+              </AnimatePresence>
             </div>
           </div>
         </div>
 
-        {!isFinished ? (
-          /* TWO-COLUMN BOARD (ALWAYS SIDE-BY-SIDE) */
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-6">
-            {/* LEFT COLUMN: SPANISH */}
-            <div className="space-y-2.5 sm:space-y-3">
-              <div className="flex items-center justify-between px-1.5 pb-1 border-b border-[#E5D5C5]">
-                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#A67B5B] flex items-center gap-1">
-                  <span>Español</span>
-                </span>
-                <span className="text-[10px] sm:text-xs font-bold text-[#A67B5B]">
-                  {leftCards.length}
-                </span>
-              </div>
-
-              <div className="space-y-2 sm:space-y-2.5 min-h-[300px]">
-                <AnimatePresence>
-                  {leftCards.map((card) => {
-                    const isSelected = selectedLeft?.uid === card.uid;
-                    const isMatched = matchedUids.includes(card.uid);
-                    const isWrong = wrongUids.includes(card.uid);
-
-                    let cardClass = "bg-white border-[#E5D5C5] text-[#6B4423] hover:border-[#F59E0B]";
-                    if (isSelected) {
-                      cardClass = "bg-amber-50 border-[#F59E0B] text-[#92400E] shadow-[0_3px_0_0_#D97706] scale-[1.02]";
-                    }
-                    if (isMatched) {
-                      cardClass = "bg-emerald-50 border-emerald-500 text-emerald-800 shadow-[0_3px_0_0_#10B981]";
-                    }
-                    if (isWrong) {
-                      cardClass = "bg-red-50 border-red-500 text-red-800 shadow-[0_3px_0_0_#EF4444] animate-shake";
-                    }
-
-                    return (
-                      <motion.button
-                        key={card.uid}
-                        layout
-                        initial={{ opacity: 0, x: -15, scale: 0.95 }}
-                        animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8, x: -20 }}
-                        transition={{ duration: 0.22 }}
-                        type="button"
-                        onClick={() => handleLeftClick(card)}
-                        className={`w-full p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border-2 font-bold text-xs sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
-                      >
-                        <span className="font-black leading-tight">{card.text}</span>
-                        {isSelected && <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping" />}
-                        {isMatched && <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />}
-                      </motion.button>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN: ENGLISH */}
-            <div className="space-y-2.5 sm:space-y-3">
-              <div className="flex items-center justify-between px-1.5 pb-1 border-b border-[#E5D5C5]">
-                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-indigo-700 flex items-center gap-1">
-                  <span>Inglés</span>
-                  <span>🇺🇸</span>
-                </span>
-                <span className="text-[10px] sm:text-xs font-bold text-[#A67B5B]">
-                  {rightCards.length}
-                </span>
-              </div>
-
-              <div className="space-y-2 sm:space-y-2.5 min-h-[300px]">
-                <AnimatePresence>
-                  {rightCards.map((card) => {
-                    const isSelected = selectedRight?.uid === card.uid;
-                    const isMatched = matchedUids.includes(card.uid);
-                    const isWrong = wrongUids.includes(card.uid);
-
-                    let cardClass = "bg-white border-[#E5D5C5] text-[#4338CA] hover:border-indigo-500";
-                    if (isSelected) {
-                      cardClass = "bg-indigo-50 border-indigo-600 text-indigo-900 shadow-[0_3px_0_0_#4F46E5] scale-[1.02]";
-                    }
-                    if (isMatched) {
-                      cardClass = "bg-emerald-50 border-emerald-500 text-emerald-800 shadow-[0_3px_0_0_#10B981]";
-                    }
-                    if (isWrong) {
-                      cardClass = "bg-red-50 border-red-500 text-red-800 shadow-[0_3px_0_0_#EF4444] animate-shake";
-                    }
-
-                    return (
-                      <motion.button
-                        key={card.uid}
-                        layout
-                        initial={{ opacity: 0, x: 15, scale: 0.95 }}
-                        animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8, x: 20 }}
-                        transition={{ duration: 0.22 }}
-                        type="button"
-                        onClick={() => handleRightClick(card)}
-                        className={`w-full p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border-2 font-bold text-xs sm:text-base text-left flex items-center justify-between transition-all select-none shadow-xs ${cardClass}`}
-                      >
-                        <span className="font-black leading-tight">{card.text}</span>
-                        <div className="flex items-center gap-1.5">
-                          {isSelected && <span className="w-2 h-2 rounded-full bg-indigo-600 animate-ping" />}
-                          {isMatched && <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />}
-                        </div>
-                      </motion.button>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
-            </div>
+        {/* Small Companion Mascot Indicator */}
+        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#FAF6F0] dark:bg-slate-900 border border-[#E5D5C5] dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <ConanMascot size="sm" mood={isGameOver ? "sad" : isFinished ? "celebrate" : "happy"} animate={true} />
+            <span className="text-xs font-bold text-[#6B4423] dark:text-slate-300">
+              {isGameOver
+                ? "¡Cuidado piloto! Nos quedamos sin vidas tácticas."
+                : isFinished
+                ? "¡Excelente trabajo! Has completado los 10 pares."
+                : "Empareja cada palabra con su traducción correcta."}
+            </span>
           </div>
-        ) : (
-          /* VICTORY SCREEN */
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-3xl border-2 border-[#A67B5B] shadow-conan-card p-8 text-center max-w-md mx-auto"
-          >
-            <div className="w-16 h-16 rounded-3xl bg-amber-100 text-[#F59E0B] flex items-center justify-center mx-auto mb-4">
-              <Trophy className="w-8 h-8" />
-            </div>
 
-            <h2 className="text-2xl font-black text-[#6B4423] mb-2">
+          <Link
+            href="/vocabulary"
+            className="text-xs font-black text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Ver Biblioteca</span>
+          </Link>
+        </div>
+      </main>
+
+      {/* 🏆 FINITE VICTORY SCREEN MODAL */}
+      {isFinished && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-500 p-6 sm:p-8 max-w-md w-full text-center shadow-2xl"
+          >
+            <div className="w-16 h-16 rounded-3xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+              🏆
+            </div>
+            <h2 className="text-2xl font-black text-[#6B4423] dark:text-white mb-2">
               ¡Misión Cumplida!
             </h2>
-
-            <p className="text-sm text-[#A67B5B] font-medium mb-6">
-              ¡Completaste todos los pares de vocabulario disponibles en el banco con excelente precisión táctica!
+            <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-300 mb-6">
+              Has completado con éxito la ronda táctica de <strong>10 pares de vocabulario</strong>.
             </p>
 
-            <div className="p-4 bg-[#FAF6F0] rounded-2xl border border-[#E5D5C5] mb-6 flex justify-around">
-              <div>
-                <span className="text-xs text-[#A67B5B] font-bold block">Pares logrados</span>
-                <span className="text-2xl font-black text-[#6B4423]">{totalMatched}</span>
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800">
+                <span className="text-[10px] font-black uppercase text-amber-800 dark:text-amber-300 block">Experiencia</span>
+                <span className="text-lg font-black text-amber-900 dark:text-amber-100">+50 XP ⚡</span>
               </div>
-              <div>
-                <span className="text-xs text-[#A67B5B] font-bold block">Mejor racha</span>
-                <span className="text-2xl font-black text-[#F59E0B]">{streak}</span>
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                <span className="text-[10px] font-black uppercase text-emerald-800 dark:text-emerald-300 block">Precisión</span>
+                <span className="text-lg font-black text-emerald-900 dark:text-emerald-100">100% 🎯</span>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={initGame}
-              className="w-full py-3.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-2xl shadow-conan-btn flex items-center justify-center gap-2 transition-transform active:scale-98"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>Jugar otra ronda</span>
-            </button>
+            <div className="space-y-2.5">
+              <button
+                type="button"
+                onClick={initGame}
+                className="w-full py-3 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-xl shadow-conan-btn transition-transform active:scale-95 text-xs sm:text-sm"
+              >
+                🎮 Jugar Siguiente Ronda (10 Pares)
+              </button>
+
+              <Link
+                href="/vocabulary"
+                className="w-full py-2.5 bg-[#FAF6F0] dark:bg-slate-800 text-[#6B4423] dark:text-slate-200 font-bold rounded-xl border border-[#E5D5C5] dark:border-slate-700 flex items-center justify-center gap-2 text-xs hover:bg-[#F5EFEB]"
+              >
+                <BookOpen className="w-4 h-4 text-amber-500" />
+                <span>Explorar Biblioteca de Vocabulario</span>
+              </Link>
+
+              <Link
+                href="/"
+                className="block text-xs text-[#A67B5B] dark:text-slate-400 font-bold pt-1 hover:underline"
+              >
+                Volver a la Base de Entrenamiento
+              </Link>
+            </div>
           </motion.div>
-        )}
-      </main>
+        </div>
+      )}
+
+      {/* 💀 GAME OVER MODAL (OUT OF LIVES) */}
+      {isGameOver && !isFinished && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-red-500 p-6 sm:p-8 max-w-md w-full text-center shadow-2xl"
+          >
+            <div className="w-16 h-16 rounded-3xl bg-red-100 text-red-600 flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+              💔
+            </div>
+            <h2 className="text-2xl font-black text-[#6B4423] dark:text-white mb-2">
+              ¡Sin Vidas Tácticas!
+            </h2>
+            <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-300 mb-6">
+              Has agotado tus vidas al cometer errores en los pares. ¡Mira un video breve para recuperar tus 3 vidas y continuar la ronda exactamente donde quedaste!
+            </p>
+
+            <div className="space-y-3">
+              {/* Button: Watch Video to continue */}
+              <button
+                type="button"
+                onClick={() => setRewardModalOpen(true)}
+                className="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm transition-transform active:scale-95"
+              >
+                <Video className="w-4 h-4 text-white" />
+                <span>Ver Video & Revivir Gratis (+3 Vidas)</span>
+              </button>
+
+              {/* Button: Conan PRO infinite lives */}
+              <button
+                type="button"
+                onClick={() => setProModalOpen(true)}
+                className="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 text-white font-black rounded-xl shadow-md flex items-center justify-center gap-2 text-xs transition-transform active:scale-95"
+              >
+                <Crown className="w-4 h-4" />
+                <span>Desbloquear Vidas Infinitas con Conan PRO</span>
+              </button>
+
+              {/* Restart or Quit */}
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={initGame}
+                  className="flex-1 py-2 bg-[#FAF6F0] dark:bg-slate-800 text-[#6B4423] dark:text-slate-300 font-bold rounded-xl text-xs border border-[#E5D5C5] dark:border-slate-700 hover:bg-[#F5EFEB]"
+                >
+                  Reiniciar Ronda
+                </button>
+                <Link
+                  href="/"
+                  className="flex-1 py-2 bg-[#FAF6F0] dark:bg-slate-800 text-[#6B4423] dark:text-slate-300 font-bold rounded-xl text-xs border border-[#E5D5C5] dark:border-slate-700 hover:bg-[#F5EFEB] text-center"
+                >
+                  Salir a Base
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Rewarded Video Modal */}
+      <RewardedVideoModal
+        isOpen={rewardModalOpen}
+        onClose={() => setRewardModalOpen(false)}
+        onRewarded={handleAdRewarded}
+      />
+
+      {/* Pro Modal */}
+      <ProSubscriptionModal
+        isOpen={proModalOpen}
+        onClose={() => setProModalOpen(false)}
+      />
+
+      {/* Guest Wall */}
+      {limitReached && (
+        <GuestLimitWall onOpenAuth={() => setAuthModalOpen(true)} />
+      )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+      />
     </div>
   );
 }
