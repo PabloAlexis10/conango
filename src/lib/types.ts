@@ -110,6 +110,26 @@ export interface PromoCode {
   createdBy?: string;
 }
 
+export interface CodeRedemption {
+  id: string;
+  codeId: string;
+  code: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  type: "discount" | "gift" | "pro_trial";
+  value: number;
+  rewardDetail?: {
+    gems?: number;
+    streakFreeze?: number;
+    discountPercent?: number;
+    proDays?: number;
+  };
+  redeemedAt: string;
+  revoked?: boolean;
+  revokedAt?: string;
+}
+
 export interface MistakeRecord {
   id: string;
   questionId: number;

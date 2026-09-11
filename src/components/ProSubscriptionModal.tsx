@@ -139,14 +139,14 @@ export default function ProSubscriptionModal({
   };
 
   // Validación de cupón conectado al motor de códigos
-  const handleCouponSubmit = (e: React.FormEvent) => {
+  const handleCouponSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const clean = couponCode.trim();
     if (!clean) return;
 
     setPaymentState("verifying");
-    setTimeout(() => {
-      const res = redeemCode(clean);
+    try {
+      const res = await redeemCode(clean);
       if (res.success) {
         soundEffects.playLevelUp();
         try {
@@ -159,7 +159,7 @@ export default function ProSubscriptionModal({
         } catch {}
 
         setCouponMsg(res.message);
-        if (res.rewardType === "pro_trial" || clean.toUpperCase() === "CONANPRO") {
+        if (res.rewardType === "pro_trial") {
           setPaymentState("confirmed");
           setProStatus(true);
           setTimeout(() => {
@@ -181,7 +181,12 @@ export default function ProSubscriptionModal({
         soundEffects.playIncorrect();
         setTimeout(() => setCouponMsg(""), 4000);
       }
-    }, 800);
+    } catch {
+      setPaymentState("idle");
+      setCouponMsg("Error al validar el código.");
+      soundEffects.playIncorrect();
+      setTimeout(() => setCouponMsg(""), 4000);
+    }
   };
 
   return (
@@ -613,7 +618,7 @@ export default function ProSubscriptionModal({
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      placeholder="Ej: CONANPRO"
+                      placeholder="CUPÓN O BECA MILITAR"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
                       className="flex-1 p-3 rounded-xl border-2 border-[#E5D5C5] dark:border-slate-700 bg-[#FAF6F0] dark:bg-slate-800 text-xs font-black text-[#6B4423] dark:text-white uppercase tracking-wider focus:outline-none focus:border-[#F59E0B]"
@@ -628,9 +633,6 @@ export default function ProSubscriptionModal({
                   {couponMsg && (
                     <p className="text-xs font-bold text-red-600">{couponMsg}</p>
                   )}
-                  <p className="text-[10px] text-[#A67B5B] dark:text-slate-400 font-bold">
-                    (Código de demostración para pruebas del sistema: <code>CONANPRO</code>)
-                  </p>
                 </form>
               )}
 

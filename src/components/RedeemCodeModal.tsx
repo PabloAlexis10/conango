@@ -24,15 +24,15 @@ export default function RedeemCodeModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code.trim()) return;
 
     setLoading(true);
     setResult(null);
 
-    setTimeout(() => {
-      const res = redeemCode(code);
+    try {
+      const res = await redeemCode(code);
       setLoading(false);
       setResult(res);
 
@@ -56,7 +56,11 @@ export default function RedeemCodeModal({
       } else {
         soundEffects.playIncorrect();
       }
-    }, 600);
+    } catch {
+      setLoading(false);
+      setResult({ success: false, message: "Error al comunicarse con la Comandancia." });
+      soundEffects.playIncorrect();
+    }
   };
 
   return (
@@ -98,7 +102,7 @@ export default function RedeemCodeModal({
                   setCode(e.target.value.toUpperCase());
                   if (result) setResult(null);
                 }}
-                placeholder="EJ: CONANPRO7"
+                placeholder="INGRESA TU CÓDIGO AQUÍ"
                 className="w-full px-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-2xl text-center font-mono font-black text-lg tracking-widest uppercase text-amber-600 dark:text-amber-400 placeholder:text-slate-400 focus:border-amber-500 focus:outline-none transition-all shadow-inner"
               />
               <Tag className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -142,12 +146,6 @@ export default function RedeemCodeModal({
             )}
           </button>
         </form>
-
-        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-center">
-          <span className="text-[11px] text-slate-400">
-            ¿Buscas códigos? Prueba con <code className="text-amber-600 dark:text-amber-400 font-bold">CONANPRO7</code> o <code className="text-amber-600 dark:text-amber-400 font-bold">DIAMANTESVIP</code>.
-          </span>
-        </div>
       </motion.div>
     </div>
   );

@@ -1,95 +1,21 @@
-import { PromoCode, UserProfile } from "./types";
+import { PromoCode, UserProfile, CodeRedemption } from "./types";
 import { getCurrentUser, saveCurrentUserProfile, setProStatus } from "./supabase";
 
 const STORAGE_KEY_PROMO_CODES = "conango_promo_codes";
 const STORAGE_KEY_REDEEMED = "conango_user_redeemed_codes";
 const STORAGE_KEY_ACTIVE_DISCOUNT = "conango_active_discount";
 
-// Códigos por defecto autorizados por el Comandante General
-export const DEFAULT_PROMO_CODES: PromoCode[] = [
-  {
-    id: "code_conanpro7",
-    code: "CONANPRO7",
-    type: "pro_trial",
-    value: 7,
-    description: "Prueba Gratuita de Conan PRO por 7 días con Vidas Infinitas y Radio Cabina F-22",
-    rewardDetail: { proDays: 7 },
-    active: true,
-    usedCount: 0,
-    maxUses: 1000,
-    createdAt: new Date().toISOString(),
-    createdBy: "Comandancia General",
-  },
-  {
-    id: "code_topgun50",
-    code: "TOPGUN50",
-    type: "discount",
-    value: 50,
-    description: "50% de Descuento Inmediato en cualquier plan de Conan PRO",
-    rewardDetail: { discountPercent: 50 },
-    active: true,
-    usedCount: 0,
-    maxUses: 500,
-    createdAt: new Date().toISOString(),
-    createdBy: "Comandancia General",
-  },
-  {
-    id: "code_diamantesvip",
-    code: "DIAMANTESVIP",
-    type: "gift",
-    value: 500,
-    description: "Regalo Táctico de +500 Diamantes para Pociones y Tienda Táctica",
-    rewardDetail: { gems: 500 },
-    active: true,
-    usedCount: 0,
-    maxUses: 500,
-    createdAt: new Date().toISOString(),
-    createdBy: "Comandancia General",
-  },
-  {
-    id: "code_pocionesvip",
-    code: "POCIONESVIP",
-    type: "gift",
-    value: 300,
-    description: "Pack Regalo de +300 Diamantes y +2 Protectores de Racha Táctica",
-    rewardDetail: { gems: 300, streakFreeze: 2 },
-    active: true,
-    usedCount: 0,
-    maxUses: 500,
-    createdAt: new Date().toISOString(),
-    createdBy: "Comandancia General",
-  },
-  {
-    id: "code_alcptmaster",
-    code: "ALCPTMASTER",
-    type: "pro_trial",
-    value: 30,
-    description: "Pase Oficial de Prueba Militar PRO por 30 Días con Acceso Total",
-    rewardDetail: { proDays: 30 },
-    active: true,
-    usedCount: 0,
-    maxUses: 200,
-    createdAt: new Date().toISOString(),
-    createdBy: "Comandancia General",
-  },
-];
+// Empty by default: Only codes created by the administrator will exist
+export const DEFAULT_PROMO_CODES: PromoCode[] = [];
 
 export function getPromoCodes(): PromoCode[] {
-  if (typeof window === "undefined") return DEFAULT_PROMO_CODES;
+  if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY_PROMO_CODES);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEY_PROMO_CODES, JSON.stringify(DEFAULT_PROMO_CODES));
-      return DEFAULT_PROMO_CODES;
-    }
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      localStorage.setItem(STORAGE_KEY_PROMO_CODES, JSON.stringify(DEFAULT_PROMO_CODES));
-      return DEFAULT_PROMO_CODES;
-    }
-    return parsed;
+    if (!raw) return [];
+    return JSON.parse(raw);
   } catch {
-    return DEFAULT_PROMO_CODES;
+    return [];
   }
 }
 
@@ -98,7 +24,23 @@ export function savePromoCodes(codes: PromoCode[]): void {
   localStorage.setItem(STORAGE_KEY_PROMO_CODES, JSON.stringify(codes));
 }
 
-export function createPromoCode(params: {
+// Fetch codes from centralized server backend
+export async function fetchServerCodes(): Promise<{ codes: PromoCode[]; redemptions: CodeRedemption[] }> {
+  try {
+    const res = await fetch("/api/admin/codes", { method: "GET", cache: "no-store" });
+    const data = await res.json();
+    if (data.success && Array.isArray(data.codes)) {
+      savePromoCodes(data.codes);
+      return { codes: data.codes, redemptions: data.redemptions || [] };
+    }
+    return { codes: getPromoCodes(), redemptions: [] };
+  } catch (err) {
+    console.error("[fetchServerCodes] Error:", err);
+    return { codes: getPromoCodes(), redemptions: [] };
+  }
+}
+
+export async function createPromoCode(params: {
   code: string;
   type: "discount" | "gift" | "pro_trial";
   value: number;
@@ -111,168 +53,204 @@ export function createPromoCode(params: {
     discountPercent?: number;
     proDays?: number;
   };
-}): { success: boolean; code?: PromoCode; error?: string } {
+}): Promise<{ success: boolean; code?: PromoCode; error?: string }> {
   const cleanCode = params.code.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
   if (!cleanCode || cleanCode.length < 3) {
     return { success: false, error: "El código debe tener al menos 3 caracteres alfanuméricos." };
   }
 
-  const existing = getPromoCodes();
-  if (existing.some((c) => c.code.toUpperCase() === cleanCode)) {
-    return { success: false, error: `El código "${cleanCode}" ya existe en el sistema.` };
-  }
-
-  const newCode: PromoCode = {
-    id: `code_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-    code: cleanCode,
-    type: params.type,
-    value: Number(params.value) || 0,
-    description: params.description.trim() || `Código ${params.type}`,
-    maxUses: params.maxUses || 999,
-    usedCount: 0,
-    active: true,
-    expiresAt: params.expiresAt,
-    rewardDetail: params.rewardDetail,
-    createdAt: new Date().toISOString(),
-    createdBy: "Administrador",
-  };
-
-  existing.unshift(newCode);
-  savePromoCodes(existing);
-
-  return { success: true, code: newCode };
-}
-
-export function togglePromoCodeActive(codeId: string): void {
-  const codes = getPromoCodes();
-  const idx = codes.findIndex((c) => c.id === codeId);
-  if (idx !== -1) {
-    codes[idx].active = !codes[idx].active;
-    savePromoCodes(codes);
+  try {
+    const res = await fetch("/api/admin/codes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        code: cleanCode,
+        type: params.type,
+        value: params.value,
+        description: params.description,
+        maxUses: params.maxUses,
+        expiresAt: params.expiresAt,
+        rewardDetail: params.rewardDetail,
+      }),
+    });
+    const data = await res.json();
+    if (data.success && data.code) {
+      const current = getPromoCodes();
+      const updated = [data.code, ...current.filter((c) => c.id !== data.code.id)];
+      savePromoCodes(updated);
+      return { success: true, code: data.code };
+    }
+    return { success: false, error: data.error || "Error al crear el código." };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Error de conexión con el servidor." };
   }
 }
 
-export function deletePromoCode(codeId: string): void {
-  const codes = getPromoCodes().filter((c) => c.id !== codeId);
-  savePromoCodes(codes);
+export async function togglePromoCodeActive(codeId: string): Promise<boolean> {
+  try {
+    const res = await fetch("/api/admin/codes", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ codeId }),
+    });
+    const data = await res.json();
+    if (data.success && data.code) {
+      const current = getPromoCodes();
+      const idx = current.findIndex((c) => c.id === codeId);
+      if (idx !== -1) {
+        current[idx].active = data.code.active;
+        savePromoCodes(current);
+      }
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
 }
 
-// Canjear un código ingresado por el usuario
-export function redeemCode(rawCode: string): {
+export async function deletePromoCode(codeId: string): Promise<boolean> {
+  try {
+    const res = await fetch(`/api/admin/codes?codeId=${encodeURIComponent(codeId)}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    if (data.success) {
+      const updated = getPromoCodes().filter((c) => c.id !== codeId);
+      savePromoCodes(updated);
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+// Revoke redemption by Admin
+export async function revokeRedemption(redemptionId: string): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const res = await fetch("/api/admin/codes", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ redemptionId }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      return { success: true, message: data.message };
+    }
+    return { success: false, error: data.error || "Error al revocar el canje." };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+// Canjear un código ingresado por el usuario (conectado al backend central)
+export async function redeemCode(rawCode: string): Promise<{
   success: boolean;
   message: string;
   code?: PromoCode;
   rewardType?: "discount" | "gift" | "pro_trial";
-} {
+}> {
   const clean = rawCode.trim().toUpperCase();
   if (!clean) {
     return { success: false, message: "Por favor ingresa un código promocional o de regalo." };
   }
 
-  const codes = getPromoCodes();
-  const match = codes.find((c) => c.code.toUpperCase() === clean);
-
-  if (!match) {
-    // Códigos rápidos especiales
-    if (clean === "CONANPRO" || clean === "ADMINMASTER") {
-      setProStatus(true);
-      return {
-        success: true,
-        message: "¡Código Maestro Autorizado! Conan PRO activado indefinidamente con Vidas Infinitas.",
-        rewardType: "pro_trial",
-      };
-    }
-    return { success: false, message: "Código inválido o no reconocido. Verifica que esté bien escrito." };
-  }
-
-  if (!match.active) {
-    return { success: false, message: "Este código ha sido desactivado por la Comandancia." };
-  }
-
-  if (match.expiresAt && new Date(match.expiresAt).getTime() < Date.now()) {
-    return { success: false, message: "Este código ha caducado en su fecha de vigencia." };
-  }
-
-  if (match.maxUses && match.usedCount >= match.maxUses) {
-    return { success: false, message: "Este código ha alcanzado el límite máximo de canjes permitidos." };
-  }
-
-  // Verificar si este usuario ya canjeó este código
   let user = getCurrentUser();
   const userId = user?.id || "guest";
-  if (typeof window !== "undefined") {
-    const redeemedList: string[] = JSON.parse(
-      localStorage.getItem(`${STORAGE_KEY_REDEEMED}_${userId}`) || "[]"
-    );
-    if (redeemedList.includes(match.id)) {
-      return { success: false, message: "Ya has canjeado este código anteriormente en tu cuenta." };
-    }
-  }
+  const userName = user?.name || "Cadete";
+  const userEmail = user?.email || "cadete@conango.com";
 
-  // Aplicar beneficios
-  let message = "";
-  if (match.type === "gift") {
-    const gemsToAdd = match.rewardDetail?.gems || match.value || 250;
-    const freezeToAdd = match.rewardDetail?.streakFreeze || 0;
+  try {
+    const res = await fetch("/api/codes/redeem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        code: clean,
+        userId,
+        userName,
+        userEmail,
+      }),
+    });
 
-    if (!user) {
-      user = {
-        id: "usr_" + Date.now(),
-        email: "cadete@conango.com",
-        name: "Cadete ConanGo",
-        medals: 5,
-        streakDays: 1,
-        xp: 100,
-        coins: 100,
-        gems: 100,
-        streakFreeze: 0,
-        created_at: new Date().toISOString(),
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        message: data.message || "Código inválido o no reconocido. Verifica que esté bien escrito.",
       };
     }
 
-    user.gems = (user.gems ?? user.coins ?? 100) + gemsToAdd;
-    user.coins = user.gems;
-    if (freezeToAdd > 0) {
-      user.streakFreeze = (user.streakFreeze || 0) + freezeToAdd;
+    const { code, rewardType, rewardDetail, message } = data;
+
+    // Aplicar beneficios localmente en la cuenta del usuario activo
+    if (rewardType === "gift") {
+      const gemsToAdd = rewardDetail?.gems || code?.value || 250;
+      const freezeToAdd = rewardDetail?.streakFreeze || 0;
+
+      if (!user) {
+        user = {
+          id: userId,
+          email: userEmail,
+          name: userName,
+          medals: 15,
+          streakDays: 1,
+          xp: 100,
+          coins: 100,
+          gems: 100,
+          streakFreeze: 0,
+          created_at: new Date().toISOString(),
+        };
+      }
+
+      user.gems = (user.gems ?? user.coins ?? 100) + gemsToAdd;
+      user.coins = user.gems;
+      if (freezeToAdd > 0) {
+        user.streakFreeze = (user.streakFreeze || 0) + freezeToAdd;
+      }
+      saveCurrentUserProfile(user);
+    } else if (rewardType === "pro_trial") {
+      setProStatus(true);
+      if (user) {
+        user.isPro = true;
+        user.medals = 9999;
+        saveCurrentUserProfile(user);
+      }
+    } else if (rewardType === "discount") {
+      const discount = rewardDetail?.discountPercent || code?.value || 50;
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEY_ACTIVE_DISCOUNT,
+          JSON.stringify({ percent: discount, code: code?.code || clean, appliedAt: Date.now() })
+        );
+      }
     }
 
-    saveCurrentUserProfile(user);
-    message = `¡Felicitaciones! Has recibido +${gemsToAdd} Diamantes Tácticos${
-      freezeToAdd > 0 ? ` y +${freezeToAdd} Protectores de Racha` : ""
-    }.`;
-  } else if (match.type === "pro_trial") {
-    const days = match.rewardDetail?.proDays || match.value || 7;
-    setProStatus(true);
-    message = `¡Pase Militar Autorizado! Tienes acceso completo a Conan PRO por ${days} días con Vidas Infinitas, Simulador Radio F-22 y Bóveda de Errores.`;
-  } else if (match.type === "discount") {
-    const discount = match.rewardDetail?.discountPercent || match.value || 50;
-    if (typeof window !== "undefined") {
-      localStorage.setItem(
-        STORAGE_KEY_ACTIVE_DISCOUNT,
-        JSON.stringify({ percent: discount, code: match.code, appliedAt: Date.now() })
+    // Registrar en historial local
+    if (typeof window !== "undefined" && code?.id) {
+      const redeemedList: string[] = JSON.parse(
+        localStorage.getItem(`${STORAGE_KEY_REDEEMED}_${userId}`) || "[]"
       );
+      if (!redeemedList.includes(code.id)) {
+        redeemedList.push(code.id);
+        localStorage.setItem(`${STORAGE_KEY_REDEEMED}_${userId}`, JSON.stringify(redeemedList));
+      }
     }
-    message = `¡Descuento del ${discount}% activado con éxito! Se aplicará automáticamente al contratar Conan PRO.`;
+
+    return {
+      success: true,
+      message,
+      code,
+      rewardType,
+    };
+  } catch (err: any) {
+    console.error("[redeemCode] Network Error:", err);
+    return {
+      success: false,
+      message: "No se pudo conectar con el servidor de la Comandancia para validar el código. Revisa tu conexión a internet.",
+    };
   }
-
-  // Registrar uso
-  match.usedCount += 1;
-  savePromoCodes(codes);
-
-  if (typeof window !== "undefined") {
-    const redeemedList: string[] = JSON.parse(
-      localStorage.getItem(`${STORAGE_KEY_REDEEMED}_${userId}`) || "[]"
-    );
-    redeemedList.push(match.id);
-    localStorage.setItem(`${STORAGE_KEY_REDEEMED}_${userId}`, JSON.stringify(redeemedList));
-  }
-
-  return {
-    success: true,
-    message,
-    code: match,
-    rewardType: match.type,
-  };
 }
 
 export function getActiveDiscount(): { percent: number; code: string } | null {
@@ -291,3 +269,4 @@ export function getActiveDiscount(): { percent: number; code: string } | null {
     return null;
   }
 }
+
