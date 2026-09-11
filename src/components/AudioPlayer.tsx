@@ -3,10 +3,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Volume2, Play, Pause, RotateCcw, Mic, ChevronDown } from "lucide-react";
 import { getAvailableHumanVoices, getBestHumanVoice, HumanVoiceOption } from "@/lib/audioVoice";
-import CockpitAudioSimulator, { TacticalRadioAudioEngine } from "./CockpitAudioSimulator";
-import ProSubscriptionModal from "./ProSubscriptionModal";
-import { getCurrentUser, subscribeAuth } from "@/lib/supabase";
-import { UserProfile } from "@/lib/types";
 
 interface AudioPlayerProps {
   audioUrl?: string | null;
@@ -31,31 +27,8 @@ export default function AudioPlayer({
   const [availableVoices, setAvailableVoices] = useState<HumanVoiceOption[]>([]);
   const [selectedVoiceUri, setSelectedVoiceUri] = useState<string>("");
   const [showVoiceMenu, setShowVoiceMenu] = useState<boolean>(false);
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [isCockpitActive, setIsCockpitActive] = useState<boolean>(false);
-  const [showProModal, setShowProModal] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    setUser(getCurrentUser());
-    const unsub = subscribeAuth((u) => setUser(u));
-    if (typeof window !== "undefined") {
-      setIsCockpitActive(localStorage.getItem("conango_cockpit_audio") === "true");
-    }
-    return () => unsub();
-  }, []);
-
-  const handleToggleCockpit = () => {
-    const next = !isCockpitActive;
-    setIsCockpitActive(next);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("conango_cockpit_audio", next ? "true" : "false");
-    }
-    if (next) {
-      TacticalRadioAudioEngine.playMicClickStart();
-    }
-  };
 
   // Cargar y descubrir voces humanas disponibles en el navegador
   useEffect(() => {
@@ -121,9 +94,6 @@ export default function AudioPlayer({
   };
 
   const handlePlay = () => {
-    if (isCockpitActive) {
-      TacticalRadioAudioEngine.playMicClickStart();
-    }
     if (!useSpeechFallback && audioUrl && audioRef.current) {
       audioRef.current
         .play()
@@ -227,9 +197,6 @@ export default function AudioPlayer({
   };
 
   const handleStop = () => {
-    if (isCockpitActive && isPlaying) {
-      TacticalRadioAudioEngine.playMicClickEnd();
-    }
     if (pauseTimerRef.current) {
       clearTimeout(pauseTimerRef.current);
       pauseTimerRef.current = null;
@@ -405,17 +372,6 @@ export default function AudioPlayer({
         </div>
       )}
 
-      {/* Simulador de Radio Táctica de Cabina F-22 (Exclusivo PRO) */}
-      <div className="mt-3">
-        <CockpitAudioSimulator
-          isPro={user?.isPro || false}
-          isActive={isCockpitActive}
-          onToggle={handleToggleCockpit}
-          onLockedClick={() => setShowProModal(true)}
-          isPlaying={isPlaying}
-        />
-      </div>
-
       {audioUrl && !useSpeechFallback && (
         <audio
           ref={audioRef}
@@ -427,16 +383,6 @@ export default function AudioPlayer({
           onError={() => setUseSpeechFallback(true)}
         />
       )}
-
-      {/* Modal de Suscripción PRO si el cadete toca una función bloqueada */}
-      <ProSubscriptionModal
-        isOpen={showProModal}
-        onClose={() => setShowProModal(false)}
-        onSuccess={() => {
-          setShowProModal(false);
-          setUser(getCurrentUser());
-        }}
-      />
     </div>
   );
 }

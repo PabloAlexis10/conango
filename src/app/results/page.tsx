@@ -10,7 +10,6 @@ import TacticalCertificateModal from "@/components/TacticalCertificateModal";
 import ConanResultVideoScene from "@/components/ConanResultVideoScene";
 import InteractiveWordText from "@/components/InteractiveWordText";
 import MistakeVaultModal from "@/components/MistakeVaultModal";
-import AlcptPredictorModal from "@/components/AlcptPredictorModal";
 import ProSubscriptionModal from "@/components/ProSubscriptionModal";
 import { getCurrentUser, recordLessonProgress } from "@/lib/supabase";
 import { getUserRankTitle } from "@/lib/accessories";
@@ -49,7 +48,6 @@ function ResultsContent() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const [certModalOpen, setCertModalOpen] = useState(false);
   const [mistakeModalOpen, setMistakeModalOpen] = useState(false);
-  const [predictorModalOpen, setPredictorModalOpen] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
 
   useEffect(() => {
@@ -208,7 +206,7 @@ function ResultsContent() {
             )}
 
             {/* Acciones Tácticas Avanzadas */}
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="w-full">
               <button
                 type="button"
                 onClick={() => setMistakeModalOpen(true)}
@@ -216,15 +214,6 @@ function ResultsContent() {
               >
                 <ShieldAlert className="w-4 h-4 text-red-600" />
                 <span>Entrenar en Bóveda de Errores</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setPredictorModalOpen(true)}
-                className="w-full py-3 px-4 bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 text-sky-800 dark:text-sky-300 font-black text-xs uppercase tracking-wider rounded-2xl border-2 border-sky-300 dark:border-sky-800 flex items-center justify-center gap-2 shadow-xs transition-transform active:scale-95"
-              >
-                <Plane className="w-4 h-4 text-sky-600" />
-                <span>Predecir Aprobación ALCPT</span>
               </button>
             </div>
 
@@ -425,12 +414,6 @@ function ResultsContent() {
         <MistakeVaultModal
           isOpen={mistakeModalOpen}
           onClose={() => setMistakeModalOpen(false)}
-          onUpgradePro={() => setProModalOpen(true)}
-        />
-
-        <AlcptPredictorModal
-          isOpen={predictorModalOpen}
-          onClose={() => setPredictorModalOpen(false)}
           onUpgradePro={() => setProModalOpen(true)}
         />
 

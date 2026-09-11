@@ -7,14 +7,12 @@ import MedalCounter from "./MedalCounter";
 import Timer from "./Timer";
 import AuthModal from "./AuthModal";
 import StreakModal from "./StreakModal";
-import BoosterModal from "./BoosterModal";
 import DailyQuestsModal from "./DailyQuestsModal";
 import ProSubscriptionModal from "./ProSubscriptionModal";
 import AdminControlModal from "./AdminControlModal";
 import RedeemCodeModal from "./RedeemCodeModal";
 import MistakeVaultModal from "./MistakeVaultModal";
-import AlcptPredictorModal from "./AlcptPredictorModal";
-import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords, Trophy, Moon, Sun, Bell, ShieldCheck, Gift, ShieldAlert, Plane } from "lucide-react";
+import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords, Trophy, Moon, Sun, Bell, ShieldCheck, Gift, ShieldAlert } from "lucide-react";
 import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive, getUserMascotName, isAdmin } from "@/lib/supabase";
 import { getAppTheme, toggleAppTheme, subscribeTheme, AppTheme } from "@/lib/theme";
 import { requestNotificationPermission, getNotificationPermission, checkAndSendStreakReminder } from "@/lib/notifications";
@@ -43,13 +41,11 @@ export default function Header({
   const [user, setUser] = useState<UserProfile | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [streakModalOpen, setStreakModalOpen] = useState(false);
-  const [boosterModalOpen, setBoosterModalOpen] = useState(false);
   const [questsModalOpen, setQuestsModalOpen] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [redeemModalOpen, setRedeemModalOpen] = useState(false);
   const [mistakeModalOpen, setMistakeModalOpen] = useState(false);
-  const [predictorModalOpen, setPredictorModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasDoubleXp, setHasDoubleXp] = useState(false);
   const [theme, setTheme] = useState<AppTheme>("light");
@@ -307,19 +303,6 @@ export default function Header({
                         <span>Bóveda de Errores (Caja Negra)</span>
                       </button>
 
-                      {/* Predictor ALCPT */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMenuOpen(false);
-                          setPredictorModalOpen(true);
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-950/40 rounded-xl transition-colors text-left"
-                      >
-                        <Plane className="w-4 h-4 text-sky-500 shrink-0" />
-                        <span>Predictor Comisión USAF</span>
-                      </button>
-
                       <Link
                         href="/profile"
                         onClick={() => setMenuOpen(false)}
@@ -386,17 +369,12 @@ export default function Header({
                       <span>Misiones Diarias</span>
                     </button>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        setBoosterModalOpen(true);
-                      }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-[#FAF6F0] dark:hover:bg-slate-800 rounded-xl transition-colors text-left"
-                    >
-                      <Zap className="w-4 h-4 text-amber-500" />
-                      <span>Potenciador Doble XP ({hasDoubleXp ? "Activo" : "Disponible"})</span>
-                    </button>
+                    {hasDoubleXp && (
+                      <div className="px-3 py-2 text-xs font-black text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 rounded-xl flex items-center gap-2 my-1 border border-amber-300 dark:border-amber-800">
+                        <Zap className="w-4 h-4 text-amber-500 fill-amber-500 shrink-0" />
+                        <span>¡2x XP Activo por Misión / Racha! ⚡</span>
+                      </div>
+                    )}
 
                     <Link
                       href="/challenge"
@@ -469,12 +447,6 @@ export default function Header({
         onClose={() => setStreakModalOpen(false)}
       />
 
-      {/* 2x XP Booster Modal */}
-      <BoosterModal
-        isOpen={boosterModalOpen}
-        onClose={() => setBoosterModalOpen(false)}
-      />
-
       {/* Daily Quests Modal */}
       <DailyQuestsModal
         isOpen={questsModalOpen}
@@ -506,13 +478,6 @@ export default function Header({
       <MistakeVaultModal
         isOpen={mistakeModalOpen}
         onClose={() => setMistakeModalOpen(false)}
-        onUpgradePro={() => setProModalOpen(true)}
-      />
-
-      {/* Official ALCPT Flight Commission Predictor */}
-      <AlcptPredictorModal
-        isOpen={predictorModalOpen}
-        onClose={() => setPredictorModalOpen(false)}
         onUpgradePro={() => setProModalOpen(true)}
       />
     </>

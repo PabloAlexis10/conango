@@ -350,105 +350,102 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
             {/* 1. Comprensión Auditiva (Listening) */}
             <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-800 shadow-conan-card flex flex-col justify-between hover:border-blue-500 transition-all">
               <div>
-                <div className="w-11 h-11 rounded-2xl bg-blue-100 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-xs mb-3">
-                  <Volume2 className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-xs mb-3">
+                  <Volume2 className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-black text-[#6B4423] dark:text-white mb-1.5">
-                  1. Listening (Comprensión Auditiva)
+                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
+                  1. Listening
                 </h3>
                 <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
-                  Entrenamiento exclusivo de audios militares, reportes meteorológicos y radiocomunicaciones ATC en inglés americano 🇺🇸.
+                  Audios tácticos, clima y radiocomunicaciones ATC en inglés americano 🇺🇸.
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Link
-                  href="/practice?type=listening&formula=random"
-                  className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
-                >
-                  <Play className="w-3 h-3 fill-white" />
-                  <span>Listening Aleatorio</span>
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setFormulaModalOpen(true)}
-                  className="w-full py-2 bg-[#FAF6F0] dark:bg-slate-800 text-[#6B4423] dark:text-slate-200 font-bold rounded-xl border border-[#E5D5C5] dark:border-slate-700 text-xs hover:bg-[#F5EFEB]"
-                >
-                  Elegir Fórmula Específica (1-100)
-                </button>
-              </div>
+              <Link
+                href="/practice?type=listening&formula=random"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
+              >
+                <Play className="w-3 h-3 fill-white" />
+                <span>Practicar Listening</span>
+              </Link>
             </div>
 
             {/* 2. Lectura y Gramática (Reading) */}
             <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-800 shadow-conan-card flex flex-col justify-between hover:border-emerald-500 transition-all">
               <div>
-                <div className="w-11 h-11 rounded-2xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-xs mb-3">
-                  <BookOpen className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-xs mb-3">
+                  <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-black text-[#6B4423] dark:text-white mb-1.5">
-                  2. Reading (Lectura & Gramática)
+                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
+                  2. Reading
                 </h3>
                 <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
-                  Estructuras de gramática militar, tiempos verbales, modismos de aviación y lectura técnica oficial del ALCPT.
+                  Gramática militar, estructuras formales y lectura técnica oficial.
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Link
-                  href="/practice?type=reading&formula=random"
-                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
-                >
-                  <Play className="w-3 h-3 fill-white" />
-                  <span>Reading Aleatorio</span>
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setFormulaModalOpen(true)}
-                  className="w-full py-2 bg-[#FAF6F0] dark:bg-slate-800 text-[#6B4423] dark:text-slate-200 font-bold rounded-xl border border-[#E5D5C5] dark:border-slate-700 text-xs hover:bg-[#F5EFEB]"
-                >
-                  Elegir Fórmula Específica (1-100)
-                </button>
-              </div>
+              <Link
+                href="/practice?type=reading&formula=random"
+                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
+              >
+                <Play className="w-3 h-3 fill-white" />
+                <span>Practicar Reading</span>
+              </Link>
             </div>
 
-            {/* 3. Examen Completo Oficial (100 Preguntas) */}
+            {/* 3. Quiz con Fórmulas (1 al 100) */}
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-indigo-200 dark:border-indigo-800/80 shadow-conan-card flex flex-col justify-between hover:border-indigo-500 transition-all">
+              <div>
+                <div className="w-10 h-10 rounded-2xl bg-indigo-100 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-xs mb-3">
+                  <ListOrdered className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
+                  3. Quiz con Fórmulas
+                </h3>
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
+                  Escoge el cuadernillo específico que deseas resolver (del 1 al 100).
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setFormulaModalOpen(true)}
+                className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
+              >
+                <ListOrdered className="w-3.5 h-3.5" />
+                <span>Elegir Fórmula (1-100)</span>
+              </button>
+            </div>
+
+            {/* 4. Examen Final Oficial ALCPT (100 Preguntas) */}
             <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-[#F59E0B] shadow-conan-card flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-[#F59E0B] text-white px-2.5 py-0.5 rounded-bl-xl font-black text-[10px] uppercase tracking-wider shadow-xs">
-                Oficial 100
+              <div className="absolute top-0 right-0 bg-[#F59E0B] text-white px-2 py-0.5 rounded-bl-xl font-black text-[9px] uppercase tracking-wider shadow-xs">
+                Certificación
               </div>
 
               <div>
-                <div className="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-xs mb-3">
-                  <Trophy className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-xs mb-3">
+                  <Trophy className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-black text-[#6B4423] dark:text-white mb-1.5">
-                  3. Examen Oficial ALCPT (100)
+                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
+                  4. Examen Final Oficial
                 </h3>
                 <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
-                  Simulación estandarizada completa: <strong>60 Listening + 40 Reading</strong> con temporizador oficial de 60 min y diploma de graduación.
+                  Evaluación estricta de <strong>100 preguntas</strong> (60L + 40R) con 60 min y diploma.
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Link
-                  href="/practice?size=100&formula=random"
-                  className="w-full py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-conan-btn transition-transform active:scale-95"
-                >
-                  <Play className="w-3 h-3 fill-white" />
-                  <span>Rendir Examen Aleatorio</span>
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setFormulaModalOpen(true)}
-                  className="w-full py-2 bg-[#FAF6F0] dark:bg-slate-800 text-[#6B4423] dark:text-slate-200 font-bold rounded-xl border border-[#E5D5C5] dark:border-slate-700 text-xs hover:bg-[#F5EFEB]"
-                >
-                  Elegir Cuadernillo (1-100)
-                </button>
-              </div>
+              <Link
+                href="/practice?size=100&formula=random"
+                className="w-full py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-conan-btn transition-transform active:scale-95"
+              >
+                <Play className="w-3 h-3 fill-white" />
+                <span>Rendir Examen Final</span>
+              </Link>
             </div>
           </div>
 
