@@ -13,7 +13,7 @@ import AdminControlModal from "./AdminControlModal";
 import RedeemCodeModal from "./RedeemCodeModal";
 import MistakeVaultModal from "./MistakeVaultModal";
 import { User, LogIn, LogOut, Volume2, BookOpen, Sparkles, UserCheck, Flame, Zap, Crown, Swords, Trophy, Moon, Sun, Bell, ShieldCheck, Gift, ShieldAlert } from "lucide-react";
-import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive, getUserMascotName, isAdmin } from "@/lib/supabase";
+import { getCurrentUser, logoutAccount, subscribeAuth, isDoubleXpActive, getUserMascotName, isAdmin, getDailyQuests } from "@/lib/supabase";
 import { getAppTheme, toggleAppTheme, subscribeTheme, AppTheme } from "@/lib/theme";
 import { requestNotificationPermission, getNotificationPermission, checkAndSendStreakReminder } from "@/lib/notifications";
 import { UserProfile } from "@/lib/types";
@@ -50,6 +50,7 @@ export default function Header({
   const [hasDoubleXp, setHasDoubleXp] = useState(false);
   const [theme, setTheme] = useState<AppTheme>("light");
   const [notifEnabled, setNotifEnabled] = useState(false);
+  const [quests, setQuests] = useState(getDailyQuests());
 
   useEffect(() => {
     setTheme(getAppTheme());
@@ -76,10 +77,12 @@ export default function Header({
     const cur = getCurrentUser();
     setUser(cur);
     setHasDoubleXp(isDoubleXpActive());
+    setQuests(getDailyQuests());
 
     const unsubscribe = subscribeAuth((updatedUser) => {
       setUser(updatedUser);
       setHasDoubleXp(isDoubleXpActive());
+      setQuests(getDailyQuests());
     });
     return () => unsubscribe();
   }, []);
@@ -94,6 +97,9 @@ export default function Header({
 
   const streak = user?.streakDays || 1;
   const effectiveMedals = user?.isPro ? 9999 : (medals ?? user?.medals ?? 5);
+  const completedQuestsCount = quests.filter((q) => q.completed).length;
+  const totalQuestsCount = quests.length || 3;
+  const hasUnclaimedQuests = quests.some((q) => q.completed && !q.claimed);
 
   return (
     <>
@@ -142,18 +148,33 @@ export default function Header({
 
           {/* Right Status Controls (Simplified & Streamlined for clean UX) */}
           <div className="flex items-center gap-2">
-            {/* 1. Daily Streak Button */}
-            {user && (
-              <button
-                type="button"
-                onClick={() => setStreakModalOpen(true)}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-orange-700 dark:text-orange-300 text-xs font-black transition-colors shadow-xs"
-                title="Racha Diaria de Estudio"
-              >
-                <span className="text-sm">🔥</span>
-                <span>{streak}</span>
-              </button>
-            )}
+            {/* 1. Daily Streak Button (La Racha) */}
+            <button
+              type="button"
+              onClick={() => (user ? setStreakModalOpen(true) : setAuthModalOpen(true))}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-orange-700 dark:text-orange-300 text-xs font-black transition-colors shadow-xs"
+              title="Racha Diaria de Estudio"
+            >
+              <span className="text-sm">🔥</span>
+              <span>{user ? streak : 0}</span>
+            </button>
+
+            {/* 2. Daily Quests Button (Misiones Diarias al lado de ConanGo y la Racha) */}
+            <button
+              type="button"
+              onClick={() => setQuestsModalOpen(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-950/40 border border-purple-300 dark:border-purple-700 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-xs font-black transition-colors shadow-xs relative"
+              title="Misiones Diarias (Toca para ver objetivos y recompensas)"
+            >
+              <span className="text-sm">🎯</span>
+              <span className="hidden sm:inline text-[11px] font-black">Misiones</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-purple-200 dark:bg-purple-800 text-purple-950 dark:text-purple-100 text-[10px] font-black">
+                {completedQuestsCount}/{totalQuestsCount}
+              </span>
+              {hasUnclaimedQuests && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse" />
+              )}
+            </button>
 
             {/* 2. USAF Rank Badge (Fast access to current grade) */}
             {user && (

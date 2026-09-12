@@ -170,13 +170,30 @@ export default function HomePage() {
             <ChevronRight className="w-4 h-4 text-amber-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
           </Link>
 
-          <Link
-            href="/profile"
-            className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 text-[#6B4423] dark:text-slate-200 rounded-xl text-[11px] font-black transition-all shadow-xs flex items-center gap-1 shrink-0"
-          >
-            <span>Ver Mi Perfil & Base</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </Link>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setQuestsModalOpen(true)}
+              className="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 dark:bg-amber-950/70 dark:hover:bg-amber-900 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 rounded-xl text-[11px] font-black transition-all shadow-xs flex items-center gap-1.5"
+              title="Misiones de Hoy"
+            >
+              <span>🎯 Misiones</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-amber-300 dark:bg-amber-800 text-amber-950 dark:text-amber-100 text-[10px] font-black">
+                {completedQuestsCount}/{totalQuestsCount}
+              </span>
+              {hasUnclaimedQuests && (
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              )}
+            </button>
+
+            <Link
+              href="/profile"
+              className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 text-[#6B4423] dark:text-slate-200 rounded-xl text-[11px] font-black transition-all shadow-xs flex items-center gap-1"
+            >
+              <span>Ver Mi Perfil & Base</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
 
         {/* 🐾 HERO CON FOTO CIRCULAR DE CONAN */}
@@ -198,65 +215,6 @@ export default function HomePage() {
             <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-400 font-semibold max-w-xl mt-0.5">
               Lecciones rápidas y aleatorias. Pasa el cursor sobre cualquier frase para ver la traducción contextual de la oración completa.
             </p>
-          </div>
-        </section>
-
-        {/* 🎯 RESUMEN COMPACTO DE MISIONES DIARIAS */}
-        <section className="mb-8">
-          <div
-            onClick={() => setQuestsModalOpen(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setQuestsModalOpen(true);
-              }
-            }}
-            className="p-3.5 sm:p-4 bg-white dark:bg-slate-900 border-2 border-amber-300/80 dark:border-amber-700/60 rounded-2xl shadow-conan-card hover:border-amber-400 dark:hover:border-amber-500 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <div
-                className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${
-                  hasUnclaimedQuests
-                    ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-md animate-bounce"
-                    : "bg-amber-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300"
-                }`}
-              >
-                🎯
-              </div>
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h4 className="text-xs sm:text-sm font-black text-[#6B4423] dark:text-white">
-                    Misiones de Hoy
-                  </h4>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 text-[10px] font-black">
-                    {completedQuestsCount} de {totalQuestsCount} completadas
-                  </span>
-                  {hasUnclaimedQuests && (
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase animate-pulse">
-                      ¡Recompensa lista!
-                    </span>
-                  )}
-                </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">
-                  Cumple objetivos tácticos para ganar gemas, XP y potenciadores 2x. Toca para ver el detalle.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
-              <div className="w-24 sm:w-32 bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.max(6, questsProgressPercent)}%` }}
-                />
-              </div>
-              <span className="text-xs font-black text-amber-700 dark:text-amber-300 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
-                <span>Ver Misiones</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </span>
-            </div>
           </div>
         </section>
 
