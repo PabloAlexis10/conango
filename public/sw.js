@@ -1,5 +1,5 @@
 // ConanGo Service Worker - PWA & Offline Support
-const CACHE_NAME = 'conango-v1';
+const CACHE_NAME = 'conango-v2';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
