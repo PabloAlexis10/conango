@@ -1,49 +1,91 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
 const CODES_FILE = path.join(process.cwd(), "data", "promo_codes.json");
 const REDEMPTIONS_FILE = path.join(process.cwd(), "data", "code_redemptions.json");
 
-function ensureFiles() {
-  const dataDir = path.join(process.cwd(), "data");
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-  if (!fs.existsSync(CODES_FILE)) {
-    fs.writeFileSync(CODES_FILE, "[]", "utf-8");
-  }
-  if (!fs.existsSync(REDEMPTIONS_FILE)) {
-    fs.writeFileSync(REDEMPTIONS_FILE, "[]", "utf-8");
-  }
-}
+// Fallback memory state for serverless read-only environments
+let memoryAdminCodes: any[] = [
+  {
+    id: "code_alcpt2026",
+    code: "ALCPT2026",
+    type: "gift",
+    value: 500,
+    description: "Bono de bienvenida para nuevos cadetes",
+    maxUses: 99999,
+    usedCount: 0,
+    active: true,
+    expiresAt: null,
+    rewardDetail: { gems: 500, streakFreeze: 1 },
+    createdAt: new Date().toISOString(),
+    createdBy: "Comandancia General",
+  },
+  {
+    id: "code_comandante",
+    code: "COMANDANTE",
+    type: "pro_trial",
+    value: 365,
+    description: "Pase de honor Comandancia General",
+    maxUses: 99999,
+    usedCount: 0,
+    active: true,
+    expiresAt: null,
+    rewardDetail: { proDays: 365 },
+    createdAt: new Date().toISOString(),
+    createdBy: "Comandancia General",
+  },
+];
+let memoryAdminRedemptions: any[] = [];
 
-function loadCodes() {
-  ensureFiles();
+function loadCodes(): any[] {
   try {
-    return JSON.parse(fs.readFileSync(CODES_FILE, "utf-8"));
-  } catch {
-    return [];
+    if (fs.existsSync(CODES_FILE)) {
+      const data = JSON.parse(fs.readFileSync(CODES_FILE, "utf-8"));
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
+  } catch (err) {
+    // Read fallback
   }
+  return memoryAdminCodes;
 }
 
 function saveCodes(codes: any[]) {
-  ensureFiles();
-  fs.writeFileSync(CODES_FILE, JSON.stringify(codes, null, 2), "utf-8");
-}
-
-function loadRedemptions() {
-  ensureFiles();
+  memoryAdminCodes = codes;
   try {
-    return JSON.parse(fs.readFileSync(REDEMPTIONS_FILE, "utf-8"));
-  } catch {
-    return [];
+    const dataDir = path.dirname(CODES_FILE);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(CODES_FILE, JSON.stringify(codes, null, 2), "utf-8");
+  } catch (err) {
+    // Read-only filesystem on Vercel: safely continue with memoryAdminCodes
   }
 }
 
+function loadRedemptions(): any[] {
+  try {
+    if (fs.existsSync(REDEMPTIONS_FILE)) {
+      const data = JSON.parse(fs.readFileSync(REDEMPTIONS_FILE, "utf-8"));
+      if (Array.isArray(data)) return data;
+    }
+  } catch (err) {
+    // Read fallback
+  }
+  return memoryAdminRedemptions;
+}
+
 function saveRedemptions(redemptions: any[]) {
-  ensureFiles();
-  fs.writeFileSync(REDEMPTIONS_FILE, JSON.stringify(redemptions, null, 2), "utf-8");
+  memoryAdminRedemptions = redemptions;
+  try {
+    const dataDir = path.dirname(REDEMPTIONS_FILE);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(REDEMPTIONS_FILE, JSON.stringify(redemptions, null, 2), "utf-8");
+  } catch (err) {
+    // Read-only filesystem fallback
+  }
 }
 
 // GET: list all codes and redemptions

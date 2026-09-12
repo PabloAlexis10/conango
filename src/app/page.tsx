@@ -34,6 +34,7 @@ import {
   GUEST_LIMIT,
   setProStatus,
   getUserMascotName,
+  getDailyQuests,
 } from "@/lib/supabase";
 import {
   getRankByXp,
@@ -53,7 +54,7 @@ import ProSubscriptionModal from "@/components/ProSubscriptionModal";
 import StreakModal from "@/components/StreakModal";
 import BoosterModal from "@/components/BoosterModal";
 import DailyQuestsModal from "@/components/DailyQuestsModal";
-import { UserProfile } from "@/lib/types";
+import { UserProfile, DailyQuest } from "@/lib/types";
 
 export default function HomePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -66,10 +67,16 @@ export default function HomePage() {
   const [streakModalOpen, setStreakModalOpen] = useState(false);
   const [boosterModalOpen, setBoosterModalOpen] = useState(false);
   const [questsModalOpen, setQuestsModalOpen] = useState(false);
+  const [quests, setQuests] = useState<DailyQuest[]>([]);
+  const [listenSize, setListenSize] = useState<number>(30);
+  const [listenFormula, setListenFormula] = useState<string>("random");
+  const [readingSize, setReadingSize] = useState<number>(30);
+  const [readingFormula, setReadingFormula] = useState<string>("random");
 
   useEffect(() => {
     const cur = getCurrentUser();
     setUser(cur);
+    setQuests(getDailyQuests());
     setGuestUsage(getGuestUsageCount());
     setGuestLimitHit(hasReachedGuestLimit());
 
@@ -95,11 +102,17 @@ export default function HomePage() {
 
     const unsubscribe = subscribeAuth((updatedUser) => {
       setUser(updatedUser);
+      setQuests(getDailyQuests());
       setGuestUsage(getGuestUsageCount());
       setGuestLimitHit(hasReachedGuestLimit());
     });
     return () => unsubscribe();
   }, []);
+
+  const completedQuestsCount = quests.filter((q) => q.completed).length;
+  const totalQuestsCount = quests.length || 3;
+  const hasUnclaimedQuests = quests.some((q) => q.completed && !q.claimed);
+  const questsProgressPercent = Math.round((completedQuestsCount / totalQuestsCount) * 100);
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -132,130 +145,117 @@ export default function HomePage() {
       <Header medals={user?.medals ?? 10} />
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-5 md:py-8">
-        {/* COMPACT HERO WITH SMALL ANIMATRONIC CONAN & ABOUT LINK */}
-        <section className="flex items-center justify-between gap-4 mb-6 bg-gradient-to-r from-[#FAF6F0] via-amber-50/40 to-white dark:from-slate-900 dark:via-slate-900/80 dark:to-slate-950 p-4 sm:p-6 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-800 shadow-conan-card">
-          <div className="flex-1">
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FEF3C7] dark:bg-amber-950/60 border border-[#FDE68A] dark:border-amber-700 text-[#92400E] dark:text-amber-200 text-[11px] font-black uppercase tracking-wider shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#F59E0B]" />
-                A.L.C.P.T. • Inglés Militar 🇺🇸
-              </span>
-
-              {/* Link directo a Información de la página y Conan */}
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-800 border border-[#E5D5C5] dark:border-slate-700 text-xs font-bold text-[#6B4423] dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-700 transition-colors shadow-xs"
-              >
-                <Info className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span>Acerca de ConanGo & Información</span>
-              </Link>
+        {/* 🎖️ RESUMEN COMPACTO DEL GRADO MILITAR (Acceso Directo a Perfil) */}
+        <div className="flex items-center justify-between gap-3 mb-4 bg-amber-50/70 dark:bg-slate-900/80 px-3.5 py-2.5 rounded-2xl border border-amber-200/80 dark:border-slate-800 shadow-xs">
+          <Link
+            href="/profile"
+            className="flex items-center gap-2.5 text-xs font-black text-[#6B4423] dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors group"
+          >
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center text-sm shadow-xs shrink-0 border border-white dark:border-slate-700">
+              {getUserRankBadge(user?.xp || 0)}
             </div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+              <span className="truncate max-w-[140px] sm:max-w-none font-black text-sm">
+                {user ? user.name || user.email : "Cadete"}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="px-1.5 py-0.2 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-950 dark:text-amber-200 text-[10px] font-black uppercase tracking-wider">
+                  {rankInfo.currentRank.abbr}
+                </span>
+                <span className="text-[11px] text-amber-700 dark:text-amber-400 font-bold">
+                  {user?.xp || 0} XP
+                </span>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-amber-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
+          </Link>
 
-            <h1 className="text-xl sm:text-3xl font-black text-[#6B4423] dark:text-white tracking-tight leading-tight">
-              ¡Entrena y domina el examen con{" "}
-              <span className="text-[#F59E0B]">{user ? getUserMascotName(user) : "Conan"}</span>!
-            </h1>
-            <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-300 font-medium mt-1 max-w-xl">
-              Simulación interactiva para clasificación y comisiones de vuelo USAF. Elige un quiz rápido aleatorio o tu cuadernillo de práctica.
-            </p>
+          <Link
+            href="/profile"
+            className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 text-[#6B4423] dark:text-slate-200 rounded-xl text-[11px] font-black transition-all shadow-xs flex items-center gap-1 shrink-0"
+          >
+            <span>Ver Mi Perfil & Base</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* 🐾 HERO CON FOTO CIRCULAR DE CONAN */}
+        <section className="flex flex-col sm:flex-row items-center justify-center gap-4 my-4 p-4 sm:p-5 text-center sm:text-left bg-gradient-to-r from-[#FAF6F0] via-amber-50/40 to-white dark:from-slate-900 dark:via-slate-900/60 dark:to-slate-950 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-800 shadow-conan-card">
+          {/* Foto de Conan en forma de círculo pequeña */}
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-amber-400 dark:border-amber-500 bg-white dark:bg-slate-800 shadow-lg overflow-hidden flex items-center justify-center shrink-0 p-1">
+            <ConanMascot size="sm" mood="happy" animate={true} />
           </div>
 
-          {/* Small subtle animatronic mascot Conan */}
-          <div className="flex flex-col items-center shrink-0">
-            <div className="p-1 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-[#E5D5C5] dark:border-slate-700">
-              <ConanMascot size="md" mood="happy" animate={true} />
+          <div className="flex-1">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FEF3C7] dark:bg-amber-950/60 border border-[#FDE68A] dark:border-amber-700 text-[#92400E] dark:text-amber-200 text-[10px] font-black uppercase tracking-wider mb-1">
+              <Sparkles className="w-3 h-3 text-[#F59E0B]" />
+              ALCPT • Entrenamiento Táctico
             </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#6B4423] dark:text-amber-300 mt-1">
-              {user ? getUserMascotName(user) : "Conan"} 🐾
-            </span>
+            <h1 className="text-xl sm:text-2xl font-black text-[#6B4423] dark:text-white tracking-tight">
+              ¡Entrena y domina el examen con{" "}
+              <span className="text-amber-500">{user ? getUserMascotName(user) : "Conan"}</span>! 🐾
+            </h1>
+            <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-400 font-semibold max-w-xl mt-0.5">
+              Lecciones rápidas y aleatorias. Pasa el cursor sobre cualquier frase para ver la traducción contextual de la oración completa.
+            </p>
           </div>
         </section>
 
-        {/* 🎖️ WIDGET PERMANENTE: RANGO USAF ACTUAL Y PROGRESIÓN DE ASCENSO */}
-        <section className="mb-8 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/40 dark:via-slate-900/40 dark:to-slate-900 border-2 border-amber-300/80 dark:border-amber-700/60 rounded-3xl p-4 sm:p-5 shadow-conan-card relative overflow-hidden">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            {/* Rank info */}
-            <div className="flex items-start sm:items-center gap-3.5">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center text-2xl sm:text-3xl shadow-md flex-shrink-0 border-2 border-white dark:border-slate-800">
-                {getUserRankBadge(user?.xp || 0)}
-              </div>
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-black text-[#6B4423] dark:text-white">
-                    {user ? user.name || user.email : "Invitado"}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-md bg-amber-200 dark:bg-amber-900/60 text-amber-950 dark:text-amber-200 text-[10px] font-black uppercase tracking-wider">
-                    {rankInfo.currentRank.abbr}
-                  </span>
-                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                    🐾 <strong className="text-amber-700 dark:text-amber-300">{getUserMascotName(user)}</strong>
-                  </span>
-                </div>
-                <h3 className="text-base sm:text-lg font-black text-[#6B4423] dark:text-white mt-0.5">
-                  {getUserRankTitle(user?.xp || 0)}
-                </h3>
-                {rankInfo.nextRank && (
-                  <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mt-0.5">
-                    Siguiente grado: <span className="font-black">{rankInfo.nextRank.name}</span> ({rankInfo.nextRank.abbr})
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Profile Link or Login */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {user ? (
-                <Link
-                  href="/profile"
-                  className="px-3.5 py-1.5 bg-white dark:bg-slate-800 hover:bg-[#FAF6F0] dark:hover:bg-slate-700 border border-[#E5D5C5] dark:border-slate-700 text-[#6B4423] dark:text-slate-200 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
-                >
-                  <span>Base & Personalizar</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setAuthModalOpen(true)}
-                  className="px-3.5 py-1.5 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-xl text-xs font-black transition-all shadow-xs"
-                >
-                  Registrar mi Cuenta & Mascota
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Progress Bar & Missing XP */}
-          <div className="mt-3 pt-3 border-t border-amber-200/60 dark:border-slate-800">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs font-bold mb-1.5">
-              <div className="flex items-center gap-2">
-                <span className="text-[#6B4423] dark:text-white">
-                  Progreso de Ascenso:
-                </span>
-                <span className="text-amber-600 dark:text-amber-400 font-black">
-                  {rankInfo.progress}%
-                </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                  ({user?.xp || 0} XP acumulados)
-                </span>
-              </div>
-              <div className="text-xs font-black text-amber-800 dark:text-amber-300">
-                {rankInfo.nextRank ? (
-                  <span>
-                    Faltan <span className="underline decoration-amber-500 font-black">{Math.max(0, (rankInfo.nextRank.minXp || 0) - (user?.xp || 0))} XP</span> para ascender a {rankInfo.nextRank.name} ({rankInfo.nextRank.abbr})
-                  </span>
-                ) : (
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    🎖️ ¡Has alcanzado el Grado Supremo de General de la USAF!
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2.5 p-0.5 overflow-hidden shadow-inner">
+        {/* 🎯 RESUMEN COMPACTO DE MISIONES DIARIAS */}
+        <section className="mb-8">
+          <div
+            onClick={() => setQuestsModalOpen(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setQuestsModalOpen(true);
+              }
+            }}
+            className="p-3.5 sm:p-4 bg-white dark:bg-slate-900 border-2 border-amber-300/80 dark:border-amber-700/60 rounded-2xl shadow-conan-card hover:border-amber-400 dark:hover:border-amber-500 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+          >
+            <div className="flex items-center gap-3 min-w-0">
               <div
-                className="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.max(4, rankInfo.progress)}%` }}
-              />
+                className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${
+                  hasUnclaimedQuests
+                    ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-md animate-bounce"
+                    : "bg-amber-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300"
+                }`}
+              >
+                🎯
+              </div>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h4 className="text-xs sm:text-sm font-black text-[#6B4423] dark:text-white">
+                    Misiones de Hoy
+                  </h4>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 text-[10px] font-black">
+                    {completedQuestsCount} de {totalQuestsCount} completadas
+                  </span>
+                  {hasUnclaimedQuests && (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase animate-pulse">
+                      ¡Recompensa lista!
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">
+                  Cumple objetivos tácticos para ganar gemas, XP y potenciadores 2x. Toca para ver el detalle.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
+              <div className="w-24 sm:w-32 bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full rounded-full transition-all duration-500"
+                  style={{ width: `${Math.max(6, questsProgressPercent)}%` }}
+                />
+              </div>
+              <span className="text-xs font-black text-amber-700 dark:text-amber-300 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                <span>Ver Misiones</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </span>
             </div>
           </div>
         </section>
@@ -286,168 +286,352 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* ⚡ SECCIÓN 1 (ARRIBA): QUIZ ALEATORIOS RÁPIDOS (10, 20, 30, 40, 50) */}
+        {/* ⚡ LAS 6 CASILLAS RECTANGULARES: LECCIONES RÁPIDAS Y ALEATORIAS */}
         <section className="mb-10">
           <div className="mb-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 text-xs font-black uppercase tracking-wider mb-1.5 shadow-xs">
               <Zap className="w-3.5 h-3.5 text-[#F59E0B] fill-amber-500" />
-              <span>Entrenamiento Inmediato</span>
+              <span>Lecciones Rápidas & Aleatorias</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-[#6B4423] dark:text-white tracking-tight">
-              Quiz Aleatorios Rápidos
+              Entrenamiento Táctico Inmediato
             </h2>
             <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-400 font-semibold">
-              Practica al instante sin elegir fórmulas: preguntas 50% Listening + 50% Reading al azar.
+              Pasa el cursor sobre las frases para ver su traducción completa. Elige tu modalidad:
             </p>
           </div>
 
-          {/* Quick Quiz Buttons Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-            {quickQuizzes.map((quiz) => (
-              <Link
-                key={quiz.size}
-                href={`/practice?size=${quiz.size}&formula=random`}
-                className="bg-white dark:bg-slate-900 border-2 border-[#E5D5C5] dark:border-slate-800 hover:border-[#F59E0B] dark:hover:border-amber-500 p-4 rounded-2xl shadow-conan-card transition-all group flex flex-col justify-between hover:scale-[1.02] active:scale-98"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-[#F59E0B] font-black text-xs flex items-center justify-center shadow-xs">
-                      {quiz.size}
-                    </span>
-                    <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60">
-                      {quiz.badge}
-                    </span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-black text-[#6B4423] dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
-                    {quiz.label}
+          {/* Grid de 6 Casillas Rectangulares */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+            {/* 1. quiz 10 preguntas listening */}
+            <Link
+              href="/practice?size=10&type=listening&formula=random"
+              className="p-4 sm:p-5 rounded-2xl border-2 border-blue-300 dark:border-blue-900/80 bg-gradient-to-br from-blue-50/60 via-white to-blue-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-blue-500 dark:hover:border-blue-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+                  🎧
+                </span>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
+                    Audio Express • ~5 min
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    quiz 10 preguntas listening
                   </h3>
-                  <p className="text-[11px] text-[#A67B5B] dark:text-slate-400 font-medium mt-0.5">
-                    {quiz.sub}
-                  </p>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
+                    Traducción de oraciones en hover
+                  </span>
                 </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-blue-500 shrink-0 group-hover:translate-x-1 transition-transform" />
+            </Link>
 
-                <div className="mt-4 pt-2 border-t border-[#E5D5C5]/60 dark:border-slate-800 flex items-center justify-between text-xs font-black text-[#F59E0B]">
-                  <span>Iniciar Quiz</span>
-                  <Play className="w-3.5 h-3.5 fill-[#F59E0B] group-hover:translate-x-0.5 transition-transform" />
+            {/* 2. quiz de 10 preguntas Reading */}
+            <Link
+              href="/practice?size=10&type=reading&formula=random"
+              className="p-4 sm:p-5 rounded-2xl border-2 border-emerald-300 dark:border-emerald-900/80 bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-emerald-500 dark:hover:border-emerald-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+                  📖
+                </span>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
+                    Lectura Express • ~5 min
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    quiz de 10 preguntas Reading
+                  </h3>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
+                    Gramática y oraciones en hover
+                  </span>
                 </div>
-              </Link>
-            ))}
+              </div>
+              <ChevronRight className="w-5 h-5 text-emerald-500 shrink-0 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            {/* 3. quiz solo listening */}
+            <Link
+              href="/practice?type=listening&size=30&formula=random"
+              className="p-4 sm:p-5 rounded-2xl border-2 border-cyan-300 dark:border-cyan-900/80 bg-gradient-to-br from-cyan-50/60 via-white to-cyan-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-cyan-500 dark:hover:border-cyan-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+                  ⚡
+                </span>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400 block">
+                    Especializado • Comprensión Auditiva
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                    quiz solo listening
+                  </h3>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
+                    Audios militares aleatorios con ayuda
+                  </span>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-cyan-500 shrink-0 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            {/* 4. quiz solo reading */}
+            <Link
+              href="/practice?type=reading&size=30&formula=random"
+              className="p-4 sm:p-5 rounded-2xl border-2 border-teal-300 dark:border-teal-900/80 bg-gradient-to-br from-teal-50/60 via-white to-teal-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-teal-500 dark:hover:border-teal-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+                  📚
+                </span>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400 block">
+                    Especializado • Lectura y Gramática
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                    quiz solo reading
+                  </h3>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
+                    Estructuras y léxico con traducción
+                  </span>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-teal-500 shrink-0 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            {/* 5. quiz completo con ayuda */}
+            <Link
+              href="/practice?size=100&formula=random&mode=assisted"
+              className="p-4 sm:p-5 rounded-2xl border-2 border-amber-300 dark:border-amber-700/80 bg-gradient-to-br from-amber-50/70 via-white to-yellow-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-amber-500 dark:hover:border-amber-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+                  💡
+                </span>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 block">
+                    100 Reactivos • Con Ayuda Táctica
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                    quiz completo con ayuda
+                  </h3>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
+                    Examen completo con traducción de oraciones
+                  </span>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-amber-500 shrink-0 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            {/* 6. quiz completo real */}
+            <Link
+              href="/practice?size=100&formula=random&mode=real"
+              className="p-4 sm:p-5 rounded-2xl border-2 border-rose-300 dark:border-rose-700/80 bg-gradient-to-br from-rose-50/70 via-white to-red-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-rose-500 dark:hover:border-rose-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+                  🎯
+                </span>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
+                    100 Reactivos • Simulación Estricta
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
+                    quiz completo real
+                  </h3>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
+                    Tiempo oficial USAF, sin traducciones
+                  </span>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-rose-500 shrink-0 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </section>
 
-        {/* 📚 SECCIÓN 2 (ABAJO): PRÁCTICA NORMAL & MODALIDADES ESPECÍFICAS */}
+        {/* 📚 SECCIÓN INFERIOR: PRÁCTICA ESTRUCTURADA CON SELECTOR DE PREGUNTAS Y FÓRMULAS */}
         <section className="mb-10">
           <div className="mb-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black uppercase tracking-wider mb-1.5 shadow-xs">
-              <ListOrdered className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+              <ListOrdered className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
               <span>Entrenamiento Estructurado</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-[#6B4423] dark:text-white tracking-tight">
-              Práctica Normal & Fórmulas Oficiales
+              Configura tu Cuadernillo & Habilidad
             </h2>
             <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-400 font-semibold">
-              Elige tu modalidad de estudio por habilidad o realiza el examen completo con el cuadernillo de tu elección (1 al 100).
+              Personaliza la cantidad exacta de preguntas y la fórmula oficial que deseas practicar (1 al 100).
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-            {/* 1. Comprensión Auditiva (Listening) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            {/* 1. Comprensión Auditiva (Listening) Personalizable */}
             <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-800 shadow-conan-card flex flex-col justify-between hover:border-blue-500 transition-all">
               <div>
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-xs mb-3">
-                  <Volume2 className="w-5 h-5" />
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-xs">
+                    <Volume2 className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                    6,000 Reactivos
+                  </span>
                 </div>
-                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
-                  1. Listening
+                <h3 className="text-lg font-black text-[#6B4423] dark:text-white mb-1">
+                  1. Listening Personalizado
                 </h3>
-                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
-                  Audios tácticos, clima y radiocomunicaciones ATC en inglés americano 🇺🇸.
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mb-4">
+                  Elige cuántas preguntas resolver y qué fórmula escuchar.
                 </p>
+
+                {/* Selector de Cantidad */}
+                <div className="mb-3">
+                  <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 block mb-1.5">
+                    Cantidad de preguntas:
+                  </label>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {[10, 20, 30, 60].map((sz) => (
+                      <button
+                        key={sz}
+                        type="button"
+                        onClick={() => setListenSize(sz)}
+                        className={`py-1.5 rounded-xl text-xs font-black transition-all border ${
+                          listenSize === sz
+                            ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                            : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100"
+                        }`}
+                      >
+                        {sz}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Selector de Fórmula */}
+                <div className="mb-4">
+                  <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 block mb-1.5">
+                    Fórmula ALCPT:
+                  </label>
+                  <select
+                    value={listenFormula}
+                    onChange={(e) => setListenFormula(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-100"
+                  >
+                    <option value="random">🔀 Fórmula Aleatoria</option>
+                    {Array.from({ length: 100 }, (_, i) => i + 1).map((f) => (
+                      <option key={f} value={f}>
+                        Fórmula {f} {f <= 8 ? "(Gratis)" : "(PRO)"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <Link
-                href="/practice?type=listening&formula=random"
+                href={`/practice?type=listening&size=${listenSize}&formula=${listenFormula}`}
                 className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
               >
-                <Play className="w-3 h-3 fill-white" />
-                <span>Practicar Listening</span>
+                <Play className="w-3.5 h-3.5 fill-white" />
+                <span>Iniciar Listening ({listenSize} Preguntas)</span>
               </Link>
             </div>
 
-            {/* 2. Lectura y Gramática (Reading) */}
+            {/* 2. Lectura y Gramática (Reading) Personalizable */}
             <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-[#E5D5C5] dark:border-slate-800 shadow-conan-card flex flex-col justify-between hover:border-emerald-500 transition-all">
               <div>
-                <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-xs mb-3">
-                  <BookOpen className="w-5 h-5" />
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-xs">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                    4,000 Reactivos
+                  </span>
                 </div>
-                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
-                  2. Reading
+                <h3 className="text-lg font-black text-[#6B4423] dark:text-white mb-1">
+                  2. Reading Personalizado
                 </h3>
-                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
-                  Gramática militar, estructuras formales y lectura técnica oficial.
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mb-4">
+                  Elige cuántas preguntas resolver y qué fórmula leer.
                 </p>
+
+                {/* Selector de Cantidad */}
+                <div className="mb-3">
+                  <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 block mb-1.5">
+                    Cantidad de preguntas:
+                  </label>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {[10, 20, 30, 40].map((sz) => (
+                      <button
+                        key={sz}
+                        type="button"
+                        onClick={() => setReadingSize(sz)}
+                        className={`py-1.5 rounded-xl text-xs font-black transition-all border ${
+                          readingSize === sz
+                            ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                            : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100"
+                        }`}
+                      >
+                        {sz}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Selector de Fórmula */}
+                <div className="mb-4">
+                  <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 block mb-1.5">
+                    Fórmula ALCPT:
+                  </label>
+                  <select
+                    value={readingFormula}
+                    onChange={(e) => setReadingFormula(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-100"
+                  >
+                    <option value="random">🔀 Fórmula Aleatoria</option>
+                    {Array.from({ length: 100 }, (_, i) => i + 1).map((f) => (
+                      <option key={f} value={f}>
+                        Fórmula {f} {f <= 8 ? "(Gratis)" : "(PRO)"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <Link
-                href="/practice?type=reading&formula=random"
+                href={`/practice?type=reading&size=${readingSize}&formula=${readingFormula}`}
                 className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
               >
-                <Play className="w-3 h-3 fill-white" />
-                <span>Practicar Reading</span>
-              </Link>
-            </div>
-
-            {/* 3. Quiz con Fórmulas (1 al 100) */}
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-indigo-200 dark:border-indigo-800/80 shadow-conan-card flex flex-col justify-between hover:border-indigo-500 transition-all">
-              <div>
-                <div className="w-10 h-10 rounded-2xl bg-indigo-100 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-xs mb-3">
-                  <ListOrdered className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
-                  3. Quiz con Fórmulas
-                </h3>
-                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
-                  Escoge el cuadernillo específico que deseas resolver (del 1 al 100).
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setFormulaModalOpen(true)}
-                className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-95"
-              >
-                <ListOrdered className="w-3.5 h-3.5" />
-                <span>Elegir Fórmula (1-100)</span>
-              </button>
-            </div>
-
-            {/* 4. Examen Final Oficial ALCPT (100 Preguntas) */}
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border-2 border-[#F59E0B] shadow-conan-card flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-[#F59E0B] text-white px-2 py-0.5 rounded-bl-xl font-black text-[9px] uppercase tracking-wider shadow-xs">
-                Certificación
-              </div>
-
-              <div>
-                <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-xs mb-3">
-                  <Trophy className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-black text-[#6B4423] dark:text-white mb-1.5">
-                  4. Examen Final Oficial
-                </h3>
-                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium leading-relaxed mb-4">
-                  Evaluación estricta de <strong>100 preguntas</strong> (60L + 40R) con 60 min y diploma.
-                </p>
-              </div>
-
-              <Link
-                href="/practice?size=100&formula=random"
-                className="w-full py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-conan-btn transition-transform active:scale-95"
-              >
-                <Play className="w-3 h-3 fill-white" />
-                <span>Rendir Examen Final</span>
+                <Play className="w-3.5 h-3.5 fill-white" />
+                <span>Iniciar Reading ({readingSize} Preguntas)</span>
               </Link>
             </div>
           </div>
+
+          {/* Cuadernillos Oficiales (1 al 100) */}
+          <div className="bg-gradient-to-r from-amber-50 via-yellow-50/50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-2 border-amber-300 dark:border-amber-700/80 p-4 sm:p-5 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-conan-card">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center text-2xl shadow-xs shrink-0">
+                📋
+              </div>
+              <div>
+                <h4 className="text-base font-black text-[#6B4423] dark:text-white">
+                  Catálogo Oficial de 100 Fórmulas ALCPT
+                </h4>
+                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-semibold mt-0.5">
+                  Explora las 100 formas completas (10,000 preguntas). Formas 1 al 8 gratis para todos los cadetes.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setFormulaModalOpen(true)}
+              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl text-xs shadow-conan-btn transition-transform active:scale-95 shrink-0 flex items-center gap-1.5"
+            >
+              <ListOrdered className="w-4 h-4" />
+              <span>Abrir Selector de Fórmulas (1-100)</span>
+            </button>
+          </div>
+        </section>
 
           {/* DUAL VOCABULARY SUITE: BIBLIOTECA + JUEGO DE CARTAS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

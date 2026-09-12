@@ -53,8 +53,11 @@ import RedeemCodeModal from "@/components/RedeemCodeModal";
 import MistakeVaultModal from "@/components/MistakeVaultModal";
 import AlcptPredictorModal from "@/components/AlcptPredictorModal";
 
+type ProfileTab = "personal" | "progress" | "security";
+
 export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [activeTab, setActiveTab] = useState<ProfileTab>("personal");
   const [examHistory, setExamHistory] = useState<ExamResult[]>([]);
   const [sessionHistory, setSessionHistory] = useState<SessionResult[]>([]);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -218,491 +221,614 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Barra de Comandos y Operaciones Tácticas */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          {isAdmin(user) ? (
-            <button
-              type="button"
-              onClick={() => setAdminModalOpen(true)}
-              className="p-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-2xl shadow-md flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider transition-transform active:scale-95"
-            >
-              <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span>⭐ Panel Admin</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setProModalOpen(true)}
-              className="p-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-2xl shadow-md flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider transition-transform active:scale-95"
-            >
-              <Crown className="w-4 h-4 shrink-0" />
-              <span>Conan PRO</span>
-            </button>
-          )}
-
+        {/* NAVEGACIÓN TÁCTICA POR PESTAÑAS DESPLEGABLES */}
+        <div className="grid grid-cols-3 gap-2 p-1.5 bg-[#FAF6F0] dark:bg-slate-800/90 rounded-2xl border-2 border-[#E5D5C5] dark:border-slate-700 mb-8 shadow-xs">
           <button
             type="button"
-            onClick={() => setRedeemModalOpen(true)}
-            className="p-3.5 bg-white dark:bg-slate-800 border-2 border-amber-300 dark:border-amber-600 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-amber-50 dark:hover:bg-slate-700 transition-all shadow-xs"
+            onClick={() => setActiveTab("personal")}
+            className={`flex items-center justify-center gap-1.5 sm:gap-2 py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm transition-all ${
+              activeTab === "personal"
+                ? "bg-white dark:bg-slate-900 text-[#6B4423] dark:text-amber-300 shadow-sm border-2 border-amber-400 dark:border-amber-600"
+                : "text-slate-600 dark:text-slate-400 hover:text-[#6B4423] hover:bg-amber-100/40 dark:hover:bg-slate-700/50"
+            }`}
           >
-            <Gift className="w-4 h-4 text-amber-500 shrink-0" />
-            <span>Canjear Código</span>
+            <span className="text-base sm:text-lg">🪖</span>
+            <span className="truncate">Información Personal</span>
           </button>
 
           <button
             type="button"
-            onClick={() => setMistakeModalOpen(true)}
-            className="p-3.5 bg-white dark:bg-slate-800 border-2 border-red-300 dark:border-red-700 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-red-50 dark:hover:bg-slate-700 transition-all shadow-xs"
+            onClick={() => setActiveTab("progress")}
+            className={`flex items-center justify-center gap-1.5 sm:gap-2 py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm transition-all ${
+              activeTab === "progress"
+                ? "bg-white dark:bg-slate-900 text-[#6B4423] dark:text-amber-300 shadow-sm border-2 border-amber-400 dark:border-amber-600"
+                : "text-slate-600 dark:text-slate-400 hover:text-[#6B4423] hover:bg-amber-100/40 dark:hover:bg-slate-700/50"
+            }`}
           >
-            <ShieldAlert className="w-4 h-4 text-red-500 shrink-0" />
-            <span>Bóveda Errores</span>
+            <span className="text-base sm:text-lg">🚀</span>
+            <span className="truncate">Avance Táctico</span>
           </button>
 
           <button
             type="button"
-            onClick={() => setPredictorModalOpen(true)}
-            className="p-3.5 bg-white dark:bg-slate-800 border-2 border-sky-300 dark:border-sky-700 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-sky-50 dark:hover:bg-slate-700 transition-all shadow-xs"
+            onClick={() => setActiveTab("security")}
+            className={`flex items-center justify-center gap-1.5 sm:gap-2 py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm transition-all ${
+              activeTab === "security"
+                ? "bg-white dark:bg-slate-900 text-[#6B4423] dark:text-amber-300 shadow-sm border-2 border-amber-400 dark:border-amber-600"
+                : "text-slate-600 dark:text-slate-400 hover:text-[#6B4423] hover:bg-amber-100/40 dark:hover:bg-slate-700/50"
+            }`}
           >
-            <Plane className="w-4 h-4 text-sky-500 shrink-0" />
-            <span>Predictor ALCPT</span>
+            <span className="text-base sm:text-lg">🔒</span>
+            <span className="truncate">Información Privada</span>
           </button>
         </div>
 
-        {/* Global Statistics Grid */}
-        {/* Rank and Gamification Stats */}
-        <div className="bg-[#FAF6F0] p-5 rounded-3xl border-2 border-[#E5D5C5] mb-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">{getRankByXp(user?.xp || 0).currentRank.badge}</span>
-              <div>
-                <span className="text-xs font-black text-[#A67B5B] dark:text-slate-400 uppercase tracking-wider block">
-                  Rango Oficial USAF
-                </span>
-                <h3 className="text-lg font-black text-[#6B4423] dark:text-white">
-                  {getRankByXp(user?.xp || 0).currentRank.name} • {getRankByXp(user?.xp || 0).currentRank.abbr}
-                </h3>
-                {getRankByXp(user?.xp || 0).nextRank && (
-                  <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mt-0.5">
-                    Siguiente grado: <span className="font-black">{getRankByXp(user?.xp || 0).nextRank?.name}</span> ({getRankByXp(user?.xp || 0).nextRank?.abbr})
-                  </p>
-                )}
-                <p className="text-xs text-[#A67B5B] dark:text-slate-400 font-medium mt-1">
-                  {getRankByXp(user?.xp || 0).currentRank.desc}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2.5">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-orange-700 shadow-xs">
-                <span>🔥</span>
-                <span>{user?.streakDays || 1} Días</span>
-              </div>
-              {(user?.streakFreeze || 0) > 0 && (
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 rounded-xl border border-sky-200 text-xs font-black text-sky-700 shadow-xs">
-                  <span>❄️</span>
-                  <span>{user?.streakFreeze} Congelador</span>
-                </div>
-              )}
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-sky-600 shadow-xs">
-                <span>💎</span>
-                <span>{user?.gems ?? user?.coins ?? 50} Gemas</span>
-              </div>
-              <Link
-                href="/shop"
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-xl text-xs font-black shadow-xs transition-transform active:scale-95"
-              >
-                <span>🏪</span>
-                <span>Tienda</span>
-              </Link>
-            </div>
-          </div>
-
-          <div className="w-full bg-white h-2.5 rounded-full overflow-hidden border border-[#E5D5C5]">
-            <div
-              className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full transition-all duration-500"
-              style={{ width: `${getRankByXp(user?.xp || 0).progress}%` }}
-            />
-          </div>
-          <div className="flex justify-between text-[10px] text-[#A67B5B] font-bold mt-1">
-            <span>{user?.xp || 0} XP Acumulada</span>
-            <span>Progreso: {getRankByXp(user?.xp || 0).progress}%</span>
-          </div>
-          <div className="mt-2 pt-2 border-t border-[#E5D5C5]/60 flex items-center justify-between text-xs font-bold text-amber-900">
-            {getRankByXp(user?.xp || 0).nextRank ? (
-              <span>
-                🎯 Te faltan <strong className="text-[#F59E0B] font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</strong> para ascender a <strong>{getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.abbr})</strong>
-              </span>
-            ) : (
-              <span className="text-emerald-700">🎖️ ¡Has alcanzado el Grado Supremo de General de la USAF!</span>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-[#F59E0B]">
-              <Trophy className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-[#A67B5B] uppercase tracking-wider block">
-                Exámenes de 100
-              </span>
-              <span className="text-2xl font-black text-[#6B4423]">{totalExams}</span>
-            </div>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-[#D97706]">
-              <Award className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-[#A67B5B] uppercase tracking-wider block">
-                Último Porcentaje
-              </span>
-              <span className="text-2xl font-black text-[#F59E0B]">
-                {latestExam ? `${latestExam.percentage}%` : "--"}
-              </span>
-            </div>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-700">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-[#A67B5B] uppercase tracking-wider block">
-                Promedio General
-              </span>
-              <span className="text-2xl font-black text-green-700">
-                {avgPercentage > 0 ? `${avgPercentage}%` : "--"}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Google Ads Placement in Profile */}
-        <AdBanner
-          className="mb-8"
-          slotId="8765432109"
-          sponsorTitle="Simulacros Oficiales con Certificación de Rendimiento ALCPT 🎖️"
-          sponsorDescription="Valida tus resultados con informes oficiales de competencia militar y nivel de inglés OACI / ALCPT."
-          sponsorCta="Ver Certificaciones"
-        />
-
-        {/* Pilot & Tactical Mascot Personalization */}
-        {user && (
-          <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 mb-8 shadow-sm">
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#E5D5C5]">
-              <div className="flex items-center gap-2.5">
-                <span className="text-2xl">🪖</span>
-                <div>
-                  <h3 className="font-black text-lg text-[#6B4423]">
-                    Personaliza tu Base: Usuario y Mascota Táctica
-                  </h3>
-                  <p className="text-xs text-[#A67B5B] font-semibold">
-                    Esta es tu aplicación de adiestramiento y tu compañero canino. Modifica tu nombre de usuario y el de tu mascota a tu gusto.
-                  </p>
-                </div>
-              </div>
-              <span className="text-xs font-black px-2.5 py-1 bg-amber-100 text-amber-900 rounded-full hidden sm:inline-block">
-                {getRankByXp(user.xp || 0).currentRank.abbr}
-              </span>
-            </div>
-
-            <form onSubmit={handleProfileSubmit} className="space-y-4 max-w-xl">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
-                    Tu Nombre de Usuario
-                  </label>
-                  <input
-                    type="text"
-                    value={profileName}
-                    onChange={(e) => setProfileName(e.target.value)}
-                    placeholder="Ej. Pablo, Alex, Carlos..."
-                    required
-                    className="w-full px-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423] font-bold"
-                  />
-                  <p className="text-[10px] text-[#A67B5B] mt-1">
-                    Aparecerá en tus diplomas oficiales y clasificaciones.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
-                    Nombre de tu Mascota Táctica 🐾
-                  </label>
-                  <input
-                    type="text"
-                    value={profileMascot}
-                    onChange={(e) => setProfileMascot(e.target.value)}
-                    placeholder="Ej. Conan, Hunter, Zeus..."
-                    required
-                    className="w-full px-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423] font-bold"
-                  />
-                  <p className="text-[10px] text-[#A67B5B] mt-1">
-                    Tu fiel compañero canino en cada sesión y celebración.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 pt-1">
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-conan-btn transition-transform active:scale-95"
-                >
-                  Guardar Cambios
-                </button>
-                {profileSaved && (
-                  <span className="text-xs font-bold text-green-700 animate-fade-in flex items-center gap-1">
-                    <CheckCircle2 className="w-4 h-4" />
-                    ¡Datos de tu base actualizados con éxito!
+        {/* PESTAÑA 1: INFORMACIÓN PERSONAL */}
+        {activeTab === "personal" && (
+          <div className="space-y-8 animate-fade-in">
+            {/* Formulario de Datos Personales */}
+            {user ? (
+              <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 shadow-sm">
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#E5D5C5]">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">🪖</span>
+                    <div>
+                      <h3 className="font-black text-lg text-[#6B4423]">
+                        Personaliza tu Base: Usuario y Mascota Táctica
+                      </h3>
+                      <p className="text-xs text-[#A67B5B] font-semibold">
+                        Modifica tu nombre de cadete y el de tu compañero canino a tu gusto.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-black px-2.5 py-1 bg-amber-100 text-amber-900 rounded-full hidden sm:inline-block">
+                    {getRankByXp(user.xp || 0).currentRank.abbr}
                   </span>
-                )}
+                </div>
+
+                <form onSubmit={handleProfileSubmit} className="space-y-4 max-w-xl">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                        Tu Nombre de Usuario
+                      </label>
+                      <input
+                        type="text"
+                        value={profileName}
+                        onChange={(e) => setProfileName(e.target.value)}
+                        placeholder="Ej. Pablo, Alex, Carlos..."
+                        required
+                        className="w-full px-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423] font-bold"
+                      />
+                      <p className="text-[10px] text-[#A67B5B] mt-1">
+                        Aparecerá en tus diplomas oficiales y clasificaciones.
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                        Nombre de tu Mascota Táctica 🐾
+                      </label>
+                      <input
+                        type="text"
+                        value={profileMascot}
+                        onChange={(e) => setProfileMascot(e.target.value)}
+                        placeholder="Ej. Conan, Hunter, Zeus..."
+                        required
+                        className="w-full px-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423] font-bold"
+                      />
+                      <p className="text-[10px] text-[#A67B5B] mt-1">
+                        Tu fiel compañero en cada sesión y celebración.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-1">
+                    <button
+                      type="submit"
+                      className="px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-conan-btn transition-transform active:scale-95"
+                    >
+                      Guardar Cambios
+                    </button>
+                    {profileSaved && (
+                      <span className="text-xs font-bold text-green-700 animate-fade-in flex items-center gap-1">
+                        <CheckCircle2 className="w-4 h-4" />
+                        ¡Datos de tu base actualizados con éxito!
+                      </span>
+                    )}
+                  </div>
+                </form>
               </div>
-            </form>
+            ) : (
+              <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 text-center">
+                <h4 className="font-black text-base text-[#6B4423]">Modo Invitado</h4>
+                <p className="text-xs text-[#A67B5B] mt-1 mb-4">
+                  Inicia sesión o regístrate para personalizar tu nombre de usuario y tu mascota táctica.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setAuthModalOpen(true)}
+                  className="px-5 py-2.5 bg-[#F59E0B] text-white font-black text-xs rounded-xl shadow-sm"
+                >
+                  Iniciar Sesión
+                </button>
+              </div>
+            )}
+
+            {/* Ficha de Grado Militar y Mascota */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-white rounded-2xl border-2 border-[#E5D5C5] p-5 shadow-xs flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center text-3xl shadow-sm shrink-0">
+                  {getRankByXp(user?.xp || 0).currentRank.badge}
+                </div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-amber-700 tracking-wider">
+                    Grado Militar Actual
+                  </span>
+                  <h4 className="text-base font-black text-[#6B4423]">
+                    {getRankByXp(user?.xp || 0).currentRank.name} ({getRankByXp(user?.xp || 0).currentRank.abbr})
+                  </h4>
+                  <p className="text-xs text-[#A67B5B] mt-0.5">
+                    {getRankByXp(user?.xp || 0).currentRank.desc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border-2 border-[#E5D5C5] p-5 shadow-xs flex items-center gap-4">
+                <div className="p-2 rounded-2xl bg-[#FAF6F0] border border-[#E5D5C5] shrink-0">
+                  <ConanMascot size="md" mood="happy" animate={true} />
+                </div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-amber-700 tracking-wider">
+                    Compañero Táctico
+                  </span>
+                  <h4 className="text-base font-black text-[#6B4423]">
+                    {getUserMascotName(user)} 🐾
+                  </h4>
+                  <p className="text-xs text-[#A67B5B] mt-0.5">
+                    Mascota canina de apoyo en misiones y simulaciones ALCPT.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Account Security & Password Section */}
-        <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 mb-10 shadow-sm">
-          <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-[#E5D5C5]">
-            <Shield className="w-5 h-5 text-[#F59E0B]" />
-            <h3 className="font-black text-lg text-[#6B4423]">
-              Seguridad de la Cuenta y Contraseña
-            </h3>
-          </div>
-
-          {user ? (
-            <form onSubmit={handlePasswordSubmit} className="max-w-xl space-y-3.5">
-              <p className="text-xs text-[#A67B5B] font-semibold mb-3">
-                Actualiza tu contraseña periódicamente para proteger tu historial y progreso.
-              </p>
-
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
-                  Contraseña Actual
-                </label>
-                <div className="relative">
-                  <Lock className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
-                  <input
-                    type="password"
-                    required
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Ingresa tu contraseña actual"
-                    className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
-                    Nueva Contraseña
-                  </label>
-                  <div className="relative">
-                    <KeyRound className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
-                    <input
-                      type="password"
-                      required
-                      minLength={6}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Mínimo 6 caracteres"
-                      className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
-                    />
+        {/* PESTAÑA 2: AVANCE TÁCTICO */}
+        {activeTab === "progress" && (
+          <div className="space-y-8 animate-fade-in">
+            {/* Progresión de Rango y Gamificación */}
+            <div className="bg-[#FAF6F0] p-5 sm:p-6 rounded-3xl border-2 border-[#E5D5C5] shadow-xs">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{getRankByXp(user?.xp || 0).currentRank.badge}</span>
+                  <div>
+                    <span className="text-xs font-black text-[#A67B5B] dark:text-slate-400 uppercase tracking-wider block">
+                      Rango Oficial USAF
+                    </span>
+                    <h3 className="text-lg font-black text-[#6B4423] dark:text-white">
+                      {getRankByXp(user?.xp || 0).currentRank.name} • {getRankByXp(user?.xp || 0).currentRank.abbr}
+                    </h3>
+                    {getRankByXp(user?.xp || 0).nextRank && (
+                      <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mt-0.5">
+                        Siguiente grado: <span className="font-black">{getRankByXp(user?.xp || 0).nextRank?.name}</span> ({getRankByXp(user?.xp || 0).nextRank?.abbr})
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
-                    Confirmar Nueva Contraseña
-                  </label>
-                  <div className="relative">
-                    <KeyRound className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
-                    <input
-                      type="password"
-                      required
-                      minLength={6}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Repite la nueva clave"
-                      className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
-                    />
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-orange-700 shadow-xs">
+                    <span>🔥</span>
+                    <span>{user?.streakDays || 1} Días</span>
                   </div>
+                  {(user?.streakFreeze || 0) > 0 && (
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 rounded-xl border border-sky-200 text-xs font-black text-sky-700 shadow-xs">
+                      <span>❄️</span>
+                      <span>{user?.streakFreeze} Congelador</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-xl border border-[#E5D5C5] text-xs font-black text-sky-600 shadow-xs">
+                    <span>💎</span>
+                    <span>{user?.gems ?? user?.coins ?? 50} Gemas</span>
+                  </div>
+                  <Link
+                    href="/shop"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-xl text-xs font-black shadow-xs transition-transform active:scale-95"
+                  >
+                    <span>🏪</span>
+                    <span>Tienda</span>
+                  </Link>
                 </div>
               </div>
 
-              {pwdError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                  <span>{pwdError}</span>
-                </div>
-              )}
-
-              {pwdSuccess && (
-                <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-xs font-bold text-green-800 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                  <span>{pwdSuccess}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={pwdLoading}
-                className="px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-sm flex items-center gap-2 transition-transform active:scale-98"
-              >
-                <KeyRound className="w-3.5 h-3.5" />
-                <span>{pwdLoading ? "Actualizando..." : "Cambiar Contraseña"}</span>
-              </button>
-            </form>
-          ) : (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white rounded-2xl border border-[#E5D5C5]">
-              <div>
-                <h4 className="text-sm font-black text-[#6B4423] mb-1">
-                  Protege tu cuenta y desbloquea acceso ilimitado
-                </h4>
-                <p className="text-xs text-[#A67B5B] font-medium">
-                  Crea una cuenta gratuita con contraseña para guardar tus medallas y seguir practicando sin límites de lecciones.
-                </p>
+              <div className="w-full bg-white h-2.5 rounded-full overflow-hidden border border-[#E5D5C5]">
+                <div
+                  className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full transition-all duration-500"
+                  style={{ width: `${getRankByXp(user?.xp || 0).progress}%` }}
+                />
               </div>
+              <div className="flex justify-between text-[10px] text-[#A67B5B] font-bold mt-1">
+                <span>{user?.xp || 0} XP Acumulada</span>
+                <span>Progreso: {getRankByXp(user?.xp || 0).progress}%</span>
+              </div>
+              <div className="mt-2 pt-2 border-t border-[#E5D5C5]/60 flex items-center justify-between text-xs font-bold text-amber-900">
+                {getRankByXp(user?.xp || 0).nextRank ? (
+                  <span>
+                    🎯 Te faltan <strong className="text-[#F59E0B] font-black">{Math.max(0, (getRankByXp(user?.xp || 0).nextRank?.minXp || 0) - (user?.xp || 0))} XP</strong> para ascender a <strong>{getRankByXp(user?.xp || 0).nextRank?.name} ({getRankByXp(user?.xp || 0).nextRank?.abbr})</strong>
+                  </span>
+                ) : (
+                  <span className="text-emerald-700">🎖️ ¡Has alcanzado el Grado Supremo de General de la USAF!</span>
+                )}
+              </div>
+            </div>
+
+            {/* Tarjetas de Estadísticas Globales */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-[#F59E0B]">
+                  <Trophy className="w-6 h-6" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-[#A67B5B] uppercase tracking-wider block">
+                    Exámenes de 100
+                  </span>
+                  <span className="text-2xl font-black text-[#6B4423]">{totalExams}</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-[#D97706]">
+                  <Award className="w-6 h-6" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-[#A67B5B] uppercase tracking-wider block">
+                    Último Porcentaje
+                  </span>
+                  <span className="text-2xl font-black text-[#F59E0B]">
+                    {latestExam ? `${latestExam.percentage}%` : "--"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border-2 border-[#E5D5C5] shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-700">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-[#A67B5B] uppercase tracking-wider block">
+                    Promedio General
+                  </span>
+                  <span className="text-2xl font-black text-green-700">
+                    {avgPercentage > 0 ? `${avgPercentage}%` : "--"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Accesos de Apoyo Táctico */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setAuthModalOpen(true)}
-                className="px-4 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs font-black rounded-xl shadow-sm whitespace-nowrap"
+                onClick={() => setMistakeModalOpen(true)}
+                className="p-4 bg-white dark:bg-slate-800 border-2 border-red-300 dark:border-red-700 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-red-50 dark:hover:bg-slate-700 transition-all shadow-xs"
               >
-                Crear Cuenta Gratis
+                <ShieldAlert className="w-5 h-5 text-red-500 shrink-0" />
+                <span>Abrir Bóveda de Errores</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPredictorModalOpen(true)}
+                className="p-4 bg-white dark:bg-slate-800 border-2 border-sky-300 dark:border-sky-700 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-sky-50 dark:hover:bg-slate-700 transition-all shadow-xs"
+              >
+                <Plane className="w-5 h-5 text-sky-500 shrink-0" />
+                <span>Abrir Predictor de Comisión USAF</span>
               </button>
             </div>
-          )}
-        </div>
 
-        {/* Two Columns: Exam History & Session History */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* Exam History (100 Qs) */}
-          <div className="bg-white rounded-3xl border-2 border-[#E5D5C5] shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E5D5C5]">
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-red-500" />
-                <h3 className="font-black text-lg text-[#6B4423]">
-                  Historial de Exámenes (100 Qs)
-                </h3>
-              </div>
-              <span className="text-xs font-bold text-[#A67B5B] bg-[#FAF6F0] px-2.5 py-1 rounded-full border">
-                {examHistory.length} registros
-              </span>
-            </div>
+            {/* Historial de Exámenes y Quizzes */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Exam History (100 Qs) */}
+              <div className="bg-white rounded-3xl border-2 border-[#E5D5C5] shadow-sm p-6">
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E5D5C5]">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-red-500" />
+                    <h3 className="font-black text-lg text-[#6B4423]">
+                      Historial de Exámenes (100 Qs)
+                    </h3>
+                  </div>
+                  <span className="text-xs font-bold text-[#A67B5B] bg-[#FAF6F0] px-2.5 py-1 rounded-full border">
+                    {examHistory.length} registros
+                  </span>
+                </div>
 
-            {examHistory.length === 0 ? (
-              <div className="text-center py-8 text-[#A67B5B] text-sm">
-                <p className="font-semibold mb-3">Aún no has rendido un examen oficial de 100 preguntas.</p>
-                <Link
-                  href="/practice?size=100"
-                  className="inline-block px-4 py-2 bg-[#F59E0B] text-white font-bold text-xs rounded-xl shadow-sm"
-                >
-                  Rendir Examen de 100 Ahora
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
-                {examHistory.map((exam, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3.5 bg-[#FAF6F0] rounded-xl border border-[#E5D5C5] flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-black uppercase text-[#6B4423]">
-                          Examen Oficial {exam.type}
-                        </span>
-                        <span className="text-[10px] text-[#A67B5B]">
-                          {new Date(exam.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <span className="text-xs text-[#A67B5B] block mt-0.5">
-                        {exam.correct} correctas / {exam.incorrect} incorrectas
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <span className="text-lg font-black text-[#F59E0B]">
-                          {exam.percentage}%
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedCertExam(exam)}
-                        className="p-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl text-xs font-bold transition-transform active:scale-95 flex items-center gap-1 shadow-2xs"
-                        title="Ver Diploma Oficial de este examen"
+                {examHistory.length === 0 ? (
+                  <div className="text-center py-8 text-[#A67B5B] text-sm">
+                    <p className="font-semibold mb-3">Aún no has rendido un examen oficial de 100 preguntas.</p>
+                    <Link
+                      href="/practice?size=100"
+                      className="inline-block px-4 py-2 bg-[#F59E0B] text-white font-bold text-xs rounded-xl shadow-sm"
+                    >
+                      Rendir Examen de 100 Ahora
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                    {examHistory.map((exam, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3.5 bg-[#FAF6F0] rounded-xl border border-[#E5D5C5] flex items-center justify-between"
                       >
-                        <Award className="w-4 h-4 text-amber-700" />
-                        <span className="hidden sm:inline text-[11px]">Diploma</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-black uppercase text-[#6B4423]">
+                              Examen Oficial {exam.type}
+                            </span>
+                            <span className="text-[10px] text-[#A67B5B]">
+                              {new Date(exam.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <span className="text-xs text-[#A67B5B] block mt-0.5">
+                            {exam.correct} correctas / {exam.incorrect} incorrectas
+                          </span>
+                        </div>
 
-          {/* Session History (10/30/50) */}
-          <div className="bg-white rounded-3xl border-2 border-[#E5D5C5] shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E5D5C5]">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#F59E0B]" />
-                <h3 className="font-black text-lg text-[#6B4423]">
-                  Quizzes Completados (10, 30, 50)
-                </h3>
+                        <div className="flex items-center gap-3">
+                          <div className="text-right">
+                            <span className="text-lg font-black text-[#F59E0B]">
+                              {exam.percentage}%
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedCertExam(exam)}
+                            className="p-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl text-xs font-bold transition-transform active:scale-95 flex items-center gap-1 shadow-2xs"
+                            title="Ver Diploma Oficial de este examen"
+                          >
+                            <Award className="w-4 h-4 text-amber-700" />
+                            <span className="hidden sm:inline text-[11px]">Diploma</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <span className="text-xs font-bold text-[#A67B5B] bg-[#FAF6F0] px-2.5 py-1 rounded-full border">
-                {sessionHistory.length} registros
-              </span>
+
+              {/* Session History (10/30/50) */}
+              <div className="bg-white rounded-3xl border-2 border-[#E5D5C5] shadow-sm p-6">
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E5D5C5]">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-[#F59E0B]" />
+                    <h3 className="font-black text-lg text-[#6B4423]">
+                      Quizzes Rápidos (10, 30, 50)
+                    </h3>
+                  </div>
+                  <span className="text-xs font-bold text-[#A67B5B] bg-[#FAF6F0] px-2.5 py-1 rounded-full border">
+                    {sessionHistory.length} registros
+                  </span>
+                </div>
+
+                {sessionHistory.length === 0 ? (
+                  <div className="text-center py-8 text-[#A67B5B] text-sm">
+                    <p className="font-semibold mb-3">No hay quizzes guardados aún.</p>
+                    <Link
+                      href="/practice?size=10"
+                      className="inline-block px-4 py-2 bg-[#F59E0B] text-white font-bold text-xs rounded-xl shadow-sm"
+                    >
+                      Practicar Quiz de 10
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                    {sessionHistory.map((sess, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3.5 bg-[#FAF6F0] rounded-xl border border-[#E5D5C5] flex items-center justify-between"
+                      >
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-black uppercase text-[#6B4423]">
+                              Quiz {sess.size}Q ({sess.type})
+                            </span>
+                            <span className="text-[10px] text-[#A67B5B]">
+                              {new Date(sess.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <span className="text-xs text-[#A67B5B] block mt-0.5">
+                            {sess.correct} correctas / {sess.incorrect} incorrectas
+                          </span>
+                        </div>
+
+                        <div className="text-right">
+                          <span className="text-base font-black text-green-700">
+                            {sess.percentage}%
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {sessionHistory.length === 0 ? (
-              <div className="text-center py-8 text-[#A67B5B] text-sm">
-                <p className="font-semibold mb-3">No hay quizzes guardados aún.</p>
-                <Link
-                  href="/practice?size=10"
-                  className="inline-block px-4 py-2 bg-[#F59E0B] text-white font-bold text-xs rounded-xl shadow-sm"
-                >
-                  Practicar Quiz de 10
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
-                {sessionHistory.map((sess, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3.5 bg-[#FAF6F0] rounded-xl border border-[#E5D5C5] flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-black uppercase text-[#6B4423]">
-                          Quiz {sess.size}Q ({sess.type})
-                        </span>
-                        <span className="text-[10px] text-[#A67B5B]">
-                          {new Date(sess.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <span className="text-xs text-[#A67B5B] block mt-0.5">
-                        {sess.correct} correctas / {sess.incorrect} incorrectas
-                      </span>
-                    </div>
+            {/* Anuncio Google Ads */}
+            <AdBanner
+              className="mt-6"
+              slotId="8765432109"
+              sponsorTitle="Simulacros Oficiales con Certificación de Rendimiento ALCPT 🎖️"
+              sponsorDescription="Valida tus resultados con informes oficiales de competencia militar y nivel de inglés OACI / ALCPT."
+              sponsorCta="Ver Certificaciones"
+            />
+          </div>
+        )}
 
-                    <div className="text-right">
-                      <span className="text-base font-black text-green-700">
-                        {sess.percentage}%
-                      </span>
+        {/* PESTAÑA 3: INFORMACIÓN PRIVADA Y SEGURIDAD */}
+        {activeTab === "security" && (
+          <div className="space-y-8 animate-fade-in">
+            {/* Estado de Cuenta y Privilegios */}
+            <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 shadow-sm">
+              <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-[#E5D5C5]">
+                <Shield className="w-5 h-5 text-[#F59E0B]" />
+                <h3 className="font-black text-lg text-[#6B4423]">
+                  Privilegios y Estado de Membresía
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                {isAdmin(user) ? (
+                  <button
+                    type="button"
+                    onClick={() => setAdminModalOpen(true)}
+                    className="p-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-2xl shadow-md flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider"
+                  >
+                    <ShieldCheck className="w-4 h-4 shrink-0" />
+                    <span>⭐ Panel Admin</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setProModalOpen(true)}
+                    className="p-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-2xl shadow-md flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider"
+                  >
+                    <Crown className="w-4 h-4 shrink-0" />
+                    <span>Membresía Conan PRO</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setRedeemModalOpen(true)}
+                  className="p-4 bg-white dark:bg-slate-800 border-2 border-amber-300 dark:border-amber-600 rounded-2xl text-slate-800 dark:text-slate-100 flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider hover:bg-amber-50"
+                >
+                  <Gift className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span>Canjear Código Táctico</span>
+                </button>
+
+                {user && (
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="p-4 bg-white border-2 border-red-200 hover:bg-red-50 text-red-600 rounded-2xl flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Cerrar Sesión</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Cambio de Contraseña */}
+            <div className="bg-[#FAF6F0] rounded-3xl border-2 border-[#E5D5C5] p-6 sm:p-7 shadow-sm">
+              <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-[#E5D5C5]">
+                <Lock className="w-5 h-5 text-[#F59E0B]" />
+                <h3 className="font-black text-lg text-[#6B4423]">
+                  Seguridad de la Cuenta y Contraseña
+                </h3>
+              </div>
+
+              {user ? (
+                <form onSubmit={handlePasswordSubmit} className="max-w-xl space-y-3.5">
+                  <p className="text-xs text-[#A67B5B] font-semibold mb-3">
+                    Actualiza tu contraseña para mantener protegido tu avance y récord táctico.
+                  </p>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                      Contraseña Actual
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
+                      <input
+                        type="password"
+                        required
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        placeholder="Ingresa tu contraseña actual"
+                        className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
+                      />
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                        Nueva Contraseña
+                      </label>
+                      <div className="relative">
+                        <KeyRound className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
+                        <input
+                          type="password"
+                          required
+                          minLength={6}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="Mínimo 6 caracteres"
+                          className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B4423] mb-1">
+                        Confirmar Nueva Contraseña
+                      </label>
+                      <div className="relative">
+                        <KeyRound className="w-4 h-4 text-[#A67B5B] absolute left-3.5 top-3" />
+                        <input
+                          type="password"
+                          required
+                          minLength={6}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="Repite la nueva clave"
+                          className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-[#E5D5C5] focus:border-[#F59E0B] focus:outline-none text-xs sm:text-sm bg-white text-[#6B4423]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {pwdError && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      <span>{pwdError}</span>
+                    </div>
+                  )}
+
+                  {pwdSuccess && (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-xs font-bold text-green-800 flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                      <span>{pwdSuccess}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={pwdLoading}
+                    className="px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs rounded-xl shadow-sm flex items-center gap-2 transition-transform active:scale-98"
+                  >
+                    <KeyRound className="w-3.5 h-3.5" />
+                    <span>{pwdLoading ? "Actualizando..." : "Cambiar Contraseña"}</span>
+                  </button>
+                </form>
+              ) : (
+                <div className="p-4 bg-white rounded-2xl border border-[#E5D5C5] text-center">
+                  <p className="text-xs text-[#A67B5B] mb-3">
+                    Estás en modo invitado. Crea una cuenta gratuita para proteger tu récord.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setAuthModalOpen(true)}
+                    className="px-4 py-2 bg-[#F59E0B] text-white text-xs font-black rounded-xl"
+                  >
+                    Crear Cuenta Gratis
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </main>
 
       <AuthModal

@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { getWordGrammarInfo, fetchWordTranslationAsync, WordGrammarInfo } from "@/lib/wordDictionary";
 import { speakHumanText } from "@/lib/audioVoice";
-import { Volume2, X, ShieldAlert } from "lucide-react";
+import { Volume2, X, Languages, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface InteractiveWordTextProps {
@@ -14,226 +13,267 @@ interface InteractiveWordTextProps {
   isExamMode?: boolean;
 }
 
+// Caché en memoria para traducciones de oraciones completas
+const SENTENCE_CACHE = new Map<string, string>();
+
+// Frases y estructuras recurrentes oficiales de exámenes ALCPT
+const PRESET_SENTENCE_TRANSLATIONS: Record<string, string> = {
+  "what did the student mean?": "¿Qué quiso decir el estudiante?",
+  "what did the man say?": "¿Qué dijo el hombre?",
+  "what did the woman say?": "¿Qué dijo la mujer?",
+  "what did the speaker say?": "¿Qué dijo el hablante?",
+  "what does the speaker mean?": "¿Qué quiere decir el hablante?",
+  "what are they talking about?": "¿De qué están hablando?",
+  "where are they going?": "¿A dónde van?",
+  "what will happen next?": "¿Qué sucederá a continuación?",
+  "what will they do?": "¿Qué harán ellos?",
+  "choose the correct sentence.": "Elige la oración gramaticalmente correcta.",
+  "select the best answer.": "Selecciona la mejor respuesta.",
+  "which sentence is correct?": "¿Cuál oración es correcta?",
+  "listen to the audio and answer the question.": "Escucha el audio y responde la pregunta.",
+  "what is the main idea?": "¿Cuál es la idea principal?",
+  "he will go": "Él irá.",
+  "he can't go": "Él no puede ir.",
+  "he finished his studies": "Él terminó sus estudios.",
+  "he likes to study": "A él le gusta estudiar.",
+  "they will fly": "Ellos volarán.",
+  "at the barracks": "En el cuartel / barracas.",
+  "any time after 6:00": "En cualquier momento después de las 6:00.",
+  "the most courageously": "Con el mayor valor / el más valientemente.",
+  "a kind of fruit": "Un tipo de fruta (dátil).",
+  "a social engagement": "Un compromiso social / una cita.",
+  "walk": "Caminar.",
+  "walking": "Caminar / el acto de caminar.",
+  "i must stay here": "Debo quedarme aquí.",
+  "i'll stay here": "Me quedaré aquí.",
+  "the slowest of the three": "El más lento de los tres.",
+  "cultivated": "Cultivado / trabajado.",
+  "where they belong": "Donde corresponden.",
+  "when they belong": "Cuando corresponden.",
+  "was saw": "Fue visto.",
+  "was seen": "Fue visto.",
+  "cleaned and pressed": "Limpio y planchado.",
+  "to clean and to press": "Limpiar y planchar.",
+};
+
+// Generar una clave segura para localStorage
+function getSentenceHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return `trans_sent_${Math.abs(hash)}`;
+}
+
 export default function InteractiveWordText({
   text,
   className = "",
   interactive = true,
   isExamMode = false,
 }: InteractiveWordTextProps) {
-  const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
-  const [activeInfo, setActiveInfo] = useState<WordGrammarInfo | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [translation, setTranslation] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const popoverRef = useRef<HTMLDivElement | null>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Parsear texto dividiendo palabras de signos de puntuación y espacios
-  const tokens = useMemo(() => {
-    if (!text) return [];
-    return text.match(/([a-zA-Z0-9'’-]+|[^\sa-zA-Z0-9'’-]+|\s+)/g) || [text];
-  }, [text]);
+  const cleanText = (text || "").trim();
 
-  const closePopover = () => {
-    setActiveWordIndex(null);
-    setActiveInfo(null);
-  };
-
-  // Cerrar con la tecla Escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        closePopover();
-      }
-    };
-    if (activeInfo) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [activeInfo]);
-
-  if (!interactive) {
+  // En modo examen real, devolver texto puro sin traducción ni tooltips
+  if (!interactive || isExamMode || !cleanText) {
     return <span className={className}>{text}</span>;
   }
 
-  const handleMouseEnter = (token: string, idx: number) => {
-    // En escritorio, solo abrir al pasar el ratón si no hay otra palabra activa
-    if (activeWordIndex !== null) return;
-    const info = getWordGrammarInfo(token);
-    setActiveWordIndex(idx);
-    setActiveInfo(info);
+  const lookupTranslation = async (sentence: string) => {
+    const lower = sentence.toLowerCase().trim();
 
-    if (info.translation === info.cleanWord) {
-      fetchWordTranslationAsync(token).then((res) => {
-        if (res) {
-          setActiveInfo((prev) => (prev && prev.cleanWord === info.cleanWord ? { ...prev, translation: res } : prev));
-        }
-      });
+    // 1. Diccionario ALCPT predeterminado
+    if (PRESET_SENTENCE_TRANSLATIONS[lower]) {
+      setTranslation(PRESET_SENTENCE_TRANSLATIONS[lower]);
+      return;
     }
-  };
 
-  const handleClickWord = (e: React.MouseEvent | React.TouchEvent, token: string, idx: number) => {
-    e.stopPropagation();
-    // Prevenir que el clic se propague al botón de la opción o active la respuesta
-    if (activeWordIndex === idx) {
-      closePopover();
-    } else {
-      const info = getWordGrammarInfo(token);
-      setActiveWordIndex(idx);
-      setActiveInfo(info);
+    // 2. Caché en memoria
+    if (SENTENCE_CACHE.has(lower)) {
+      setTranslation(SENTENCE_CACHE.get(lower)!);
+      return;
+    }
 
-      if (info.translation === info.cleanWord) {
-        fetchWordTranslationAsync(token).then((res) => {
-          if (res) {
-            setActiveInfo((prev) => (prev && prev.cleanWord === info.cleanWord ? { ...prev, translation: res } : prev));
-          }
-        });
+    // 3. Caché en localStorage
+    if (typeof window !== "undefined") {
+      const cached = localStorage.getItem(getSentenceHash(lower));
+      if (cached) {
+        SENTENCE_CACHE.set(lower, cached);
+        setTranslation(cached);
+        return;
       }
     }
+
+    // 4. Consulta a Google Translate GTX (alta velocidad)
+    setLoading(true);
+    try {
+      const gtxUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${encodeURIComponent(
+        sentence
+      )}`;
+      const res = await fetch(gtxUrl, { signal: AbortSignal.timeout(3500) });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          const trans = data[0].map((c: any) => c[0]).join("").trim();
+          if (trans && trans.toLowerCase() !== lower) {
+            SENTENCE_CACHE.set(lower, trans);
+            if (typeof window !== "undefined") {
+              localStorage.setItem(getSentenceHash(lower), trans);
+            }
+            setTranslation(trans);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+    } catch {
+      // Fallback a MyMemory
+    }
+
+    // 5. Fallback con MyMemory
+    try {
+      const myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+        sentence
+      )}&langpair=en|es`;
+      const res = await fetch(myMemoryUrl, { signal: AbortSignal.timeout(3500) });
+      if (res.ok) {
+        const data = await res.json();
+        const trans = data.responseData?.translatedText;
+        if (trans && trans.toLowerCase() !== lower) {
+          SENTENCE_CACHE.set(lower, trans);
+          if (typeof window !== "undefined") {
+            localStorage.setItem(getSentenceHash(lower), trans);
+          }
+          setTranslation(trans);
+          setLoading(false);
+          return;
+        }
+      }
+    } catch {}
+
+    setLoading(false);
+    setTranslation(sentence);
   };
 
-  const playPronunciation = (e: React.MouseEvent, wordToSpeak: string) => {
-    e.stopPropagation();
-    speakHumanText(wordToSpeak, { rate: 0.92 });
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setIsHovered(true);
+    lookupTranslation(cleanText);
   };
+
+  const handleMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 250);
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+    if (!isOpen) {
+      lookupTranslation(cleanText);
+    }
+  };
+
+  const handleSpeak = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    speakHumanText(cleanText, { rate: 0.9 });
+  };
+
+  const showCard = (isHovered || isOpen) && !isExamMode;
 
   return (
     <>
-      <span className={`inline leading-relaxed ${className}`}>
-        {tokens.map((token, idx) => {
-          const isWord = /[a-zA-Z]/i.test(token);
-          if (!isWord) {
-            return <React.Fragment key={idx}>{token}</React.Fragment>;
-          }
-
-          const isActive = activeWordIndex === idx;
-
-          return (
-            <span
-              key={idx}
-              className="relative inline-block"
-              onMouseEnter={() => handleMouseEnter(token, idx)}
-            >
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={(e) => handleClickWord(e, token, idx)}
-                onPointerDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleClickWord(e as any, token, idx);
-                  }
-                }}
-                className={`cursor-pointer rounded px-0.5 transition-all select-none ${
-                  isActive
-                    ? "bg-amber-200 dark:bg-amber-900/70 text-amber-950 dark:text-amber-100 font-extrabold shadow-xs"
-                    : isExamMode
-                    ? "hover:bg-amber-100/60 dark:hover:bg-amber-900/30 underline decoration-dotted decoration-amber-300 dark:decoration-amber-600 underline-offset-2"
-                    : "hover:bg-amber-100/80 dark:hover:bg-amber-900/40 hover:text-amber-900 dark:hover:text-amber-200 underline decoration-dotted decoration-amber-400/70 dark:decoration-amber-500/70 underline-offset-3"
-                }`}
-                title={
-                  isExamMode
-                    ? "Toca para escuchar pronunciación y tiempos en inglés (Modo Examen)"
-                    : "Toca o pasa el cursor para ver traducción y tiempos verbales"
-                }
-              >
-                {token}
-              </span>
-            </span>
-          );
-        })}
+      <span
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+        className={`inline cursor-help transition-all rounded px-0.5 select-text hover:bg-amber-100/70 dark:hover:bg-amber-950/40 underline decoration-dotted decoration-amber-400/80 dark:decoration-amber-500/80 underline-offset-4 ${className}`}
+        title="Pasa el cursor o toca para ver la traducción de la oración completa"
+      >
+        {text}
       </span>
 
-      {/* ÚNICA VENTANA EMERGENTE EN TODA LA APLICACIÓN (React Portal a document.body)
-          No altera el layout de la página ni agranda el ancho del viewport.
-          Adaptada 100% para celular y escritorio en la parte inferior/central. */}
+      {/* Tarjeta Flotante con la Traducción Contextual Completa */}
       {mounted &&
         typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
-            {activeInfo && (
-              <>
-                {/* Telón de fondo oscuro translúcido */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="fixed inset-0 bg-black/40 backdrop-blur-2xs z-[9998] pointer-events-auto"
-                  onClick={closePopover}
-                />
-
-                {/* Tarjeta Flotante Única y Ultra Compacta */}
-                <motion.div
-                  ref={popoverRef}
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="fixed bottom-4 inset-x-4 sm:bottom-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 w-auto sm:min-w-[280px] max-w-sm px-4 py-3 bg-white dark:bg-slate-900 rounded-2xl border-2 border-amber-400 dark:border-amber-600 shadow-2xl z-[9999] text-left pointer-events-auto select-text text-slate-800 dark:text-slate-100 font-sans"
-                >
-                  {/* Encabezado: Palabra, Fonética, Audio y Botón Cerrar */}
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="font-black text-base sm:text-lg text-[#6B4423] dark:text-amber-300 truncate">
-                        {activeInfo.cleanWord}
-                      </span>
-                      {activeInfo.phonetic && (
-                        <span className="text-xs text-amber-700 dark:text-amber-400 font-mono">
-                          {activeInfo.phonetic}
-                        </span>
-                      )}
-                      <button
-                        type="button"
-                        title="Escuchar pronunciación"
-                        onClick={(e) => playPronunciation(e, activeInfo.cleanWord)}
-                        className="p-1 rounded-lg bg-amber-100 dark:bg-slate-800 text-amber-800 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-slate-700 transition-colors shrink-0"
-                      >
-                        <Volume2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      {activeInfo.partOfSpeech && (
-                        <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60">
-                          {activeInfo.partOfSpeech}
-                        </span>
-                      )}
-                      <button
-                        type="button"
-                        onClick={closePopover}
-                        className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                        title="Cerrar"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+            {showCard && (
+              <motion.div
+                initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                onMouseEnter={() => {
+                  if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+                  setIsHovered(true);
+                }}
+                onMouseLeave={handleMouseLeave}
+                onClick={(e) => e.stopPropagation()}
+                className="fixed bottom-5 inset-x-4 sm:bottom-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 w-auto sm:min-w-[340px] max-w-lg p-3.5 sm:p-4 bg-white dark:bg-slate-900 rounded-2xl border-2 border-amber-400 dark:border-amber-600 shadow-2xl z-[9999] text-left pointer-events-auto select-text text-slate-800 dark:text-slate-100 font-sans"
+              >
+                {/* Cabecera Táctica del Tooltip */}
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                    <Languages className="w-4 h-4 text-amber-500" />
+                    <span>Traducción Contextual (Oración Completa)</span>
                   </div>
 
-                  {/* Traducción al Español (Directa, limpia y sin textos largos) */}
-                  {isExamMode ? (
-                    <div className="mt-2 text-xs text-red-600 dark:text-red-400 font-bold flex items-center gap-1.5">
-                      <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
-                      <span>Modo Examen: Traducción bloqueada según normativa USAF.</span>
-                    </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={handleSpeak}
+                      title="Escuchar pronunciación en inglés"
+                      className="p-1 rounded-lg bg-amber-100 dark:bg-slate-800 text-amber-800 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-slate-700 transition-colors"
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                        setIsHovered(false);
+                      }}
+                      title="Cerrar traducción"
+                      className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Frase Original en Inglés */}
+                <div className="text-xs text-slate-500 dark:text-slate-400 italic mb-1.5 line-clamp-2">
+                  &ldquo;{cleanText}&rdquo;
+                </div>
+
+                {/* Traducción al Español */}
+                <div className="pt-2 border-t border-amber-200/80 dark:border-slate-800 flex items-start gap-2">
+                  <span className="text-sm shrink-0">🇪🇸</span>
+                  {loading ? (
+                    <span className="text-xs font-bold text-amber-700 dark:text-amber-300 animate-pulse flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Traduciendo oración completa...
+                    </span>
                   ) : (
-                    <div className="mt-2 pt-2 border-t border-amber-200/70 dark:border-slate-800 flex items-baseline gap-2">
-                      <span className="text-[10px] font-black tracking-wider text-amber-800 dark:text-amber-400 uppercase">
-                        Traducción:
-                      </span>
-                      <span className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                        {activeInfo.translation}
-                      </span>
-                    </div>
+                    <p className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug">
+                      {translation || cleanText}
+                    </p>
                   )}
-                </motion.div>
-              </>
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>,
           document.body
@@ -241,3 +281,7 @@ export default function InteractiveWordText({
     </>
   );
 }
+
+// Exportar alias para consistencia
+export { InteractiveWordText as InteractiveSentenceText };
+

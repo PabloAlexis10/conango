@@ -76,7 +76,7 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
   if (!isOpen) return null;
 
   const handleSelectFormula = (id: number) => {
-    if (id > 5 && !isPro) {
+    if (id > 8 && !isPro) {
       setProModalOpen(true);
       return;
     }
@@ -85,7 +85,7 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
 
   const handleStart = () => {
     if (!selectedFormula) return;
-    if (selectedFormula > 5 && !isPro) {
+    if (selectedFormula > 8 && !isPro) {
       setProModalOpen(true);
       return;
     }
@@ -186,7 +186,7 @@ export default function FormulaModal({ isOpen, onClose }: FormulaModalProps) {
           <div className="flex-1 overflow-y-auto pr-1 space-y-1.5 mb-4 max-h-52 sm:max-h-60 border border-[#E5D5C5]/60 dark:border-slate-800 p-2 rounded-2xl bg-slate-50/50 dark:bg-slate-950/40">
             {filteredFormulas.map((f) => {
               const isSelected = selectedFormula === f.id;
-              const isLocked = f.id > 5 && !isPro;
+              const isLocked = f.id > 8 && !isPro;
               return (
                 <div
                   key={f.id}

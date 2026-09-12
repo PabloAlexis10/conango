@@ -24,6 +24,7 @@ import {
   Crown,
   Calendar,
   FileText,
+  Share2,
 } from "lucide-react";
 import { PromoCode, UserProfile, CodeRedemption } from "@/lib/types";
 import {
@@ -32,6 +33,7 @@ import {
   togglePromoCodeActive,
   deletePromoCode,
   revokeRedemption,
+  generateUniversalTacticalCode,
 } from "@/lib/adminCodes";
 import { getCurrentUser, saveCurrentUserProfile, getRegisteredAccounts } from "@/lib/supabase";
 
@@ -113,6 +115,65 @@ export default function AdminControlModal({
       navigator.clipboard.writeText(code);
       setCopiedCode(code);
       setTimeout(() => setCopiedCode(null), 2000);
+    }
+  };
+
+  const handleCopyShare = (code: string, description?: string) => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      const shareMessage = `¡Hola! Aquí tienes tu código para ConanGo: ${code}\nIngresa a https://conango.vercel.app y canjéalo tocando el ícono de regalo 🎁 para activar tus beneficios militares.`;
+      navigator.clipboard.writeText(shareMessage);
+      setCopiedCode(code);
+      setFeedbackMsg({ type: "success", text: `¡Mensaje con código ${code} copiado al portapapeles para WhatsApp!` });
+      setTimeout(() => {
+        setCopiedCode(null);
+        setFeedbackMsg(null);
+      }, 3000);
+    }
+  };
+
+  const handleCreateQuickPreset = async (preset: "pro_30d" | "pro_lifetime" | "gems_500" | "desc_50") => {
+    setFeedbackMsg(null);
+    let type: "pro_trial" | "gift" | "discount" = "pro_trial";
+    let val = 30;
+    let desc = "Pase Conan PRO Táctico (30 Días)";
+    let detail: any = { proDays: 30 };
+
+    if (preset === "pro_30d") {
+      type = "pro_trial";
+      val = 30;
+      desc = "Pase Conan PRO Táctico (30 Días)";
+      detail = { proDays: 30 };
+    } else if (preset === "pro_lifetime") {
+      type = "pro_trial";
+      val = 9999;
+      desc = "Pase Conan PRO Vitalicio de la Comandancia";
+      detail = { proDays: 9999 };
+    } else if (preset === "gems_500") {
+      type = "gift";
+      val = 500;
+      desc = "Bolsa Militar de 500 Diamantes";
+      detail = { gems: 500, streakFreeze: 1 };
+    } else if (preset === "desc_50") {
+      type = "discount";
+      val = 50;
+      desc = "Descuento Táctico 50% en Conan PRO";
+      detail = { discountPercent: 50 };
+    }
+
+    const generatedCode = generateUniversalTacticalCode(type, val);
+    const res = await createPromoCode({
+      code: generatedCode,
+      type,
+      value: val,
+      description: desc,
+      maxUses: 999,
+      rewardDetail: detail,
+    });
+
+    if (res.success && res.code) {
+      setFeedbackMsg({ type: "success", text: `¡Código universal ${res.code.code} generado listo para enviar!` });
+      handleCopyShare(res.code.code, desc);
+      refreshData();
     }
   };
 
@@ -381,11 +442,49 @@ export default function AdminControlModal({
         {activeTab === "codes" && (
           <div className="space-y-4">
             {/* Creador de Nuevos Códigos */}
-            <div className="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-700">
-              <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2 mb-3">
-                <PlusCircle className="w-4 h-4 text-amber-500" />
-                Crear Nuevo Código Táctico Universal
-              </h3>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
+                  <PlusCircle className="w-4 h-4 text-amber-500" />
+                  Crear Código Táctico Universal (Infalible)
+                </h3>
+              </div>
+
+              {/* Botones de 1 Clic para Crear y Copiar al instante */}
+              <div className="mb-4 bg-amber-50/60 dark:bg-amber-950/30 p-3 rounded-xl border border-amber-200 dark:border-amber-800">
+                <span className="text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 block mb-2">
+                  ⚡ Generación Rápida de 1 Clic (Se genera y copia para WhatsApp):
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleCreateQuickPreset("pro_30d")}
+                    className="px-2.5 py-2 bg-white dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-300 dark:border-amber-700 rounded-xl text-xs font-black text-amber-900 dark:text-amber-200 shadow-xs flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <span>⭐ PRO 30 Días</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCreateQuickPreset("pro_lifetime")}
+                    className="px-2.5 py-2 bg-white dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-300 dark:border-amber-700 rounded-xl text-xs font-black text-amber-900 dark:text-amber-200 shadow-xs flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <span>👑 PRO Vitalicio</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCreateQuickPreset("gems_500")}
+                    className="px-2.5 py-2 bg-white dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border border-emerald-300 dark:border-emerald-700 rounded-xl text-xs font-black text-emerald-900 dark:text-emerald-200 shadow-xs flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <span>💎 500 Gemas</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCreateQuickPreset("desc_50")}
+                    className="px-2.5 py-2 bg-white dark:bg-slate-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 border border-indigo-300 dark:border-indigo-700 rounded-xl text-xs font-black text-indigo-900 dark:text-indigo-200 shadow-xs flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <span>🏷️ 50% OFF</span>
+                  </button>
+                </div>
+              </div>
 
               <form onSubmit={handleCreateCode} className="space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -565,18 +664,29 @@ export default function AdminControlModal({
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
-                        {/* Copiar */}
+                        {/* Copiar Sólo Código */}
                         <button
                           type="button"
                           onClick={() => handleCopy(c.code)}
                           className="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-amber-100 dark:hover:bg-amber-900/40 text-slate-700 dark:text-slate-200 transition-colors"
-                          title="Copiar código"
+                          title="Copiar sólo código"
                         >
                           {copiedCode === c.code ? (
                             <Check className="w-4 h-4 text-emerald-500" />
                           ) : (
                             <Copy className="w-4 h-4" />
                           )}
+                        </button>
+
+                        {/* Copiar para WhatsApp */}
+                        <button
+                          type="button"
+                          onClick={() => handleCopyShare(c.code, c.description)}
+                          className="px-2 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-[11px] font-black transition-colors flex items-center gap-1 shadow-xs"
+                          title="Copiar mensaje listo para WhatsApp"
+                        >
+                          <Share2 className="w-3.5 h-3.5" />
+                          <span>WhatsApp</span>
                         </button>
 
                         {/* Activar / Desactivar */}

@@ -67,39 +67,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Retrieve the complete 100 questions for this formula
-    let formulaQuestions = getFormulaQuestions(selectedFormulaNumber);
-
-    // If custom questions exist in JSON, overlay them
-    if (customListening.length > 0) {
-      customListening.sort((a, b) => a.id - b.id);
-      customListening.forEach((cq) => {
-        const idx = formulaQuestions.findIndex((q) => q.type === "listening" && q.id === cq.id);
-        if (idx !== -1) {
-          formulaQuestions[idx] = {
-            ...cq,
-            formula: selectedFormulaNumber,
-            formulaName: `Fórmula ${selectedFormulaNumber}`,
-            textToSpeak: cleanAudioPrompt(cq.textToSpeak || cq.question),
-            question: cleanQuestionText(cq.question),
-          };
-        }
-      });
-    }
-
-    if (customReading.length > 0) {
-      customReading.sort((a, b) => a.id - b.id);
-      customReading.forEach((cq) => {
-        const idx = formulaQuestions.findIndex((q) => q.type === "reading" && q.id === cq.id);
-        if (idx !== -1) {
-          formulaQuestions[idx] = {
-            ...cq,
-            formula: selectedFormulaNumber,
-            formulaName: `Fórmula ${selectedFormulaNumber}`,
-            textToSpeak: cleanQuestionText(cq.question),
-            question: cleanQuestionText(cq.question),
-          };
-        }
-      });
+    let formulaQuestions: Question[] = [];
+    if (customListening.length > 0 || customReading.length > 0) {
+      formulaQuestions = [...customListening, ...customReading];
+    } else {
+      formulaQuestions = getFormulaQuestions(selectedFormulaNumber);
     }
 
     // Check if user dropped custom formula files into data/formulas_personalizadas/ (PRIORIDAD MÁXIMA)
@@ -160,7 +132,39 @@ export async function GET(request: NextRequest) {
 
     let finalQuestions: Question[] = [];
 
-    if (size === 100) {
+    if (typeParam === "listening") {
+      const pool = listeningItems.length > 0 ? listeningItems : formulaQuestions.filter((q) => q.type === "listening");
+      const selected = size >= pool.length ? pool : (isRandomFormula ? shuffleArray(pool).slice(0, size) : pool.slice(0, size));
+      finalQuestions = selected.map((q, idx) => {
+        const cleanQ = cleanQuestionText(q.question);
+        const cleanSpk = cleanAudioPrompt(q.textToSpeak || q.question);
+        const ctx = q.context || cleanAudioPrompt(cleanSpk.replace(cleanQ, "").trim()) || cleanSpk;
+        return {
+          ...q,
+          id: idx + 1,
+          formula: selectedFormulaNumber,
+          formulaName: `Fórmula ${selectedFormulaNumber}`,
+          type: "listening" as const,
+          context: ctx,
+          contextEs: q.contextEs || "Contexto de la situación en audio en inglés.",
+          question: cleanQ,
+          questionEs: q.questionEs || "¿Cuál es la respuesta correcta según el audio?",
+          textToSpeak: cleanSpk,
+        };
+      });
+    } else if (typeParam === "reading") {
+      const pool = readingItems.length > 0 ? readingItems : formulaQuestions.filter((q) => q.type === "reading");
+      const selected = size >= pool.length ? pool : (isRandomFormula ? shuffleArray(pool).slice(0, size) : pool.slice(0, size));
+      finalQuestions = selected.map((q, idx) => ({
+        ...q,
+        id: idx + 1,
+        formula: selectedFormulaNumber,
+        formulaName: `Fórmula ${selectedFormulaNumber}`,
+        type: "reading" as const,
+        textToSpeak: cleanQuestionText(q.question),
+        question: cleanQuestionText(q.question),
+      }));
+    } else if (size === 100) {
       // EXAMEN OFICIAL: 1 a 60 Listening en orden estricto, 61 a 100 Reading en orden estricto (0 duplicados)
       const list60 = listeningItems.slice(0, 60).map((q, idx) => {
         const cleanQ = cleanQuestionText(q.question);

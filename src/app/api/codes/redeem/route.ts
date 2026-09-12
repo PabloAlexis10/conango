@@ -1,55 +1,189 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
 const CODES_FILE = path.join(process.cwd(), "data", "promo_codes.json");
 const REDEMPTIONS_FILE = path.join(process.cwd(), "data", "code_redemptions.json");
 
-function ensureFiles() {
-  const dataDir = path.join(process.cwd(), "data");
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+// Secret salt for military tactical code checksum
+const COMMAND_SALT = "CONANGO_TACTICAL_AUTH_2026_USAF_DLIELC";
+
+export function generateTacticalChecksum(payload: string): string {
+  let hash = 5381;
+  const str = payload.toUpperCase() + COMMAND_SALT;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) + hash + str.charCodeAt(i);
+    hash = hash & hash;
   }
-  if (!fs.existsSync(CODES_FILE)) {
-    fs.writeFileSync(CODES_FILE, "[]", "utf-8");
-  }
-  if (!fs.existsSync(REDEMPTIONS_FILE)) {
-    fs.writeFileSync(REDEMPTIONS_FILE, "[]", "utf-8");
-  }
+  return Math.abs(hash).toString(36).toUpperCase().padStart(4, "0").slice(-4);
 }
 
-function loadCodes() {
-  ensureFiles();
+// In-memory fallback in case of read-only serverless environment
+let memoryCodes: any[] = [
+  {
+    id: "code_alcpt2026",
+    code: "ALCPT2026",
+    type: "gift",
+    value: 500,
+    description: "Bono de bienvenida para nuevos cadetes",
+    maxUses: 99999,
+    usedCount: 0,
+    active: true,
+    expiresAt: null,
+    rewardDetail: { gems: 500, streakFreeze: 1 },
+    createdAt: new Date().toISOString(),
+    createdBy: "Comandancia General",
+  },
+  {
+    id: "code_comandante",
+    code: "COMANDANTE",
+    type: "pro_trial",
+    value: 365,
+    description: "Pase de honor Comandancia General",
+    maxUses: 99999,
+    usedCount: 0,
+    active: true,
+    expiresAt: null,
+    rewardDetail: { proDays: 365 },
+    createdAt: new Date().toISOString(),
+    createdBy: "Comandancia General",
+  },
+];
+let memoryRedemptions: any[] = [];
+
+function loadCodes(): any[] {
   try {
-    return JSON.parse(fs.readFileSync(CODES_FILE, "utf-8"));
-  } catch {
-    return [];
+    if (fs.existsSync(CODES_FILE)) {
+      const data = JSON.parse(fs.readFileSync(CODES_FILE, "utf-8"));
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
+  } catch (err) {
+    // Read error fallback
   }
+  return memoryCodes;
 }
 
 function saveCodes(codes: any[]) {
-  ensureFiles();
-  fs.writeFileSync(CODES_FILE, JSON.stringify(codes, null, 2), "utf-8");
-}
-
-function loadRedemptions() {
-  ensureFiles();
+  memoryCodes = codes;
   try {
-    return JSON.parse(fs.readFileSync(REDEMPTIONS_FILE, "utf-8"));
-  } catch {
-    return [];
+    const dataDir = path.dirname(CODES_FILE);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(CODES_FILE, JSON.stringify(codes, null, 2), "utf-8");
+  } catch (err) {
+    // Read-only filesystem on Vercel: safely continue with memoryCodes
   }
 }
 
+function loadRedemptions(): any[] {
+  try {
+    if (fs.existsSync(REDEMPTIONS_FILE)) {
+      const data = JSON.parse(fs.readFileSync(REDEMPTIONS_FILE, "utf-8"));
+      if (Array.isArray(data)) return data;
+    }
+  } catch (err) {
+    // Read error fallback
+  }
+  return memoryRedemptions;
+}
+
 function saveRedemptions(redemptions: any[]) {
-  ensureFiles();
-  fs.writeFileSync(REDEMPTIONS_FILE, JSON.stringify(redemptions, null, 2), "utf-8");
+  memoryRedemptions = redemptions;
+  try {
+    const dataDir = path.dirname(REDEMPTIONS_FILE);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(REDEMPTIONS_FILE, JSON.stringify(redemptions, null, 2), "utf-8");
+  } catch (err) {
+    // Read-only filesystem fallback
+  }
+}
+
+// Check if a code is a universal signed tactical code
+function checkSignedCode(cleanCode: string): any | null {
+  const parts = cleanCode.split("-");
+  if (parts.length >= 2) {
+    const providedCheck = parts[parts.length - 1];
+    const payload = parts.slice(0, parts.length - 1).join("-");
+    const expectedCheck = generateTacticalChecksum(payload);
+    if (providedCheck === expectedCheck) {
+      // Decode reward type from payload
+      if (payload.includes("PRO-30D") || payload.includes("PRO30")) {
+        return {
+          id: `code_signed_${cleanCode}`,
+          code: cleanCode,
+          type: "pro_trial",
+          value: 30,
+          description: "Pase Conan PRO Táctico (30 Días)",
+          rewardDetail: { proDays: 30 },
+          active: true,
+        };
+      }
+      if (payload.includes("PRO-LIFETIME") || payload.includes("PROLIFE")) {
+        return {
+          id: `code_signed_${cleanCode}`,
+          code: cleanCode,
+          type: "pro_trial",
+          value: 9999,
+          description: "Pase Conan PRO Vitalicio",
+          rewardDetail: { proDays: 9999 },
+          active: true,
+        };
+      }
+      if (payload.includes("GEMS-500") || payload.includes("GIFT-500")) {
+        return {
+          id: `code_signed_${cleanCode}`,
+          code: cleanCode,
+          type: "gift",
+          value: 500,
+          description: "Recompensa Militar de 500 Diamantes",
+          rewardDetail: { gems: 500, streakFreeze: 1 },
+          active: true,
+        };
+      }
+      if (payload.includes("GEMS-1000") || payload.includes("GIFT-1000")) {
+        return {
+          id: `code_signed_${cleanCode}`,
+          code: cleanCode,
+          type: "gift",
+          value: 1000,
+          description: "Recompensa Militar de 1,000 Diamantes",
+          rewardDetail: { gems: 1000, streakFreeze: 2 },
+          active: true,
+        };
+      }
+      if (payload.includes("DESC-50") || payload.includes("DESC50")) {
+        return {
+          id: `code_signed_${cleanCode}`,
+          code: cleanCode,
+          type: "discount",
+          value: 50,
+          description: "Descuento Táctico 50% en Conan PRO",
+          rewardDetail: { discountPercent: 50 },
+          active: true,
+        };
+      }
+      // General signed custom code (grants 30 days pro by default)
+      return {
+        id: `code_signed_${cleanCode}`,
+        code: cleanCode,
+        type: "pro_trial",
+        value: 30,
+        description: "Código Autorizado por la Comandancia",
+        rewardDetail: { proDays: 30 },
+        active: true,
+      };
+    }
+  }
+  return null;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const rawCode = (body.code || "").toString().trim().toUpperCase();
+    const rawCode = (body.code || "").toString().trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
     const userId = (body.userId || "").toString().trim() || "guest";
     const userName = (body.userName || "").toString().trim() || "Cadete";
     const userEmail = (body.userEmail || "").toString().trim().toLowerCase() || "cadete@conango.com";
@@ -62,7 +196,11 @@ export async function POST(request: NextRequest) {
     }
 
     const codes = loadCodes();
-    const match = codes.find((c: any) => c.code.toUpperCase() === rawCode);
+    let match = codes.find((c: any) => c.code.toUpperCase() === rawCode);
+
+    if (!match) {
+      match = checkSignedCode(rawCode);
+    }
 
     if (!match) {
       return NextResponse.json(

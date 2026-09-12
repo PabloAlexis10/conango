@@ -34,7 +34,9 @@ export default function PracticeView({ type: defaultType = "mixed" }: PracticeVi
     ? (rawSize as SessionSize)
     : 100;
 
-  const isExamMode = size === 100;
+  const modeParam = searchParams.get("mode"); // "real", "assisted"
+  // Solo es modo examen estricto (sin traducciones) si el modo es "real" o por defecto en 100 si no es asistido
+  const isExamMode = modeParam === "real" || (size === 100 && modeParam !== "assisted");
 
   // Session states
   const [questions, setQuestions] = useState<Question[]>([]);
