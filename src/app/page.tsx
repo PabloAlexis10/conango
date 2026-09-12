@@ -245,164 +245,125 @@ export default function HomePage() {
         )}
 
         {/* ⚡ LAS 6 CASILLAS RECTANGULARES: LECCIONES RÁPIDAS Y ALEATORIAS */}
-        <section className="mb-10">
-          <div className="mb-4">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 text-xs font-black uppercase tracking-wider mb-1.5 shadow-xs">
+        <section className="mb-8">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 text-xs font-black uppercase tracking-wider shadow-xs">
               <Zap className="w-3.5 h-3.5 text-[#F59E0B] fill-amber-500" />
-              <span>Lecciones Rápidas & Aleatorias</span>
+              <span>Quizzes Tácticos • Acceso Directo</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-[#6B4423] dark:text-white tracking-tight">
-              Entrenamiento Táctico Inmediato
-            </h2>
-            <p className="text-xs sm:text-sm text-[#A67B5B] dark:text-slate-400 font-semibold">
-              Pasa el cursor sobre las frases para ver su traducción completa. Elige tu modalidad:
-            </p>
+            <span className="text-[11px] text-[#A67B5B] dark:text-slate-400 font-bold hidden sm:inline">
+              Traducción contextual al posar el cursor (excepto modo real)
+            </span>
           </div>
 
-          {/* Grid de 6 Casillas Rectangulares */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+          {/* Grid de 6 Casillas en formato Tarjetas ConanGo */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {/* 1. quiz 10 preguntas listening */}
             <Link
               href="/practice?size=10&type=listening&formula=random"
-              className="p-4 sm:p-5 rounded-2xl border-2 border-blue-300 dark:border-blue-900/80 bg-gradient-to-br from-blue-50/60 via-white to-blue-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-blue-500 dark:hover:border-blue-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 border-2 border-blue-200 dark:border-blue-800 hover:border-blue-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group flex flex-col justify-between"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+              <div>
+                <div className="w-9 h-9 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
                   🎧
-                </span>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
-                    Audio Express • ~5 min
-                  </span>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    quiz 10 preguntas listening
-                  </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
-                    Traducción de oraciones en hover
-                  </span>
                 </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-blue-900 dark:text-blue-400 block mb-0.5">
+                  Audio Express
+                </span>
+                <span className="text-sm sm:text-base font-black text-[#6B4423] dark:text-white leading-tight block">
+                  quiz 10 preguntas listening
+                </span>
               </div>
-              <ChevronRight className="w-5 h-5 text-blue-500 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             {/* 2. quiz de 10 preguntas Reading */}
             <Link
               href="/practice?size=10&type=reading&formula=random"
-              className="p-4 sm:p-5 rounded-2xl border-2 border-emerald-300 dark:border-emerald-900/80 bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-emerald-500 dark:hover:border-emerald-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+              className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-slate-900 dark:to-slate-800 border-2 border-emerald-200 dark:border-emerald-800 hover:border-emerald-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group flex flex-col justify-between"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+              <div>
+                <div className="w-9 h-9 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
                   📖
-                </span>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
-                    Lectura Express • ~5 min
-                  </span>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                    quiz de 10 preguntas Reading
-                  </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
-                    Gramática y oraciones en hover
-                  </span>
                 </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900 dark:text-emerald-400 block mb-0.5">
+                  Lectura Express
+                </span>
+                <span className="text-sm sm:text-base font-black text-[#6B4423] dark:text-white leading-tight block">
+                  quiz de 10 preguntas Reading
+                </span>
               </div>
-              <ChevronRight className="w-5 h-5 text-emerald-500 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             {/* 3. quiz solo listening */}
             <Link
               href="/practice?type=listening&size=30&formula=random"
-              className="p-4 sm:p-5 rounded-2xl border-2 border-cyan-300 dark:border-cyan-900/80 bg-gradient-to-br from-cyan-50/60 via-white to-cyan-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-cyan-500 dark:hover:border-cyan-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+              className="bg-gradient-to-br from-cyan-50 to-sky-50 dark:from-slate-900 dark:to-slate-800 border-2 border-cyan-200 dark:border-cyan-800 hover:border-cyan-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group flex flex-col justify-between"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+              <div>
+                <div className="w-9 h-9 rounded-2xl bg-cyan-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
                   ⚡
-                </span>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400 block">
-                    Especializado • Comprensión Auditiva
-                  </span>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                    quiz solo listening
-                  </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
-                    Audios militares aleatorios con ayuda
-                  </span>
                 </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900 dark:text-cyan-400 block mb-0.5">
+                  Solo Audio
+                </span>
+                <span className="text-sm sm:text-base font-black text-[#6B4423] dark:text-white leading-tight block">
+                  quiz solo listening
+                </span>
               </div>
-              <ChevronRight className="w-5 h-5 text-cyan-500 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             {/* 4. quiz solo reading */}
             <Link
               href="/practice?type=reading&size=30&formula=random"
-              className="p-4 sm:p-5 rounded-2xl border-2 border-teal-300 dark:border-teal-900/80 bg-gradient-to-br from-teal-50/60 via-white to-teal-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-teal-500 dark:hover:border-teal-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+              className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-slate-900 dark:to-slate-800 border-2 border-teal-200 dark:border-teal-800 hover:border-teal-400 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group flex flex-col justify-between"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+              <div>
+                <div className="w-9 h-9 rounded-2xl bg-teal-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
                   📚
-                </span>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400 block">
-                    Especializado • Lectura y Gramática
-                  </span>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-                    quiz solo reading
-                  </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
-                    Estructuras y léxico con traducción
-                  </span>
                 </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-teal-900 dark:text-teal-400 block mb-0.5">
+                  Solo Lectura
+                </span>
+                <span className="text-sm sm:text-base font-black text-[#6B4423] dark:text-white leading-tight block">
+                  quiz solo reading
+                </span>
               </div>
-              <ChevronRight className="w-5 h-5 text-teal-500 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             {/* 5. quiz completo con ayuda */}
             <Link
               href="/practice?size=100&formula=random&mode=assisted"
-              className="p-4 sm:p-5 rounded-2xl border-2 border-amber-300 dark:border-amber-700/80 bg-gradient-to-br from-amber-50/70 via-white to-yellow-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-amber-500 dark:hover:border-amber-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+              className="bg-gradient-to-br from-amber-50 to-yellow-100 dark:from-slate-900 dark:to-slate-800 border-2 border-amber-300 dark:border-amber-800 hover:border-amber-500 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group flex flex-col justify-between"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+              <div>
+                <div className="w-9 h-9 rounded-2xl bg-[#F59E0B] text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
                   💡
-                </span>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 block">
-                    100 Reactivos • Con Ayuda Táctica
-                  </span>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                    quiz completo con ayuda
-                  </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
-                    Examen completo con traducción de oraciones
-                  </span>
                 </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-950 dark:text-amber-400 block mb-0.5">
+                  100 Reactivos
+                </span>
+                <span className="text-sm sm:text-base font-black text-[#6B4423] dark:text-white leading-tight block">
+                  quiz completo con ayuda
+                </span>
               </div>
-              <ChevronRight className="w-5 h-5 text-amber-500 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             {/* 6. quiz completo real */}
             <Link
               href="/practice?size=100&formula=random&mode=real"
-              className="p-4 sm:p-5 rounded-2xl border-2 border-rose-300 dark:border-rose-700/80 bg-gradient-to-br from-rose-50/70 via-white to-red-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800/80 hover:border-rose-500 dark:hover:border-rose-400 shadow-conan-card transition-all group flex items-center justify-between gap-3 active:scale-[0.98] hover:scale-[1.01]"
+              className="bg-gradient-to-br from-rose-50 to-red-100 dark:from-slate-900 dark:to-slate-800 border-2 border-rose-300 dark:border-rose-800 hover:border-rose-500 p-4 rounded-3xl text-left shadow-xs transition-all active:scale-95 group flex flex-col justify-between"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="text-3xl sm:text-4xl shrink-0 group-hover:scale-110 transition-transform">
+              <div>
+                <div className="w-9 h-9 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-lg shadow-xs mb-2 group-hover:scale-110 transition-transform">
                   🎯
-                </span>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
-                    100 Reactivos • Simulación Estricta
-                  </span>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
-                    quiz completo real
-                  </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block mt-0.5">
-                    Tiempo oficial USAF, sin traducciones
-                  </span>
                 </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-rose-950 dark:text-rose-400 block mb-0.5">
+                  Simulacro Real
+                </span>
+                <span className="text-sm sm:text-base font-black text-[#6B4423] dark:text-white leading-tight block">
+                  quiz completo real
+                </span>
               </div>
-              <ChevronRight className="w-5 h-5 text-rose-500 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </section>
