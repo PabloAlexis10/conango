@@ -442,6 +442,7 @@ export default function AdminControlModal({
         {activeTab === "codes" && (
           <div className="space-y-4">
             {/* Creador de Nuevos Códigos */}
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                 <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
                   <PlusCircle className="w-4 h-4 text-amber-500" />

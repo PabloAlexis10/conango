@@ -634,6 +634,7 @@ export default function HomePage() {
         </section>
 
           {/* DUAL VOCABULARY SUITE: BIBLIOTECA + JUEGO DE CARTAS */}
+        <section className="mb-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Biblioteca de Vocabulario */}
             <Link
