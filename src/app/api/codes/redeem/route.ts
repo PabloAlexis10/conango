@@ -8,7 +8,7 @@ const REDEMPTIONS_FILE = path.join(process.cwd(), "data", "code_redemptions.json
 // Secret salt for military tactical code checksum
 const COMMAND_SALT = "CONANGO_TACTICAL_AUTH_2026_USAF_DLIELC";
 
-export function generateTacticalChecksum(payload: string): string {
+function generateTacticalChecksum(payload: string): string {
   let hash = 5381;
   const str = payload.toUpperCase() + COMMAND_SALT;
   for (let i = 0; i < str.length; i++) {
